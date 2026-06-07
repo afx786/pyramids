@@ -1,0 +1,36 @@
+export const dataContracts = {
+  user: {
+    id: 'string',
+    name: 'string',
+    email: 'string',
+    role: 'string',
+    program: 'string',
+    avatar: 'string',
+    rank: 'string',
+    verifiedSkills: 'Array<{ name: string, strength: number }>',
+  },
+  project: {
+    id: 'string',
+    title: 'string',
+    description: 'string',
+    domain: 'string',
+    stack: 'string[]',
+    requiredSkills: 'string[]',
+    teamSize: 'number',
+    status: 'Draft | Prototype | Building | Looking for team | Completed',
+    creatorId: 'string',
+  },
+  connection: {
+    id: 'string',
+    requesterId: 'string',
+    receiverId: 'string',
+    status: 'pending | accepted | rejected | sent',
+  },
+  message: {
+    id: 'string',
+    conversationId: 'string',
+    senderId: 'string',
+    text: 'string',
+    createdAt: 'ISO date string',
+  },
+};
