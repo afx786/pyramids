@@ -15,6 +15,8 @@ from app.models.project_skill import ProjectSkill
 
 from app.routes.skills import router as skill_router
 
+from app.routes.ranks import router as rank_router
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -23,6 +25,7 @@ app.include_router(auth_router)
 app.include_router(user_router)
 app.include_router(project_router)
 app.include_router(skill_router)
+app.include_router(rank_router)
 
 @app.get("/")
 def root():
