@@ -52,3 +52,5 @@ class Project(Base):
          back_populates="project",
          cascade="all, delete-orphan"
     )
+    
+    
