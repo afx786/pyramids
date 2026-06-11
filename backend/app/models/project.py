@@ -46,3 +46,9 @@ class Project(Base):
         "User",
         back_populates="projects"
     )
+    
+    skills = relationship(
+        "ProjectSkill",
+         back_populates="project",
+         cascade="all, delete-orphan"
+    )

@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.deps import get_db
 from app.core.auth import get_current_user
+from app.services.project_service import serialize_project
 
 from app.schemas.project import (
     ProjectCreate,
@@ -30,25 +31,30 @@ def create_new_project(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
-    return create_project(
+    project = create_project(
         db=db,
         title=data.title,
         description=data.description,
         domain=data.domain,
         visibility=data.visibility,
         status=data.status,
-        owner_id=current_user.id
+        owner_id=current_user.id,
+        tech_stack=data.tech_stack
     )
 
+    return serialize_project(project)
 
-@router.get(
-    "",
-    response_model=list[ProjectResponse]
-)
+
+@router.get("", response_model=list[ProjectResponse])
 def list_projects(
     db: Session = Depends(get_db)
 ):
-    return get_all_projects(db)
+    projects = get_all_projects(db)
+
+    return [
+        serialize_project(project)
+        for project in projects
+    ]
 
 
 @router.get(
@@ -67,4 +73,4 @@ def get_single_project(
             detail="Project not found"
         )
 
-    return project
+    return serialize_project(project)

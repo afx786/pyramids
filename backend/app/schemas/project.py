@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from datetime import datetime
+from typing import List
 
+from typing import List
 
 class ProjectCreate(BaseModel):
     title: str
@@ -8,6 +10,8 @@ class ProjectCreate(BaseModel):
     domain: str
     visibility: str = "public"
     status: str = "building"
+
+    tech_stack: List[str]
 
 
 class ProjectResponse(BaseModel):
@@ -19,6 +23,8 @@ class ProjectResponse(BaseModel):
     status: str
     owner_id: int
     created_at: datetime
+
+    tech_stack: List[str]
 
     class Config:
         from_attributes = True

@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
 
 from app.models.project import Project
+from app.models.skill import Skill
+from app.models.project_skill import ProjectSkill
 
 
 def create_project(
@@ -10,7 +12,8 @@ def create_project(
     domain: str,
     visibility: str,
     status: str,
-    owner_id: int
+    owner_id: int,
+    tech_stack: list[str]
 ):
     project = Project(
         title=title,
@@ -22,6 +25,35 @@ def create_project(
     )
 
     db.add(project)
+    db.flush()
+
+    for skill_name in tech_stack:
+
+        normalized_name = skill_name.strip()
+        slug = normalized_name.lower()
+
+        skill = (
+            db.query(Skill)
+            .filter(Skill.slug == slug)
+            .first()
+        )
+
+        if not skill:
+            skill = Skill(
+                name=normalized_name,
+                slug=slug
+            )
+
+            db.add(skill)
+            db.flush()
+
+        project_skill = ProjectSkill(
+            project_id=project.id,
+            skill_id=skill.id
+        )
+
+        db.add(project_skill)
+
     db.commit()
     db.refresh(project)
 
@@ -36,3 +68,21 @@ def get_project(db: Session, project_id: int):
 
 def get_all_projects(db: Session):
     return db.query(Project).all()
+    
+def serialize_project(project):
+    return {
+        "id": project.id,
+        "title": project.title,
+        "description": project.description,
+        "domain": project.domain,
+        "visibility": project.visibility,
+        "status": project.status,
+        "owner_id": project.owner_id,
+        "created_at": project.created_at,
+        "tech_stack": [
+            ps.skill.name
+            for ps in project.skills
+        ]
+    }
+    
+    

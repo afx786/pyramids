@@ -10,6 +10,8 @@ from app.database.base import Base
 from app.database.session import engine
 
 from app.routes.projects import router as project_router
+from app.models.skill import Skill
+from app.models.project_skill import ProjectSkill
 
 Base.metadata.create_all(bind=engine)
 
