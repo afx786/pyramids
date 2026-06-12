@@ -64,7 +64,7 @@ def get_project(db: Session, project_id: int):
     return db.query(Project).filter(
         Project.id == project_id
     ).first()
-
+    
 
 def get_all_projects(db: Session):
     return db.query(Project).all()
