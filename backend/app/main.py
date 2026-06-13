@@ -14,7 +14,8 @@ from app.models.skill import Skill
 from app.models.project_skill import ProjectSkill
 
 from app.routes.skills import router as skill_router
-
+from app.models.team import Team
+from app.models.team_member import TeamMember
 from app.routes.ranks import router as rank_router
 from app.routes.profile import router as profile_router
 from app.routes.search import router as search_router
@@ -24,6 +25,25 @@ from app.routes.leaderboard import (
 from app.routes.project_search import (
     router as project_search_router
 )
+
+from app.routes.stats import (
+    router as stats_router
+)
+
+from app.routes.skill_analytics import (
+    router as skill_analytics_router
+)
+
+from app.routes.teams import (
+    router as teams_router
+)
+from app.models.hackathon import Hackathon
+
+from app.routes.hackathons import (
+    router as hackathon_router
+)
+
+from app.models.hackathon_team import HackathonTeam
 
 Base.metadata.create_all(bind=engine)
 
@@ -41,6 +61,22 @@ app.include_router(
 )
 app.include_router(
     project_search_router
+)
+
+app.include_router(
+    stats_router
+)
+
+app.include_router(
+    skill_analytics_router
+)
+
+app.include_router(
+    teams_router
+)
+
+app.include_router(
+    hackathon_router
 )
 
 @app.get("/")

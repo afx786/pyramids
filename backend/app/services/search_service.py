@@ -41,7 +41,65 @@ def search_users_by_skill(
         results.append({
             "id": user.id,
             "name": user.name,
-            "rank": rank_data["rank"]
+            "rank": rank_data["rank"],
+            "points": rank_data["points"]
+        })
+
+    return results
+
+def search_users_by_name(
+    db: Session,
+    name: str
+):
+    users = (
+        db.query(User)
+        .filter(
+            User.name.ilike(f"%{name}%")
+        )
+        .all()
+    )
+
+    results = []
+
+    for user in users:
+
+        rank_data = get_user_rank(
+            db,
+            user.id
+        )
+
+        results.append({
+            "id": user.id,
+            "name": user.name,
+            "rank": rank_data["rank"],
+            "points": rank_data["points"]
+        })
+
+    return results
+
+def search_users_by_rank(
+    db: Session,
+    rank: str
+):
+    users = db.query(User).all()
+
+    results = []
+
+    for user in users:
+
+        rank_data = get_user_rank(
+            db,
+            user.id
+        )
+
+        if rank_data["rank"].lower() != rank.lower():
+            continue
+
+        results.append({
+            "id": user.id,
+            "name": user.name,
+            "rank": rank_data["rank"],
+            "points": rank_data["points"]
         })
 
     return results
