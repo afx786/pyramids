@@ -84,5 +84,58 @@ def serialize_project(project):
             for ps in project.skills
         ]
     }
+
+def update_project(
+    db: Session,
+    project_id: int,
+    current_user_id: int,
+    title: str,
+    description: str,
+    domain: str,
+    visibility: str,
+    status: str
+):
+    project = (
+        db.query(Project)
+        .filter(Project.id == project_id)
+        .first()
+    )
+
+    if not project:
+        return None
+
+    if project.owner_id != current_user_id:
+        return "forbidden"
+
+    project.title = title
+    project.description = description
+    project.domain = domain
+    project.visibility = visibility
+    project.status = status
+
+    db.commit()
+    db.refresh(project)
+
+    return project    
     
-    
+def delete_project(
+    db: Session,
+    project_id: int,
+    current_user_id: int
+):
+    project = (
+        db.query(Project)
+        .filter(Project.id == project_id)
+        .first()
+    )
+
+    if not project:
+        return None
+
+    if project.owner_id != current_user_id:
+        return "forbidden"
+
+    db.delete(project)
+    db.commit()
+
+    return True

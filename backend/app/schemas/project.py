@@ -28,4 +28,10 @@ class ProjectResponse(BaseModel):
 
     class Config:
         from_attributes = True
-        
+ 
+class ProjectUpdate(BaseModel):
+    title: str
+    description: str
+    domain: str
+    visibility: str
+    status: str        
