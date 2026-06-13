@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String
 from app.database.base import Base
-
+from sqlalchemy.orm import relationship
 
 class Skill(Base):
     __tablename__ = "skills"
@@ -21,4 +21,9 @@ class Skill(Base):
         String(100),
         unique=True,
         nullable=False
+    )
+    
+    project_skills = relationship(
+        "ProjectSkill",
+        back_populates="skill"
     )
