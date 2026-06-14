@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.models.hackathon import Hackathon
 from app.models.hackathon_team import HackathonTeam
 from app.models.team import Team
-
+from app.models.hackathon_team import HackathonTeam
 
 def create_hackathon(
     db: Session,
@@ -99,3 +99,29 @@ def register_team_for_hackathon(
     db.commit()
 
     return registration
+
+def get_hackathon_teams(
+    db: Session,
+    hackathon_id: int
+):
+    registrations = (
+        db.query(HackathonTeam)
+        .filter(
+            HackathonTeam.hackathon_id == hackathon_id
+        )
+        .all()
+    )
+
+    results = []
+
+    for registration in registrations:
+
+        team = registration.team
+
+        results.append({
+            "id": team.id,
+            "name": team.name,
+            "owner_id": team.owner_id
+        })
+
+    return results

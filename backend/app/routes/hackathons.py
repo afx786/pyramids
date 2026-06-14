@@ -34,6 +34,13 @@ from app.services.hackathon_service import (
     register_team_for_hackathon
 )
 
+from app.schemas.hackathon_team import (
+    HackathonTeamResponse
+)
+
+from app.services.hackathon_service import (
+    get_hackathon_teams
+)
 
 @router.post(
     "",
@@ -123,3 +130,17 @@ def register_team(
     return {
         "message": "Team registered successfully"
     }
+
+
+@router.get(
+    "/{hackathon_id}/teams",
+    response_model=list[HackathonTeamResponse]
+)
+def list_registered_teams(
+    hackathon_id: int,
+    db: Session = Depends(get_db)
+):
+    return get_hackathon_teams(
+        db,
+        hackathon_id
+    )    
