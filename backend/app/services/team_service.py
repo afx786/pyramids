@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.models.team import Team
 from app.models.team_member import TeamMember
 
-
+from app.models.team import Team
 def create_team(
     db: Session,
     name: str,
@@ -69,3 +69,67 @@ def join_team(
     db.commit()
 
     return member
+
+def get_all_teams(
+    db: Session
+):
+    teams = db.query(Team).all()
+
+    results = []
+
+    for team in teams:
+
+        results.append({
+            "id": team.id,
+            "name": team.name,
+            "description": team.description,
+            "owner": {
+                "id": team.owner.id,
+                "name": team.owner.name
+            },
+            "members": [
+                {
+                    "id": member.user.id,
+                    "name": member.user.name,
+                    "role": member.role
+                }
+                for member in team.members
+            ]
+        })
+
+    return results
+
+def get_team(
+    db: Session,
+    team_id: int
+):
+    team = (
+        db.query(Team)
+        .filter(
+            Team.id == team_id
+        )
+        .first()
+    )
+
+    if not team:
+        return None
+
+    return {
+        "id": team.id,
+        "name": team.name,
+        "description": team.description,
+
+        "owner": {
+            "id": team.owner.id,
+            "name": team.owner.name
+        },
+
+        "members": [
+            {
+                "id": member.user.id,
+                "name": member.user.name,
+                "role": member.role
+            }
+            for member in team.members
+        ]
+    }

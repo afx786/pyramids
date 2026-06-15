@@ -15,7 +15,13 @@ from app.services.team_service import (
 
 from app.services.team_service import (
     create_team,
-    join_team
+    join_team,
+    get_all_teams,
+    get_team
+)
+
+from app.schemas.team import (
+    TeamDetailResponse
 )
 
 from fastapi import HTTPException
@@ -71,3 +77,33 @@ def join_existing_team(
     return {
         "message": "Joined team successfully"
     }
+    
+@router.get(
+    "",
+    response_model=list[TeamDetailResponse]
+)
+def list_teams(
+    db: Session = Depends(get_db)
+):
+    return get_all_teams(db)
+
+@router.get(
+    "/{team_id}",
+    response_model=TeamDetailResponse
+)
+def single_team(
+    team_id: int,
+    db: Session = Depends(get_db)
+):
+    team = get_team(
+        db,
+        team_id
+    )
+
+    if not team:
+        raise HTTPException(
+            status_code=404,
+            detail="Team not found"
+        )
+
+    return team

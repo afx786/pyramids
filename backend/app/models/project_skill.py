@@ -43,5 +43,6 @@ class ProjectSkill(Base):
     )
 
     skill = relationship(
-        "Skill"
+        "Skill",
+        back_populates="project_skills"
     )
