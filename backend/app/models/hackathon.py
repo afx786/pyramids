@@ -6,7 +6,7 @@ from sqlalchemy import (
 )
 
 from datetime import datetime
-
+from sqlalchemy import ForeignKey
 from app.database.base import Base
 
 
@@ -53,3 +53,29 @@ class Hackathon(Base):
         DateTime,
         default=datetime.utcnow
     )
+    
+    source = Column(
+        String,
+        default="admin"
+    )
+
+    status = Column(
+         String,
+         default="approved"
+    )
+
+    external_url = Column(
+         String
+    )
+
+    external_id = Column(
+         String
+    )
+
+    created_by = Column(
+         Integer,
+         ForeignKey("users.id"),
+        nullable=True
+    )
+    
+    

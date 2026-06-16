@@ -125,3 +125,35 @@ def get_hackathon_teams(
         })
 
     return results
+
+def submit_hackathon(
+    db: Session,
+    data,
+    user_id: int
+):
+    hackathon = Hackathon(
+        title=data.title,
+        description=data.description,
+        organizer=data.organizer,
+
+        mode=data.mode,
+
+        start_date=data.start_date,
+        end_date=data.end_date,
+        registration_deadline=data.registration_deadline,
+
+        external_url=data.external_url,
+
+        source="community",
+        status="pending",
+
+        created_by=user_id
+    )
+
+    db.add(hackathon)
+
+    db.commit()
+
+    db.refresh(hackathon)
+
+    return hackathon

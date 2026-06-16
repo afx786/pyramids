@@ -42,6 +42,14 @@ from app.services.hackathon_service import (
     get_hackathon_teams
 )
 
+from app.core.auth import get_current_user
+from app.schemas.hackathon import (
+    HackathonSubmission
+)
+from app.services.hackathon_service import (
+    submit_hackathon
+)
+
 @router.post(
     "",
     response_model=HackathonResponse
@@ -144,3 +152,18 @@ def list_registered_teams(
         db,
         hackathon_id
     )    
+    
+@router.post(
+    "/submit",
+    response_model=HackathonResponse
+)
+def submit_new_hackathon(
+    data: HackathonSubmission,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    return submit_hackathon(
+        db=db,
+        data=data,
+        user_id=current_user.id
+    )
