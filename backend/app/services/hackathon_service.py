@@ -157,3 +157,36 @@ def submit_hackathon(
     db.refresh(hackathon)
 
     return hackathon
+
+def get_pending_hackathons(
+    db: Session
+):
+    return (
+        db.query(Hackathon)
+        .filter(
+            Hackathon.status == "pending"
+        )
+        .all()
+    )
+    
+def approve_hackathon(
+    db: Session,
+    hackathon_id: int
+):
+    hackathon = (
+        db.query(Hackathon)
+        .filter(
+            Hackathon.id == hackathon_id
+        )
+        .first()
+    )
+
+    if not hackathon:
+        return None
+
+    hackathon.status = "approved"
+
+    db.commit()
+    db.refresh(hackathon)
+
+    return hackathon
