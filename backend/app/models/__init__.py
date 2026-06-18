@@ -6,3 +6,4 @@ from .team import Team
 from .team_member import TeamMember
 from .hackathon import Hackathon
 from .hackathon_team import HackathonTeam
+from .opportunity import Opportunity

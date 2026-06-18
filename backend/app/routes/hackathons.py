@@ -40,9 +40,7 @@ router = APIRouter(
 )
 
 
-# ---------------------------
-# Create Hackathon
-# ---------------------------
+
 
 @router.post(
     "",
@@ -58,9 +56,7 @@ def create_new_hackathon(
     )
 
 
-# ---------------------------
-# List All Hackathons
-# ---------------------------
+
 
 @router.get(
     "",
@@ -72,9 +68,7 @@ def list_hackathons(
     return get_all_hackathons(db)
 
 
-# ---------------------------
-# Community Submission
-# ---------------------------
+
 
 @router.post(
     "/submit",
@@ -92,9 +86,7 @@ def submit_new_hackathon(
     )
 
 
-# ---------------------------
-# Pending Submissions
-# ---------------------------
+
 
 @router.get(
     "/pending",
@@ -106,9 +98,6 @@ def pending_hackathons(
     return get_pending_hackathons(db)
 
 
-# ---------------------------
-# View Teams Registered
-# ---------------------------
 
 @router.get(
     "/{hackathon_id}/teams",
@@ -124,9 +113,6 @@ def list_registered_teams(
     )
 
 
-# ---------------------------
-# Register Team
-# ---------------------------
 
 @router.post(
     "/{hackathon_id}/register-team"
@@ -173,9 +159,7 @@ def register_team(
     }
 
 
-# ---------------------------
-# Approve Submission
-# ---------------------------
+
 
 @router.post(
     "/{hackathon_id}/approve",
@@ -199,10 +183,7 @@ def approve_submitted_hackathon(
     return hackathon
 
 
-# ---------------------------
-# Single Hackathon
-# KEEP THIS LAST
-# ---------------------------
+
 
 @router.get(
     "/{hackathon_id}",

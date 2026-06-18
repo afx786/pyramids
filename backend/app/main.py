@@ -19,6 +19,7 @@ from app.models.team_member import TeamMember
 from app.routes.ranks import router as rank_router
 from app.routes.profile import router as profile_router
 from app.routes.search import router as search_router
+from app.models.opportunity import Opportunity
 from app.routes.leaderboard import (
     router as leaderboard_router
 )
@@ -44,6 +45,9 @@ from app.routes.hackathons import (
 )
 
 from app.models.hackathon_team import HackathonTeam
+from app.routes.opportunities import (
+    router as opportunity_router
+)
 
 Base.metadata.create_all(bind=engine)
 
@@ -82,3 +86,7 @@ app.include_router(
 @app.get("/")
 def root():
     return {"message": "Pyramids Backend Running"}
+
+app.include_router(
+    opportunity_router
+)
