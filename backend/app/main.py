@@ -48,6 +48,9 @@ from app.models.hackathon_team import HackathonTeam
 from app.routes.opportunities import (
     router as opportunity_router
 )
+from app.routes.feed import (
+    router as feed_router
+)
 
 Base.metadata.create_all(bind=engine)
 
@@ -89,4 +92,8 @@ def root():
 
 app.include_router(
     opportunity_router
+)
+
+app.include_router(
+    feed_router
 )

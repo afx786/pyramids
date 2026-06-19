@@ -1,0 +1,31 @@
+from fastapi import (
+    APIRouter,
+    Depends
+)
+
+from sqlalchemy.orm import Session
+
+from app.deps import get_db
+
+from app.schemas.feed import (
+    FeedItemResponse
+)
+
+from app.services.feed_service import (
+    get_feed
+)
+
+router = APIRouter(
+    prefix="/feed",
+    tags=["Feed"]
+)
+
+
+@router.get(
+    "",
+    response_model=list[FeedItemResponse]
+)
+def discovery_feed(
+    db: Session = Depends(get_db)
+):
+    return get_feed(db)
