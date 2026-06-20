@@ -17,9 +17,11 @@ from app.services.team_service import (
     create_team,
     join_team,
     get_all_teams,
-    get_team
+    get_team,
+    leave_team,
+    transfer_team_ownership,
+    delete_team
 )
-
 from app.schemas.team import (
     TeamDetailResponse
 )
@@ -31,6 +33,9 @@ router = APIRouter(
     tags=["Teams"]
 )
 
+from app.schemas.team import (
+    TransferOwnershipRequest
+)
 
 @router.post(
     "",
@@ -107,3 +112,101 @@ def single_team(
         )
 
     return team
+
+@router.post(
+    "/{team_id}/leave"
+)
+def leave_existing_team(
+    team_id: int,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    result = leave_team(
+        db,
+        team_id,
+        current_user.id
+    )
+
+    if result == "not_member":
+        raise HTTPException(
+            status_code=404,
+            detail="Not a team member"
+        )
+
+    if result == "owner_cannot_leave":
+        raise HTTPException(
+            status_code=400,
+            detail="Owner must transfer ownership first"
+        )
+
+    return {
+        "message": "Left team successfully"
+    }
+
+@router.post(
+    "/{team_id}/transfer-ownership"
+)
+def transfer_ownership(
+    team_id: int,
+    data: TransferOwnershipRequest,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    result = transfer_team_ownership(
+        db=db,
+        team_id=team_id,
+        current_user_id=current_user.id,
+        new_owner_id=data.new_owner_id
+    )
+
+    if result == "team_not_found":
+        raise HTTPException(
+            status_code=404,
+            detail="Team not found"
+        )
+
+    if result == "not_owner":
+        raise HTTPException(
+            status_code=403,
+            detail="Only owner can transfer ownership"
+        )
+
+    if result == "user_not_member":
+        raise HTTPException(
+            status_code=400,
+            detail="New owner must be a team member"
+        )
+
+    return {
+        "message": "Ownership transferred successfully"
+    }
+    
+@router.delete(
+    "/{team_id}"
+)
+def remove_team(
+    team_id: int,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    result = delete_team(
+        db=db,
+        team_id=team_id,
+        current_user_id=current_user.id
+    )
+
+    if result == "team_not_found":
+        raise HTTPException(
+            status_code=404,
+            detail="Team not found"
+        )
+
+    if result == "not_owner":
+        raise HTTPException(
+            status_code=403,
+            detail="Only owner can delete team"
+        )
+
+    return {
+        "message": "Team deleted successfully"
+    }

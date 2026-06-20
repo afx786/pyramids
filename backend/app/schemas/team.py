@@ -31,3 +31,6 @@ class TeamDetailResponse(BaseModel):
     owner: TeamOwnerResponse
 
     members: list[TeamMemberResponse]
+    
+class TransferOwnershipRequest(BaseModel):
+    new_owner_id: int
