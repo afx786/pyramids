@@ -2,6 +2,8 @@ from sqlalchemy.orm import Session
 
 from app.models.research_project import ResearchProject
 
+from app.models.research_member import ResearchMember
+from app.models.user import User
 
 def create_research_project(
     db: Session,
@@ -52,3 +54,72 @@ def get_research_project(
         )
         .first()
     )
+    
+def join_research_project(
+    db: Session,
+    research_id: int,
+    user_id: int
+):
+    research = (
+        db.query(ResearchProject)
+        .filter(
+            ResearchProject.id == research_id
+        )
+        .first()
+    )
+
+    if not research:
+        return None
+
+    existing = (
+        db.query(ResearchMember)
+        .filter(
+            ResearchMember.research_id == research_id,
+            ResearchMember.user_id == user_id
+        )
+        .first()
+    )
+
+    if existing:
+        return "already_joined"
+
+    member = ResearchMember(
+        research_id=research_id,
+        user_id=user_id
+    )
+
+    db.add(member)
+
+    db.commit()
+
+    return member
+
+def get_research_members(
+    db: Session,
+    research_id: int
+):
+    members = (
+        db.query(ResearchMember)
+        .filter(
+            ResearchMember.research_id == research_id
+        )
+        .all()
+    )
+
+    results = []
+
+    for member in members:
+        user = (
+            db.query(User)
+            .filter(
+                User.id == member.user_id
+            )
+            .first()
+        )
+
+        results.append({
+            "id": user.id,
+            "name": user.name
+        })
+
+    return results

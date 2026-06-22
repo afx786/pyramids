@@ -8,3 +8,4 @@ from .hackathon import Hackathon
 from .hackathon_team import HackathonTeam
 from .opportunity import Opportunity
 from .research_project import ResearchProject
+from .research_member import ResearchMember

@@ -55,6 +55,7 @@ from app.models.research_project import ResearchProject
 from app.routes.research import (
     router as research_router
 )
+from app.models.research_member import ResearchMember
 
 Base.metadata.create_all(bind=engine)
 

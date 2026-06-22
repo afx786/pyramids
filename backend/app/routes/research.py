@@ -12,13 +12,16 @@ from app.core.auth import get_current_user
 
 from app.schemas.research import (
     ResearchProjectCreate,
-    ResearchProjectResponse
-)
+    ResearchProjectResponse,
+    ResearchMemberResponse
+)   
 
 from app.services.research_service import (
     create_research_project,
     get_all_research_projects,
-    get_research_project
+    get_research_project,
+    join_research_project,
+    get_research_members
 )
 
 router = APIRouter(
@@ -73,3 +76,46 @@ def single_research(
         )
 
     return research
+
+@router.post(
+    "/{research_id}/join"
+)
+def join_research(
+    research_id: int,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    result = join_research_project(
+        db,
+        research_id,
+        current_user.id
+    )
+
+    if result is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Research project not found"
+        )
+
+    if result == "already_joined":
+        raise HTTPException(
+            status_code=400,
+            detail="Already joined"
+        )
+
+    return {
+        "message": "Joined research project"
+    }
+    
+@router.get(
+    "/{research_id}/members",
+    response_model=list[ResearchMemberResponse]
+)
+def list_research_members(
+    research_id: int,
+    db: Session = Depends(get_db)
+):
+    return get_research_members(
+        db,
+        research_id
+    )
