@@ -123,3 +123,25 @@ def get_research_members(
         })
 
     return results
+
+def get_user_research_projects(
+    db: Session,
+    user_id: int
+):
+    projects = (
+        db.query(ResearchProject)
+        .filter(
+            ResearchProject.owner_id == user_id
+        )
+        .all()
+    )
+
+    return [
+        {
+            "id": project.id,
+            "title": project.title,
+            "domain": project.domain,
+            "status": project.status
+        }
+        for project in projects
+    ]

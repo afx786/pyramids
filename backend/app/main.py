@@ -56,6 +56,12 @@ from app.routes.research import (
     router as research_router
 )
 from app.models.research_member import ResearchMember
+from app.models.conversation import Conversation
+from app.models.conversation_participant import ConversationParticipant
+from app.models.message import Message
+from app.routes.messages import (
+    router as messages_router
+)
 
 Base.metadata.create_all(bind=engine)
 
@@ -105,4 +111,7 @@ app.include_router(
 
 app.include_router(
     research_router
+)
+app.include_router(
+    messages_router
 )

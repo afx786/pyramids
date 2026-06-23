@@ -9,3 +9,6 @@ from .hackathon_team import HackathonTeam
 from .opportunity import Opportunity
 from .research_project import ResearchProject
 from .research_member import ResearchMember
+from .conversation import Conversation
+from .conversation_participant import ConversationParticipant
+from .message import Message

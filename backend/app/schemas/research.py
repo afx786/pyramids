@@ -44,3 +44,9 @@ class ResearchMemberResponse(BaseModel):
 
     class Config:
         from_attributes = True
+        
+class UserResearchResponse(BaseModel):
+    id: int
+    title: str
+    domain: str
+    status: str
