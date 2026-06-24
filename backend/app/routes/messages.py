@@ -7,16 +7,21 @@ from fastapi import (
 from sqlalchemy.orm import Session
 
 from app.deps import get_db
-
 from app.core.auth import get_current_user
 
 from app.schemas.message import (
     ConversationCreate,
-    ConversationResponse
+    ConversationResponse,
+    MessageCreate,
+    MessageResponse,
+    ConversationListResponse
 )
 
 from app.services.message_service import (
-    create_conversation
+    create_conversation,
+    send_message,
+    get_messages,
+    get_user_conversations
 )
 
 router = APIRouter(
@@ -47,3 +52,55 @@ def start_conversation(
         )
 
     return result
+
+
+@router.post(
+    "",
+    response_model=MessageResponse
+)
+def create_message(
+    data: MessageCreate,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    result = send_message(
+        db=db,
+        conversation_id=data.conversation_id,
+        sender_id=current_user.id,
+        content=data.content
+    )
+
+    if result == "not_participant":
+        raise HTTPException(
+            status_code=403,
+            detail="Not part of conversation"
+        )
+
+    return result
+
+
+@router.get(
+    "/conversations/{conversation_id}",
+    response_model=list[MessageResponse]
+)
+def conversation_messages(
+    conversation_id: int,
+    db: Session = Depends(get_db)
+):
+    return get_messages(
+        db,
+        conversation_id
+    )
+
+@router.get(
+    "/conversations",
+    response_model=list[ConversationListResponse]
+)
+def list_conversations(
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    return get_user_conversations(
+        db,
+        current_user.id
+    )

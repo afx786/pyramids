@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app.models.conversation import Conversation
 from app.models.conversation_participant import ConversationParticipant
 from app.models.user import User
+from app.models.message import Message
 
 def create_conversation(
     db: Session,
@@ -82,3 +83,82 @@ def create_conversation(
     db.refresh(conversation)
 
     return conversation
+
+def send_message(
+    db: Session,
+    conversation_id: int,
+    sender_id: int,
+    content: str
+):
+    participant = (
+        db.query(ConversationParticipant)
+        .filter(
+            ConversationParticipant.conversation_id == conversation_id,
+            ConversationParticipant.user_id == sender_id
+        )
+        .first()
+    )
+
+    if not participant:
+        return "not_participant"
+
+    message = Message(
+        conversation_id=conversation_id,
+        sender_id=sender_id,
+        content=content
+    )
+
+    db.add(message)
+
+    db.commit()
+
+    db.refresh(message)
+
+    return message
+
+def get_messages(
+    db: Session,
+    conversation_id: int
+):
+    return (
+        db.query(Message)
+        .filter(
+            Message.conversation_id == conversation_id
+        )
+        .order_by(Message.id)
+        .all()
+    )
+
+def get_user_conversations(
+    db: Session,
+    user_id: int
+):
+    participations = (
+        db.query(ConversationParticipant)
+        .filter(
+            ConversationParticipant.user_id == user_id
+        )
+        .all()
+    )
+
+    results = []
+
+    for participation in participations:
+        participants = (
+            db.query(ConversationParticipant)
+            .filter(
+                ConversationParticipant.conversation_id
+                == participation.conversation_id
+            )
+            .all()
+        )
+
+        results.append({
+            "conversation_id": participation.conversation_id,
+            "participant_ids": [
+                p.user_id
+                for p in participants
+            ]
+        })
+
+    return results
