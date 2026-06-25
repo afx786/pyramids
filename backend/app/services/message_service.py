@@ -4,6 +4,7 @@ from app.models.conversation import Conversation
 from app.models.conversation_participant import ConversationParticipant
 from app.models.user import User
 from app.models.message import Message
+from app.services.notification_service import create_notification
 
 def create_conversation(
     db: Session,
@@ -113,6 +114,26 @@ def send_message(
     db.commit()
 
     db.refresh(message)
+
+    participants = (
+        db.query(ConversationParticipant)
+        .filter(
+            ConversationParticipant.conversation_id == conversation_id
+        )
+        .all()
+    )
+
+    for participant in participants:
+
+        if participant.user_id != sender_id:
+
+           create_notification(
+              db=db,
+              user_id=participant.user_id,
+              title="New Message",
+              message="You have received a new message.",
+              notification_type="message"
+            )
 
     return message
 

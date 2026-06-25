@@ -12,3 +12,4 @@ from .research_member import ResearchMember
 from .conversation import Conversation
 from .conversation_participant import ConversationParticipant
 from .message import Message
+from .notification import Notification

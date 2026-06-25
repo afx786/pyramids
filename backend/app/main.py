@@ -62,7 +62,10 @@ from app.models.message import Message
 from app.routes.messages import (
     router as messages_router
 )
-
+from app.models.notification import Notification
+from app.routes.notifications import (
+    router as notifications_router
+)
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -114,4 +117,7 @@ app.include_router(
 )
 app.include_router(
     messages_router
+)
+app.include_router(
+    notifications_router
 )
