@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.models.team import Team
 from app.models.team_member import TeamMember
 from app.models.hackathon_team import HackathonTeam
-
+from app.services.notification_service import create_notification
 
 def create_team(
     db: Session,
@@ -69,6 +69,17 @@ def join_team(
     db.add(member)
 
     db.commit()
+
+    db.refresh(member)
+
+    if team.owner_id != user_id:
+        create_notification(
+            db=db,
+            user_id=team.owner_id,
+            title="New Team Member",
+            message=f"A new member joined your team '{team.name}'.",
+            notification_type="team"
+       )
 
     return member
 

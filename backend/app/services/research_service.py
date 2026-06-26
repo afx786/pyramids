@@ -4,7 +4,7 @@ from app.models.research_project import ResearchProject
 
 from app.models.research_member import ResearchMember
 from app.models.user import User
-
+from app.services.notification_service import create_notification
 def create_research_project(
     db: Session,
     data,
@@ -92,8 +92,18 @@ def join_research_project(
 
     db.commit()
 
-    return member
+    db.refresh(member)
 
+    if research.owner_id != user_id:
+        create_notification(
+            db=db,
+            user_id=research.owner_id,
+            title="New Research Collaborator",
+            message="Someone joined your research project.",
+            notification_type="research"
+        )
+
+    return member
 def get_research_members(
     db: Session,
     research_id: int

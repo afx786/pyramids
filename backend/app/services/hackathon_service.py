@@ -4,6 +4,7 @@ from app.models.hackathon import Hackathon
 from app.models.hackathon_team import HackathonTeam
 from app.models.team import Team
 from app.models.hackathon_team import HackathonTeam
+from app.services.notification_service import create_notification
 
 def create_hackathon(
     db: Session,
@@ -186,7 +187,18 @@ def approve_hackathon(
 
     hackathon.status = "approved"
 
+    hackathon.status = "approved"
+
     db.commit()
+
     db.refresh(hackathon)
+
+    create_notification(
+        db=db,
+        user_id=hackathon.owner_id,
+        title="Hackathon Approved",
+        message=f"Your hackathon '{hackathon.title}' has been approved.",
+        notification_type="hackathon"
+    )
 
     return hackathon
