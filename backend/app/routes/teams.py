@@ -66,33 +66,46 @@ def create_new_team(
 @router.post(
     "/{team_id}/join"
 )
+@router.post(
+    "/{team_id}/join",
+    response_model=TeamJoinRequestResponse
+)
 def join_existing_team(
     team_id: int,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
-    result = join_team(
-        db,
-        team_id,
-        current_user.id
+    result = create_join_request(
+        db=db,
+        team_id=team_id,
+        user_id=current_user.id
     )
 
-    if result is None:
+    if result == "team_not_found":
         raise HTTPException(
             status_code=404,
             detail="Team not found"
         )
 
-    if result == "already_joined":
+    if result == "owner":
+        raise HTTPException(
+            status_code=400,
+            detail="Owner cannot join their own team"
+        )
+
+    if result == "already_member":
         raise HTTPException(
             status_code=400,
             detail="Already a member"
         )
 
-    return {
-        "message": "Joined team successfully"
-    }
-    
+    if result == "already_requested":
+        raise HTTPException(
+            status_code=400,
+            detail="Join request already pending"
+        )
+
+    return result
 @router.get(
     "",
     response_model=list[TeamDetailResponse]
@@ -221,46 +234,7 @@ def remove_team(
         "message": "Team deleted successfully"
     }
     
-@router.post(
-    "/{team_id}/request-join",
-    response_model=TeamJoinRequestResponse
-)
-def request_join_team(
-    team_id: int,
-    db: Session = Depends(get_db),
-    current_user=Depends(get_current_user)
-):
-    result = create_join_request(
-        db=db,
-        team_id=team_id,
-        user_id=current_user.id
-    )
 
-    if result == "team_not_found":
-        raise HTTPException(
-            status_code=404,
-            detail="Team not found"
-        )
-
-    if result == "owner":
-        raise HTTPException(
-            status_code=400,
-            detail="Owner cannot request to join"
-        )
-
-    if result == "already_member":
-        raise HTTPException(
-            status_code=400,
-            detail="Already a member"
-        )
-
-    if result == "already_requested":
-        raise HTTPException(
-            status_code=400,
-            detail="Request already pending"
-        )
-
-    return result
 
 @router.get(
     "/{team_id}/requests",
@@ -311,12 +285,19 @@ def approve_request(
             detail="Request not found"
         )
 
+    if result == "already_processed":
+        raise HTTPException(
+            status_code=400,
+            detail="This request has already been processed"
+        )
+
     if result == "forbidden":
         raise HTTPException(
             status_code=403,
             detail="Only the team owner can approve requests"
         )
 
+    return result
     return result
 @router.post(
     "/requests/{request_id}/reject",
