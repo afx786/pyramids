@@ -155,3 +155,107 @@ def get_user_research_projects(
         }
         for project in projects
     ]
+    
+def update_research(
+    db: Session,
+    research_id: int,
+    user_id: int,
+    data
+):
+    research = (
+        db.query(ResearchProject)
+        .filter(
+            ResearchProject.id == research_id
+        )
+        .first()
+    )
+
+    if not research:
+        return "not_found"
+
+    if research.owner_id != user_id:
+        return "forbidden"
+
+    research.title = data.title
+    research.description = data.description
+    research.domain = data.domain
+    research.status = data.status
+
+    db.commit()
+
+    db.refresh(research)
+
+    return research
+
+def delete_research(
+    db: Session,
+    research_id: int,
+    user_id: int
+):
+    research = (
+        db.query(ResearchProject)
+        .filter(
+            ResearchProject.id == research_id
+        )
+        .first()
+    )
+
+    if not research:
+        return "not_found"
+
+    if research.owner_id != user_id:
+        return "forbidden"
+
+    members = (
+        db.query(ResearchMember)
+        .filter(
+            ResearchMember.research_id == research_id
+        )
+        .all()
+    )
+
+    for member in members:
+        db.delete(member)
+
+    db.delete(research)
+
+    db.commit()
+
+    return "success"
+
+def leave_research(
+    db: Session,
+    research_id: int,
+    user_id: int
+):
+    research = (
+        db.query(ResearchProject)
+        .filter(
+            ResearchProject.id == research_id
+        )
+        .first()
+    )
+
+    if not research:
+        return "not_found"
+
+    if research.owner_id == user_id:
+        return "owner_cannot_leave"
+
+    membership = (
+        db.query(ResearchMember)
+        .filter(
+            ResearchMember.research_id == research_id,
+            ResearchMember.user_id == user_id
+        )
+        .first()
+    )
+
+    if not membership:
+        return "not_member"
+
+    db.delete(membership)
+
+    db.commit()
+
+    return "success"

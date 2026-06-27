@@ -50,3 +50,9 @@ class UserResearchResponse(BaseModel):
     title: str
     domain: str
     status: str
+    
+class ResearchUpdate(BaseModel):
+    title: str
+    description: str
+    domain: str
+    status: str
