@@ -70,6 +70,7 @@ from app.models.bookmark import Bookmark
 from app.routes.bookmarks import (
     router as bookmarks_router
 )
+from app.models.team_join_request import TeamJoinRequest
 
 Base.metadata.create_all(bind=engine)
 

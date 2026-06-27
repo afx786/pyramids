@@ -14,3 +14,4 @@ from .conversation_participant import ConversationParticipant
 from .message import Message
 from .notification import Notification
 from .bookmark import Bookmark
+from .team_join_request import TeamJoinRequest
