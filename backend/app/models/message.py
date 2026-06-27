@@ -6,6 +6,8 @@ from sqlalchemy import (
     DateTime
 )
 
+from sqlalchemy.orm import relationship
+
 from datetime import datetime
 
 from app.database.base import Base
@@ -22,12 +24,14 @@ class Message(Base):
 
     conversation_id = Column(
         Integer,
-        ForeignKey("conversations.id")
+        ForeignKey("conversations.id"),
+        nullable=False
     )
 
     sender_id = Column(
         Integer,
-        ForeignKey("users.id")
+        ForeignKey("users.id"),
+        nullable=False
     )
 
     content = Column(
@@ -38,4 +42,22 @@ class Message(Base):
     created_at = Column(
         DateTime,
         default=datetime.utcnow
+    )
+
+    # ----------------------------------
+    # Sender
+    # ----------------------------------
+
+    sender = relationship(
+        "User",
+        back_populates="messages"
+    )
+
+    # ----------------------------------
+    # Conversation
+    # ----------------------------------
+
+    conversation = relationship(
+        "Conversation",
+        back_populates="messages"
     )

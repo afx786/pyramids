@@ -6,6 +6,8 @@ from sqlalchemy import (
     ForeignKey
 )
 
+from sqlalchemy.orm import relationship
+
 from datetime import datetime
 
 from app.database.base import Base
@@ -39,4 +41,13 @@ class Bookmark(Base):
     created_at = Column(
         DateTime,
         default=datetime.utcnow
+    )
+
+    # ----------------------------------
+    # User
+    # ----------------------------------
+
+    user = relationship(
+        "User",
+        back_populates="bookmarks"
     )

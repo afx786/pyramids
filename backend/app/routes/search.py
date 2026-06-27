@@ -10,7 +10,8 @@ from app.schemas.search import (
 from app.services.search_service import (
     search_users_by_skill,
     search_users_by_name,
-    search_users_by_rank
+    search_users_by_rank,
+    unified_search
 )
 
 router = APIRouter(
@@ -56,4 +57,14 @@ def search_by_rank(
     return search_users_by_rank(
         db,
         rank
+    )
+
+@router.get("")
+def global_search(
+    q: str,
+    db: Session = Depends(get_db)
+):
+    return unified_search(
+        db=db,
+        query=q
     )

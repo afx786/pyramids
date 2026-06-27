@@ -5,6 +5,8 @@ from sqlalchemy import (
     DateTime
 )
 
+from sqlalchemy.orm import relationship
+
 from datetime import datetime
 
 from app.database.base import Base
@@ -21,15 +23,35 @@ class ResearchMember(Base):
 
     research_id = Column(
         Integer,
-        ForeignKey("research_projects.id")
+        ForeignKey("research_projects.id"),
+        nullable=False
     )
 
     user_id = Column(
         Integer,
-        ForeignKey("users.id")
+        ForeignKey("users.id"),
+        nullable=False
     )
 
     joined_at = Column(
         DateTime,
         default=datetime.utcnow
+    )
+
+    # ----------------------------------
+    # Research Project
+    # ----------------------------------
+
+    research = relationship(
+        "ResearchProject",
+        back_populates="members"
+    )
+
+    # ----------------------------------
+    # User
+    # ----------------------------------
+
+    user = relationship(
+        "User",
+        back_populates="research_memberships"
     )

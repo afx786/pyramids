@@ -7,6 +7,8 @@ from sqlalchemy import (
     ForeignKey
 )
 
+from sqlalchemy.orm import relationship
+
 from datetime import datetime
 
 from app.database.base import Base
@@ -23,7 +25,8 @@ class Notification(Base):
 
     user_id = Column(
         Integer,
-        ForeignKey("users.id")
+        ForeignKey("users.id"),
+        nullable=False
     )
 
     title = Column(
@@ -49,4 +52,13 @@ class Notification(Base):
     created_at = Column(
         DateTime,
         default=datetime.utcnow
+    )
+
+    # ----------------------------------
+    # User Relationship
+    # ----------------------------------
+
+    user = relationship(
+        "User",
+        back_populates="notifications"
     )

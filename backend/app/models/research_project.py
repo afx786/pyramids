@@ -7,6 +7,8 @@ from sqlalchemy import (
     ForeignKey
 )
 
+from sqlalchemy.orm import relationship
+
 from datetime import datetime
 
 from app.database.base import Base
@@ -57,10 +59,39 @@ class ResearchProject(Base):
 
     owner_id = Column(
         Integer,
-        ForeignKey("users.id")
+        ForeignKey("users.id"),
+        nullable=False
     )
 
     created_at = Column(
         DateTime,
         default=datetime.utcnow
+    )
+
+    # ----------------------------------
+    # Owner
+    # ----------------------------------
+
+    owner = relationship(
+        "User",
+        back_populates="research_projects"
+    )
+
+    # ----------------------------------
+    # Members
+    # ----------------------------------
+
+    members = relationship(
+        "ResearchMember",
+        back_populates="research",
+        cascade="all, delete-orphan"
+    )
+
+    # ----------------------------------
+    # Collaboration Requests
+    # ----------------------------------
+
+    join_requests = relationship(
+        "ResearchJoinRequest",
+        cascade="all, delete-orphan"
     )

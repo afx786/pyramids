@@ -2,11 +2,14 @@ from sqlalchemy import (
     Column,
     Integer,
     String,
-    DateTime
+    DateTime,
+    ForeignKey
 )
 
+from sqlalchemy.orm import relationship
+
 from datetime import datetime
-from sqlalchemy import ForeignKey
+
 from app.database.base import Base
 
 
@@ -53,29 +56,36 @@ class Hackathon(Base):
         DateTime,
         default=datetime.utcnow
     )
-    
+
     source = Column(
         String,
         default="admin"
     )
 
     status = Column(
-         String,
-         default="approved"
+        String,
+        default="approved"
     )
 
     external_url = Column(
-         String
+        String
     )
 
     external_id = Column(
-         String
+        String
     )
 
     created_by = Column(
-         Integer,
-         ForeignKey("users.id"),
+        Integer,
+        ForeignKey("users.id"),
         nullable=True
     )
-    
-    
+
+    # ----------------------------------
+    # Creator
+    # ----------------------------------
+
+    creator = relationship(
+        "User",
+        back_populates="created_hackathons"
+    )

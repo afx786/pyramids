@@ -21,11 +21,18 @@ router = APIRouter(
 )
 
 
-@router.get(
-    "",
-    response_model=list[FeedItemResponse]
-)
-def discovery_feed(
+@router.get("")
+def feed(
+    type: str = "all",
+    sort: str = "newest",
+    limit: int = 20,
+    offset: int = 0,
     db: Session = Depends(get_db)
 ):
-    return get_feed(db)
+    return get_feed(
+        db=db,
+        feed_type=type,
+        sort=sort,
+        limit=limit,
+        offset=offset
+    )

@@ -4,6 +4,8 @@ from sqlalchemy import (
     DateTime
 )
 
+from sqlalchemy.orm import relationship
+
 from datetime import datetime
 
 from app.database.base import Base
@@ -21,4 +23,23 @@ class Conversation(Base):
     created_at = Column(
         DateTime,
         default=datetime.utcnow
+    )
+
+    # -----------------------------
+    # Messages
+    # -----------------------------
+
+    messages = relationship(
+        "Message",
+        back_populates="conversation",
+        cascade="all, delete-orphan"
+    )
+
+    # -----------------------------
+    # Participants
+    # -----------------------------
+
+    participants = relationship(
+        "ConversationParticipant",
+        cascade="all, delete-orphan"
     )

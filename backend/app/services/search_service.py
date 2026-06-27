@@ -4,7 +4,10 @@ from app.models.user import User
 from app.models.skill import Skill
 
 from app.services.rank_service import get_user_rank
-
+from app.models.project import Project
+from app.models.team import Team
+from app.models.research_project import ResearchProject
+from app.models.hackathon import Hackathon
 
 def search_users_by_skill(
     db: Session,
@@ -103,3 +106,101 @@ def search_users_by_rank(
         })
 
     return results
+
+def unified_search(
+    db: Session,
+    query: str
+):
+    query = query.strip()
+
+    users = (
+        db.query(User)
+        .filter(
+            User.name.ilike(f"%{query}%")
+        )
+        .all()
+    )
+
+    projects = (
+        db.query(Project)
+        .filter(
+            (Project.title.ilike(f"%{query}%")) |
+            (Project.description.ilike(f"%{query}%"))
+        )
+        .all()
+    )
+
+    teams = (
+        db.query(Team)
+        .filter(
+            (Team.name.ilike(f"%{query}%")) |
+            (Team.description.ilike(f"%{query}%"))
+        )
+        .all()
+    )
+
+    research = (
+        db.query(ResearchProject)
+        .filter(
+            (ResearchProject.title.ilike(f"%{query}%")) |
+            (ResearchProject.description.ilike(f"%{query}%")) |
+            (ResearchProject.domain.ilike(f"%{query}%"))
+        )
+        .all()
+    )
+
+    hackathons = (
+        db.query(Hackathon)
+        .filter(
+            (Hackathon.title.ilike(f"%{query}%")) |
+            (Hackathon.description.ilike(f"%{query}%"))
+        )
+        .all()
+    )
+
+    return {
+        "users": [
+            {
+                "id": user.id,
+                "name": user.name
+            }
+            for user in users
+        ],
+
+        "projects": [
+            {
+                "id": project.id,
+                "title": project.title,
+                "description": project.description
+            }
+            for project in projects
+        ],
+
+        "teams": [
+            {
+                "id": team.id,
+                "name": team.name,
+                "description": team.description
+            }
+            for team in teams
+        ],
+
+        "research": [
+            {
+                "id": research_project.id,
+                "title": research_project.title,
+                "domain": research_project.domain,
+                "description": research_project.description
+            }
+            for research_project in research
+        ],
+
+        "hackathons": [
+            {
+                "id": hackathon.id,
+                "title": hackathon.title,
+                "description": hackathon.description
+            }
+            for hackathon in hackathons
+        ]
+    }

@@ -4,6 +4,8 @@ from sqlalchemy import (
     ForeignKey
 )
 
+from sqlalchemy.orm import relationship
+
 from app.database.base import Base
 
 
@@ -18,10 +20,21 @@ class ConversationParticipant(Base):
 
     conversation_id = Column(
         Integer,
-        ForeignKey("conversations.id")
+        ForeignKey("conversations.id"),
+        nullable=False
     )
 
     user_id = Column(
         Integer,
-        ForeignKey("users.id")
+        ForeignKey("users.id"),
+        nullable=False
+    )
+
+    conversation = relationship(
+        "Conversation",
+        back_populates="participants"
+    )
+
+    user = relationship(
+        "User"
     )

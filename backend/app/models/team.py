@@ -1,5 +1,13 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    DateTime,
+    ForeignKey
+)
+
 from sqlalchemy.orm import relationship
+
 from datetime import datetime
 
 from app.database.base import Base
@@ -8,15 +16,25 @@ from app.database.base import Base
 class Team(Base):
     __tablename__ = "teams"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
 
-    name = Column(String, nullable=False)
+    name = Column(
+        String,
+        nullable=False
+    )
 
-    description = Column(String)
+    description = Column(
+        String
+    )
 
     owner_id = Column(
         Integer,
-        ForeignKey("users.id")
+        ForeignKey("users.id"),
+        nullable=False
     )
 
     created_at = Column(
@@ -24,10 +42,17 @@ class Team(Base):
         default=datetime.utcnow
     )
 
+    # -----------------------------
+    # Team Owner
+    # -----------------------------
     owner = relationship(
-        "User"
+        "User",
+        back_populates="owned_teams"
     )
 
+    # -----------------------------
+    # Team Members
+    # -----------------------------
     members = relationship(
         "TeamMember",
         back_populates="team",
