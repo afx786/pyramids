@@ -66,6 +66,11 @@ from app.models.notification import Notification
 from app.routes.notifications import (
     router as notifications_router
 )
+from app.models.bookmark import Bookmark
+from app.routes.bookmarks import (
+    router as bookmarks_router
+)
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -120,4 +125,7 @@ app.include_router(
 )
 app.include_router(
     notifications_router
+)
+app.include_router(
+    bookmarks_router
 )
