@@ -48,6 +48,17 @@ def add_bookmark(
             status_code=400,
             detail="Already bookmarked"
         )
+    if result == "invalid_type":
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid bookmark type"
+        )
+
+    if result == "item_not_found":
+        raise HTTPException(
+            status_code=404,
+            detail="Item not found"
+        )
 
     return result
 
