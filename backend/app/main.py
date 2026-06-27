@@ -71,6 +71,7 @@ from app.routes.bookmarks import (
     router as bookmarks_router
 )
 from app.models.team_join_request import TeamJoinRequest
+from app.models.research_join_request import ResearchJoinRequest
 
 Base.metadata.create_all(bind=engine)
 

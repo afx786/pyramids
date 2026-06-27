@@ -26,6 +26,15 @@ from app.services.research_service import (
     delete_research,
     leave_research
 )
+from app.schemas.research_join_request import (
+    ResearchJoinRequestResponse
+)
+from app.services.research_join_request_service import (
+    create_research_join_request,
+    get_research_requests,
+    approve_research_request,
+    reject_research_request
+)
 
 router = APIRouter(
     prefix="/research",
@@ -82,35 +91,45 @@ def single_research(
 
 
 @router.post(
-    "/{research_id}/join"
+    "/{research_id}/join",
+    response_model=ResearchJoinRequestResponse
 )
 def join_research(
     research_id: int,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
-    result = join_research_project(
-        db,
-        research_id,
-        current_user.id
+    result = create_research_join_request(
+        db=db,
+        research_id=research_id,
+        user_id=current_user.id
     )
 
-    if result is None:
+    if result == "research_not_found":
         raise HTTPException(
             status_code=404,
             detail="Research project not found"
         )
 
-    if result == "already_joined":
+    if result == "owner":
         raise HTTPException(
             status_code=400,
-            detail="Already joined"
+            detail="Owner cannot request collaboration"
         )
 
-    return {
-        "message": "Joined research project"
-    }
+    if result == "already_member":
+        raise HTTPException(
+            status_code=400,
+            detail="Already a collaborator"
+        )
 
+    if result == "already_requested":
+        raise HTTPException(
+            status_code=400,
+            detail="Request already pending"
+        )
+
+    return result
 
 @router.get(
     "/{research_id}/members",
@@ -222,3 +241,99 @@ def leave_research_project(
     return {
         "message": "Left research project successfully"
     }
+@router.get(
+    "/{research_id}/requests",
+    response_model=list[ResearchJoinRequestResponse]
+)
+def list_research_requests(
+    research_id: int,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    result = get_research_requests(
+        db=db,
+        research_id=research_id,
+        current_user_id=current_user.id
+    )
+
+    if result == "research_not_found":
+        raise HTTPException(
+            status_code=404,
+            detail="Research project not found"
+        )
+
+    if result == "forbidden":
+        raise HTTPException(
+            status_code=403,
+            detail="Only the owner can view requests"
+        )
+
+    return result
+@router.post(
+    "/requests/{request_id}/approve",
+    response_model=ResearchJoinRequestResponse
+)
+def approve_request(
+    request_id: int,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    result = approve_research_request(
+        db=db,
+        request_id=request_id,
+        current_user_id=current_user.id
+    )
+
+    if result == "not_found":
+        raise HTTPException(
+            status_code=404,
+            detail="Request not found"
+        )
+
+    if result == "already_processed":
+        raise HTTPException(
+            status_code=400,
+            detail="Request already processed"
+        )
+
+    if result == "forbidden":
+        raise HTTPException(
+            status_code=403,
+            detail="Only the owner can approve requests"
+        )
+
+    return result
+@router.post(
+    "/requests/{request_id}/reject",
+    response_model=ResearchJoinRequestResponse
+)
+def reject_request(
+    request_id: int,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    result = reject_research_request(
+        db=db,
+        request_id=request_id,
+        current_user_id=current_user.id
+    )
+
+    if result == "not_found":
+        raise HTTPException(
+            status_code=404,
+            detail="Request not found"
+        )
+
+    if result == "already_processed":
+        raise HTTPException(
+            status_code=400,
+            detail="Request already processed"
+        )
+
+    if result == "forbidden":
+        raise HTTPException(
+            status_code=403,
+            detail="Only the owner can reject requests"
+        )
+
+    return result

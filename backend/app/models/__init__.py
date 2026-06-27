@@ -15,3 +15,4 @@ from .message import Message
 from .notification import Notification
 from .bookmark import Bookmark
 from .team_join_request import TeamJoinRequest
+from .research_join_request import ResearchJoinRequest
