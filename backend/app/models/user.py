@@ -10,7 +10,7 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 
 from app.database.base import Base
-
+from sqlalchemy import Boolean
 
 class User(Base):
     __tablename__ = "users"
@@ -142,3 +142,8 @@ class User(Base):
     created_hackathons = relationship(
         "Hackathon"
     )
+    is_admin = Column(
+    Boolean,
+    default=False,
+    nullable=False
+)
