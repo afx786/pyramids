@@ -6,3 +6,7 @@ class ProfileResponse(BaseModel):
     rank: dict
     skills: list[str]
     projects: list[dict]
+    research: list[dict]
+    teams: list[dict]
+    hackathons: list[dict]
+    statistics: dict
