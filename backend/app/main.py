@@ -73,6 +73,11 @@ from app.routes.bookmarks import (
 from app.models.team_join_request import TeamJoinRequest
 from app.models.research_join_request import ResearchJoinRequest
 
+
+from app.routes.admin import (
+    router as admin_router
+)
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -130,4 +135,7 @@ app.include_router(
 )
 app.include_router(
     bookmarks_router
+)
+app.include_router(
+    admin_router
 )
