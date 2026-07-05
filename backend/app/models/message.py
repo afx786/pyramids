@@ -11,7 +11,7 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 
 from app.database.base import Base
-
+from sqlalchemy import Boolean
 
 class Message(Base):
     __tablename__ = "messages"
@@ -61,3 +61,17 @@ class Message(Base):
         "Conversation",
         back_populates="messages"
     )
+    is_read = Column(
+    Boolean,
+    default=False
+)
+
+deleted_for_sender = Column(
+    Boolean,
+    default=False
+)
+
+deleted_for_receiver = Column(
+    Boolean,
+    default=False
+)
