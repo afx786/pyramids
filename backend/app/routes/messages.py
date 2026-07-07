@@ -14,14 +14,16 @@ from app.schemas.message import (
     ConversationResponse,
     MessageCreate,
     MessageResponse,
-    ConversationListResponse
+    ConversationListResponse,
 )
 
 from app.services.message_service import (
     create_conversation,
     send_message,
     get_messages,
-    get_user_conversations
+    get_user_conversations,
+    delete_message,
+    delete_conversation
 )
 
 router = APIRouter(
@@ -102,18 +104,7 @@ def conversation_messages(
 
     return result
 
-@router.get(
-    "/conversations",
-    response_model=list[ConversationListResponse]
-)
-def list_conversations(
-    db: Session = Depends(get_db),
-    current_user=Depends(get_current_user)
-):
-    return get_user_conversations(
-        db,
-        current_user.id
-    )
+
 @router.get(
     "/conversations",
     response_model=list[ConversationListResponse]
@@ -126,3 +117,51 @@ def my_conversations(
         db=db,
         user_id=current_user.id
     )
+@router.delete(
+    "/{message_id}"
+)
+def remove_message(
+    message_id: int,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    result = delete_message(
+        db=db,
+        message_id=message_id,
+        user_id=current_user.id
+    )
+
+    if result == "not_found":
+        raise HTTPException(
+            status_code=404,
+            detail="Message not found"
+        )
+
+    return {
+        "message": "Message deleted"
+    }
+
+
+@router.delete(
+    "/conversations/{conversation_id}"
+)
+def remove_conversation(
+    conversation_id: int,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    result = delete_conversation(
+        db=db,
+        conversation_id=conversation_id,
+        user_id=current_user.id
+    )
+
+    if result == "not_found":
+        raise HTTPException(
+            status_code=404,
+            detail="Conversation not found"
+        )
+
+    return {
+        "message": "Conversation deleted"
+    }

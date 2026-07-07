@@ -1,11 +1,13 @@
 from sqlalchemy import (
     Column,
     Integer,
-    ForeignKey
+    ForeignKey,
+    Boolean
 )
 
 from sqlalchemy.orm import relationship
-
+from sqlalchemy import DateTime
+from datetime import datetime
 from app.database.base import Base
 
 
@@ -37,4 +39,13 @@ class ConversationParticipant(Base):
 
     user = relationship(
         "User"
+    )
+    is_deleted = Column(
+        Boolean,
+     default=False
+    )
+
+    deleted_at = Column(
+        DateTime,
+        nullable=True
     )

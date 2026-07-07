@@ -1,10 +1,11 @@
 from sqlalchemy.orm import Session
-
+from datetime import datetime
 from app.models.conversation import Conversation
 from app.models.conversation_participant import ConversationParticipant
 from app.models.user import User
 from app.models.message import Message
 from app.services.notification_service import create_notification
+
 
 def create_conversation(
     db: Session,
@@ -110,6 +111,20 @@ def send_message(
     )
 
     db.add(message)
+    participants = (
+        db.query(ConversationParticipant)
+        .filter(
+            ConversationParticipant.conversation_id == conversation_id
+    )
+    .all()
+    )
+
+    for participant in participants:
+
+        if participant.user_id != sender_id:
+
+            participant.is_deleted = False
+            participant.deleted_at = None
 
     db.commit()
 
@@ -169,16 +184,36 @@ def get_messages(
 
     db.commit()
 
-    return (
-        db.query(Message)
-        .filter(
-            Message.conversation_id == conversation_id
-        )
-        .order_by(
-            Message.created_at.asc()
-        )
-        .all()
+    messages = (
+    db.query(Message)
+    .filter(
+        Message.conversation_id == conversation_id
     )
+    .order_by(
+        Message.created_at.asc()
+    )
+    .all()
+    )
+
+    visible = []
+
+    for message in messages:
+
+        if (
+            message.sender_id == current_user_id
+            and message.deleted_for_sender
+        ):
+            continue
+
+        if (
+            message.sender_id != current_user_id
+            and message.deleted_for_receiver
+        ):
+            continue
+
+        visible.append(message)
+
+    return visible
 
 def get_user_conversations(
     db: Session,
@@ -187,10 +222,11 @@ def get_user_conversations(
     participations = (
         db.query(ConversationParticipant)
         .filter(
-            ConversationParticipant.user_id == user_id
-        )
-        .all()
+            ConversationParticipant.user_id == user_id,
+            ConversationParticipant.is_deleted == False
     )
+    .all()
+)
 
     conversations = []
 
@@ -280,3 +316,53 @@ def get_user_conversations(
     )
 
     return conversations
+
+def delete_message(
+    db: Session,
+    message_id: int,
+    user_id: int
+):
+    message = (
+        db.query(Message)
+        .filter(
+            Message.id == message_id
+        )
+        .first()
+    )
+
+    if not message:
+        return "not_found"
+
+    if message.sender_id == user_id:
+        message.deleted_for_sender = True
+    else:
+        message.deleted_for_receiver = True
+
+    db.commit()
+
+    return "success"
+
+
+def delete_conversation(
+    db: Session,
+    conversation_id: int,
+    user_id: int
+):
+    participant = (
+        db.query(ConversationParticipant)
+        .filter(
+            ConversationParticipant.conversation_id == conversation_id,
+            ConversationParticipant.user_id == user_id
+        )
+        .first()
+    )
+
+    if not participant:
+        return "not_found"
+
+    participant.is_deleted = True
+    participant.deleted_at = datetime.utcnow()
+
+    db.commit()
+
+    return "success"
