@@ -139,14 +139,44 @@ def send_message(
 
 def get_messages(
     db: Session,
-    conversation_id: int
+    conversation_id: int,
+    current_user_id: int
 ):
+    participant = (
+        db.query(ConversationParticipant)
+        .filter(
+            ConversationParticipant.conversation_id == conversation_id,
+            ConversationParticipant.user_id == current_user_id
+        )
+        .first()
+    )
+
+    if not participant:
+        return "not_participant"
+
+    unread_messages = (
+        db.query(Message)
+        .filter(
+            Message.conversation_id == conversation_id,
+            Message.sender_id != current_user_id,
+            Message.is_read == False
+        )
+        .all()
+    )
+
+    for message in unread_messages:
+        message.is_read = True
+
+    db.commit()
+
     return (
         db.query(Message)
         .filter(
             Message.conversation_id == conversation_id
         )
-        .order_by(Message.id)
+        .order_by(
+            Message.created_at.asc()
+        )
         .all()
     )
 

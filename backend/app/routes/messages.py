@@ -85,12 +85,22 @@ def create_message(
 )
 def conversation_messages(
     conversation_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
 ):
-    return get_messages(
-        db,
-        conversation_id
+    result = get_messages(
+        db=db,
+        conversation_id=conversation_id,
+        current_user_id=current_user.id
     )
+
+    if result == "not_participant":
+        raise HTTPException(
+            status_code=403,
+            detail="Not part of conversation"
+        )
+
+    return result
 
 @router.get(
     "/conversations",
