@@ -104,3 +104,15 @@ def list_conversations(
         db,
         current_user.id
     )
+@router.get(
+    "/conversations",
+    response_model=list[ConversationListResponse]
+)
+def my_conversations(
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    return get_user_conversations(
+        db=db,
+        user_id=current_user.id
+    )

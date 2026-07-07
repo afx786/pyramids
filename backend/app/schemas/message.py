@@ -31,3 +31,25 @@ class MessageResponse(BaseModel):
 class ConversationListResponse(BaseModel):
     conversation_id: int
     participant_ids: list[int]
+
+from datetime import datetime
+
+
+class ConversationUser(BaseModel):
+    id: int
+    name: str
+
+    class Config:
+        from_attributes = True
+
+
+class ConversationListResponse(BaseModel):
+    conversation_id: int
+
+    other_user: ConversationUser
+
+    last_message: str | None
+
+    last_message_time: datetime | None
+
+    unread_count: int

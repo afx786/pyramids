@@ -162,24 +162,91 @@ def get_user_conversations(
         .all()
     )
 
-    results = []
+    conversations = []
 
     for participation in participations:
+
+        conversation_id = participation.conversation_id
+
         participants = (
             db.query(ConversationParticipant)
             .filter(
-                ConversationParticipant.conversation_id
-                == participation.conversation_id
+                ConversationParticipant.conversation_id == conversation_id
             )
             .all()
         )
 
-        results.append({
-            "conversation_id": participation.conversation_id,
-            "participant_ids": [
-                p.user_id
-                for p in participants
-            ]
+        other_user = None
+
+        for participant in participants:
+
+            if participant.user_id != user_id:
+
+                other_user = (
+                    db.query(User)
+                    .filter(
+                        User.id == participant.user_id
+                    )
+                    .first()
+                )
+
+                break
+
+        last_message = (
+            db.query(Message)
+            .filter(
+                Message.conversation_id == conversation_id
+            )
+            .order_by(
+                Message.created_at.desc()
+            )
+            .first()
+        )
+
+        unread_count = (
+            db.query(Message)
+            .filter(
+                Message.conversation_id == conversation_id,
+                Message.sender_id != user_id,
+                Message.is_read == False
+            )
+            .count()
+        )
+
+        conversations.append({
+
+            "conversation_id": conversation_id,
+
+            "other_user": {
+
+                "id": other_user.id,
+
+                "name": other_user.name
+
+            },
+
+            "last_message": (
+                last_message.content
+                if last_message
+                else None
+            ),
+
+            "last_message_time": (
+                last_message.created_at
+                if last_message
+                else None
+            ),
+
+            "unread_count": unread_count
+
         })
 
-    return results
+    conversations.sort(
+        key=lambda x: (
+            x["last_message_time"]
+            or 0
+        ),
+        reverse=True
+    )
+
+    return conversations
