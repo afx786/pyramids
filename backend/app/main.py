@@ -77,7 +77,9 @@ from app.models.research_join_request import ResearchJoinRequest
 from app.routes.admin import (
     router as admin_router
 )
-
+from app.routes.technologies import (
+    router as technology_router
+)
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -138,4 +140,7 @@ app.include_router(
 )
 app.include_router(
     admin_router
+)
+app.include_router(
+    technology_router
 )

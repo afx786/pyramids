@@ -40,13 +40,8 @@ def create_new_project(
 ):
     project = create_project(
         db=db,
-        title=data.title,
-        description=data.description,
-        domain=data.domain,
-        visibility=data.visibility,
-        status=data.status,
-        owner_id=current_user.id,
-        tech_stack=data.tech_stack
+        data=data,
+        owner_id=current_user.id
     )
 
     return serialize_project(project)

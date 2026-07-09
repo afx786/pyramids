@@ -1,7 +1,8 @@
 from pydantic import BaseModel
 from datetime import datetime
 from typing import List
-
+from app.schemas.technology import ProjectTechnologyCreate
+from app.schemas.technology import ProjectTechnologyResponse
 from typing import List
 
 class ProjectCreate(BaseModel):
@@ -11,7 +12,9 @@ class ProjectCreate(BaseModel):
     visibility: str = "public"
     status: str = "building"
 
-    tech_stack: List[str]
+    skills: List[str] = []
+
+    technologies: list[ProjectTechnologyCreate] = []
 
 
 class ProjectResponse(BaseModel):
@@ -23,8 +26,8 @@ class ProjectResponse(BaseModel):
     status: str
     owner_id: int
     created_at: datetime
-
-    tech_stack: List[str]
+    skills: List[str]
+    technologies: list[ProjectTechnologyResponse]
 
     class Config:
         from_attributes = True
