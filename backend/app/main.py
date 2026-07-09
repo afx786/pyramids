@@ -80,6 +80,9 @@ from app.routes.admin import (
 from app.routes.technologies import (
     router as technology_router
 )
+from app.routes.github import (
+    router as github_router
+)
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -143,4 +146,7 @@ app.include_router(
 )
 app.include_router(
     technology_router
+)
+app.include_router(
+    github_router
 )
