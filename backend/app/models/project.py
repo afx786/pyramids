@@ -8,7 +8,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 from datetime import datetime
-
+from app.models.project_technology import ProjectTechnology
 from app.database.base import Base
 
 
@@ -52,5 +52,9 @@ class Project(Base):
          back_populates="project",
          cascade="all, delete-orphan"
     )
-    
+    technologies = relationship(
+        "ProjectTechnology",
+        back_populates="project",
+        cascade="all, delete-orphan"
+    )
     
