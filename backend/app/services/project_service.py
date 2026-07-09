@@ -5,6 +5,9 @@ from app.models.skill import Skill
 from app.models.project_skill import ProjectSkill
 from app.models.technology import Technology
 from app.models.project_technology import ProjectTechnology
+from datetime import datetime
+
+from app.services.notification_service import create_notification
 
 def create_project(
     db: Session,
@@ -150,6 +153,12 @@ def serialize_project(project):
         "owner_id": project.owner_id,
 
         "created_at": project.created_at,
+        
+        "verification_status": project.verification_status,
+        
+        "verified_at": project.verified_at,
+        
+        "verification_notes": project.verification_notes,
 
         "skills": [
 
@@ -231,3 +240,51 @@ def delete_project(
     db.commit()
 
     return True
+def verify_project(
+    db: Session,
+    project_id: int,
+    admin_id: int,
+    status: str,
+    notes: str | None
+):
+    project = (
+        db.query(Project)
+        .filter(
+            Project.id == project_id
+        )
+        .first()
+    )
+
+    if not project:
+        return "not_found"
+
+    project.verification_status = status
+
+    project.verified_by = admin_id
+
+    project.verified_at = datetime.utcnow()
+
+    project.verification_notes = notes
+
+    db.commit()
+
+    db.refresh(project)
+
+    if status == "verified":
+        message = "Your project has been verified."
+
+    elif status == "rejected":
+        message = "Your project verification was rejected."
+
+    else:
+        message = "Your project verification is pending."
+        
+    create_notification(
+        db=db,
+        user_id=project.owner_id,
+        title="Project Verification",
+        message=message,
+        notification_type="project"
+    )
+
+    return project

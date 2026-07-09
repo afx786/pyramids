@@ -78,8 +78,9 @@ class User(Base):
     projects = relationship(
         "Project",
         back_populates="owner",
-        cascade="all, delete-orphan"
-    )
+        cascade="all, delete-orphan",
+        foreign_keys="Project.owner_id"
+    )   
 
     # -----------------------------
     # Teams Owned

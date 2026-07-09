@@ -28,6 +28,16 @@ class ProjectResponse(BaseModel):
     created_at: datetime
     skills: List[str]
     technologies: list[ProjectTechnologyResponse]
+    is_verified: bool
+    is_verified: bool
+
+    verified_at: datetime | None
+
+    verification_notes: str | None
+
+    verified_at: datetime | None
+
+    verification_notes: str | None
 
     class Config:
         from_attributes = True

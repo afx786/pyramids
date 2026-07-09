@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.deps import get_db
 from app.core.auth import get_current_user
 from app.services.project_service import serialize_project
-
+from app.core.admin import get_current_admin
 from app.schemas.project import (
     ProjectCreate,
     ProjectResponse
@@ -21,8 +21,10 @@ from app.services.project_service import (
 from app.schemas.project import (
     ProjectUpdate
 )
-
-
+from app.schemas.project_verification import (
+    ProjectVerificationRequest
+)
+from app.services.project_service import verify_project
 router = APIRouter(
     prefix="/projects",
     tags=["Projects"]
@@ -141,3 +143,28 @@ def remove_project(
     return {
         "message": "Project deleted successfully"
     }
+@router.patch(
+    "/{project_id}/verify",
+    response_model=ProjectResponse
+)
+def verify_existing_project(
+    project_id: int,
+    data: ProjectVerificationRequest,
+    db: Session = Depends(get_db),
+    admin=Depends(get_current_admin)
+):
+    project = verify_project(
+        db=db,
+        project_id=project_id,
+        admin_id=admin.id,
+        status=data.status,
+        notes=data.notes
+    )
+
+    if project == "not_found":
+        raise HTTPException(
+            status_code=404,
+            detail="Project not found"
+        )
+
+    return serialize_project(project)
