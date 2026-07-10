@@ -83,6 +83,9 @@ from app.routes.technologies import (
 from app.routes.github import (
     router as github_router
 )
+from app.routes.intelligence import (
+    router as intelligence_router
+)
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -149,4 +152,7 @@ app.include_router(
 )
 app.include_router(
     github_router
+)
+app.include_router(
+    intelligence_router
 )
