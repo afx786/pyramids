@@ -28,8 +28,7 @@ class ProjectResponse(BaseModel):
     created_at: datetime
     skills: List[str]
     technologies: list[ProjectTechnologyResponse]
-    is_verified: bool
-    is_verified: bool
+    verification_status: str
 
     verified_at: datetime | None
 
