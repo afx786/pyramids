@@ -24,6 +24,13 @@ class RepositoryStatistics(BaseModel):
     docker_files: int
     workflow_files: int
 
+class VerifiedSkill(BaseModel):
+
+    skill: str
+
+    confidence: int
+
+    evidence: list[str]
 
 class RepositoryAnalysisResponse(BaseModel):
 
@@ -44,3 +51,6 @@ class RepositoryAnalysisResponse(BaseModel):
     files_analyzed: list[str]
 
     repository_statistics: RepositoryStatistics
+    
+    verified_skills: list[VerifiedSkill]
+    
