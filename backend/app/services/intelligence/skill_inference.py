@@ -11,7 +11,7 @@ def infer_skills(technologies: dict):
 
         evidence = []
 
-        score = 0
+        confidence_scores = []
 
         for category, values in mapping.items():
 
@@ -20,23 +20,32 @@ def infer_skills(technologies: dict):
                 []
             )
 
-            matches = [
-                value
-                for value in values
-                if value in detected
-            ]
+            # Build lookup from detected technologies
+            detected_lookup = {
+                tech["name"]: tech
+                for tech in detected
+            }
 
-            if matches:
+            for value in values:
 
-                evidence.extend(matches)
+                if value in detected_lookup:
 
-                score += len(matches)
+                    tech = detected_lookup[value]
+
+                    evidence.append({
+                        "technology": tech["name"],
+                        "confidence": tech["confidence"]
+                    })
+
+                    confidence_scores.append(
+                        tech["confidence"]
+                    )
 
         if evidence:
 
-            confidence = min(
-                100,
-                60 + score * 15
+            confidence = round(
+                sum(confidence_scores) /
+                len(confidence_scores)
             )
 
             inferred.append({
@@ -45,7 +54,10 @@ def infer_skills(technologies: dict):
 
                 "confidence": confidence,
 
-                "evidence": evidence
+                "evidence": [
+                    item["technology"]
+                    for item in evidence
+                ]
 
             })
 

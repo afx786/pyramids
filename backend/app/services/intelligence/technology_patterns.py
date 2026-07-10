@@ -2,138 +2,250 @@ TECHNOLOGY_PATTERNS = {
 
     "frameworks": {
 
-        "FastAPI": [
-            "fastapi",
-            "from fastapi",
-            "FastAPI("
-        ],
+        "FastAPI": {
+            "patterns": [
+                "fastapi",
+                "from fastapi",
+                "FastAPI"
+            ],
+            "confidence": {
+                "requirements.txt": 100,
+                "pyproject.toml": 100,
+                ".py": 95,
+                "README.md": 25
+            }
+        },
 
-        "Flask": [
-            "flask",
-            "from flask"
-        ],
+        "Flask": {
+            "patterns": [
+                "flask",
+                "from flask"
+            ],
+            "confidence": {
+                "requirements.txt": 100,
+                ".py": 95,
+                "README.md": 25
+            }
+        },
 
-        "Django": [
-            "django"
-        ],
+        "Django": {
+            "patterns": [
+                "django",
+                "from django"
+            ],
+            "confidence": {
+                "requirements.txt": 100,
+                ".py": 95,
+                "README.md": 25
+            }
+        },
 
-        "React": [
-            "react"
-        ],
+        "React": {
+            "patterns": [
+                "\"react\"",
+                "react-dom"
+            ],
+            "confidence": {
+                "package.json": 100,
+                ".jsx": 95,
+                ".tsx": 95,
+                "README.md": 25
+            }
+        },
 
-        "Next.js": [
-            "next"
-        ],
+        "Next.js": {
+            "patterns": [
+                "\"next\"",
+                "next.config",
+                "next/"
+            ],
+            "confidence": {
+                "package.json": 100,
+                ".js": 95,
+                ".ts": 95,
+                "README.md": 25
+            }
+        }
 
-        "Vue": [
-            "vue"
-        ],
-
-        "Angular": [
-            "@angular"
-        ]
     },
 
     "libraries": {
 
-        "SQLAlchemy": [
-            "sqlalchemy"
-        ],
+        "SQLAlchemy": {
+            "patterns": [
+                "sqlalchemy"
+            ],
+            "confidence": {
+                "requirements.txt": 100,
+                "pyproject.toml": 100,
+                ".py": 95
+            }
+        },
 
-        "Pandas": [
-            "pandas"
-        ],
+        "Pandas": {
+            "patterns": [
+                "pandas",
+                "import pandas"
+            ],
+            "confidence": {
+                "requirements.txt": 100,
+                ".py": 95
+            }
+        },
 
-        "NumPy": [
-            "numpy"
-        ],
+        "NumPy": {
+            "patterns": [
+                "numpy",
+                "import numpy"
+            ],
+            "confidence": {
+                "requirements.txt": 100,
+                ".py": 95
+            }
+        },
 
-        "TensorFlow": [
-            "tensorflow"
-        ],
+        "TensorFlow": {
+            "patterns": [
+                "tensorflow"
+            ],
+            "confidence": {
+                "requirements.txt": 100,
+                ".py": 95
+            }
+        },
 
-        "PyTorch": [
-            "torch"
-        ],
+        "PyTorch": {
+            "patterns": [
+                "torch",
+                "pytorch"
+            ],
+            "confidence": {
+                "requirements.txt": 100,
+                ".py": 95
+            }
+        },
 
-        "OpenCV": [
-            "opencv-python",
-            "cv2"
-        ],
+        "Scikit-learn": {
+            "patterns": [
+                "sklearn",
+                "scikit-learn"
+            ],
+            "confidence": {
+                "requirements.txt": 100,
+                ".py": 95
+            }
+        }
 
-        "Scikit-learn": [
-            "scikit-learn",
-            "sklearn"
-        ],
-
-        "LangChain": [
-            "langchain"
-        ]
     },
 
     "databases": {
 
-        "PostgreSQL": [
-            "postgresql",
-            "psycopg2"
-        ],
+        "PostgreSQL": {
+            "patterns": [
+                "postgresql",
+                "psycopg2",
+                "postgres"
+            ],
+            "confidence": {
+                "requirements.txt": 100,
+                ".env": 95,
+                ".py": 90
+            }
+        },
 
-        "MongoDB": [
-            "pymongo",
-            "mongodb"
-        ],
+        "MySQL": {
+            "patterns": [
+                "mysql"
+            ],
+            "confidence": {
+                "requirements.txt": 100,
+                ".py": 90
+            }
+        },
 
-        "Redis": [
-            "redis"
-        ],
+        "SQLite": {
+            "patterns": [
+                "sqlite"
+            ],
+            "confidence": {
+                ".py": 90
+            }
+        },
 
-        "SQLite": [
-            "sqlite"
-        ],
+        "MongoDB": {
+            "patterns": [
+                "mongodb",
+                "pymongo"
+            ],
+            "confidence": {
+                "requirements.txt": 100,
+                ".py": 90
+            }
+        }
 
-        "MySQL": [
-            "mysql"
-        ]
     },
 
     "cloud": {
 
-        "AWS": [
-            "boto3",
-            "aws"
-        ],
+        "AWS": {
+            "patterns": [
+                "boto3",
+                "aws"
+            ],
+            "confidence": {
+                "requirements.txt": 100,
+                ".py": 90,
+                "README.md": 25
+            }
+        },
 
-        "Azure": [
-            "azure"
-        ],
+        "Azure": {
+            "patterns": [
+                "azure"
+            ],
+            "confidence": {
+                "requirements.txt": 100,
+                ".py": 90
+            }
+        },
 
-        "Google Cloud": [
-            "google-cloud"
-        ],
+        "Google Cloud": {
+            "patterns": [
+                "google-cloud"
+            ],
+            "confidence": {
+                "requirements.txt": 100,
+                ".py": 90
+            }
+        }
 
-        "Firebase": [
-            "firebase"
-        ]
     },
 
     "devops": {
 
-        "Docker": [
-            "docker"
-        ],
+        "Docker": {
+            "patterns": [
+                "FROM",
+                "docker"
+            ],
+            "confidence": {
+                "Dockerfile": 100,
+                "docker-compose.yml": 100,
+                "README.md": 20
+            }
+        },
 
-        "Docker Compose": [
-            "docker-compose"
-        ],
+        "GitHub Actions": {
+            "patterns": [
+                "name:",
+                "on:",
+                "jobs:"
+            ],
+            "confidence": {
+                ".yml": 100
+            }
+        }
 
-        "Kubernetes": [
-            "kubernetes",
-            "kubectl"
-        ],
-
-        "GitHub Actions": [
-            ".github/workflows"
-        ]
     }
 
 }

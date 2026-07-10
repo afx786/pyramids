@@ -66,9 +66,14 @@ def analyze_repository(
         repository
     )
 
-    if repo is None:
+    if repo == "rate_limit":
+        return "rate_limit"
+
+    if repo == "not_found":
         return "repository_not_found"
 
+    if repo == "github_error":
+        return "github_error"
     branch = repo["default_branch"]
 
     languages = get_languages(

@@ -7,7 +7,7 @@ from app.services.github.contents import (
 )
 
 
-SUPPORTED_PROJECT_FILES = [
+SUPPORTED_PROJECT_FILES = {
 
     "requirements.txt",
 
@@ -21,7 +21,7 @@ SUPPORTED_PROJECT_FILES = [
 
     "README.md"
 
-]
+}
 
 
 def fetch_repository_files(
@@ -30,8 +30,8 @@ def fetch_repository_files(
     branch: str
 ):
     """
-    Fetch only important repository files
-    needed for Repository Intelligence.
+    Fetch all important project files from the repository,
+    regardless of which folder they are located in.
     """
 
     tree = get_tree(
@@ -47,6 +47,10 @@ def fetch_repository_files(
 
     for item in tree.get("tree", []):
 
+        # Ignore directories
+        if item.get("type") != "blob":
+            continue
+
         path = item["path"]
 
         filename = path.split("/")[-1]
@@ -60,8 +64,9 @@ def fetch_repository_files(
             path
         )
 
-        if content is not None:
+        if content:
 
-            files[filename] = content
+            # Store the FULL PATH instead of only the filename
+            files[path] = content
 
     return files

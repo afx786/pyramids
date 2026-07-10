@@ -24,13 +24,18 @@ class RepositoryStatistics(BaseModel):
     docker_files: int
     workflow_files: int
 
-class VerifiedSkill(BaseModel):
 
-    skill: str
-
+class TechnologyEvidence(BaseModel):
+    name: str
     confidence: int
-
     evidence: list[str]
+
+
+class VerifiedSkill(BaseModel):
+    skill: str
+    confidence: int
+    evidence: list[str]
+
 
 class RepositoryAnalysisResponse(BaseModel):
 
@@ -38,19 +43,18 @@ class RepositoryAnalysisResponse(BaseModel):
 
     languages: list[str]
 
-    frameworks: list[str]
+    frameworks: list[TechnologyEvidence]
 
-    libraries: list[str]
+    libraries: list[TechnologyEvidence]
 
-    databases: list[str]
+    databases: list[TechnologyEvidence]
 
-    cloud: list[str]
+    cloud: list[TechnologyEvidence]
 
-    devops: list[str]
+    devops: list[TechnologyEvidence]
 
     files_analyzed: list[str]
 
     repository_statistics: RepositoryStatistics
-    
+
     verified_skills: list[VerifiedSkill]
-    

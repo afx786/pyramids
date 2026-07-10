@@ -35,7 +35,6 @@ def analyze(
     )
 
     if repo is None:
-
         raise HTTPException(
             status_code=400,
             detail="Invalid GitHub URL."
@@ -48,11 +47,23 @@ def analyze(
         repository
     )
 
-    if result == "repository_not_found":
+    # These checks MUST be inside the function
+    if result == "rate_limit":
+        raise HTTPException(
+            status_code=429,
+            detail="GitHub API rate limit exceeded."
+        )
 
+    if result == "repository_not_found":
         raise HTTPException(
             status_code=404,
             detail="Repository not found."
+        )
+
+    if result == "github_error":
+        raise HTTPException(
+            status_code=502,
+            detail="GitHub API unavailable."
         )
 
     return result
