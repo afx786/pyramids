@@ -102,3 +102,57 @@ def send_request(
     )
 
     return request
+def accept_request(
+    db: Session,
+    request_id: int,
+    current_user_id: int
+):
+
+    request = (
+        db.query(ConnectionRequest)
+        .filter(
+            ConnectionRequest.id == request_id
+        )
+        .first()
+    )
+
+    if not request:
+        return "request_not_found"
+
+    if request.receiver_id != current_user_id:
+        return "not_receiver"
+
+    if request.status != "pending":
+        return "already_processed"
+
+    request.status = "accepted"
+
+    connection = Connection(
+
+        user_one_id=request.sender_id,
+
+        user_two_id=request.receiver_id
+
+    )
+
+    db.add(connection)
+
+    create_notification(
+
+        db=db,
+
+        user_id=request.sender_id,
+
+        title="Connection Accepted",
+
+        message="Your connection request has been accepted.",
+
+        notification_type="connection"
+
+    )
+
+    db.commit()
+
+    db.refresh(connection)
+
+    return connection

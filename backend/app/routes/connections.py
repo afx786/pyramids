@@ -1,3 +1,4 @@
+from app.models.user import User
 from fastapi import (
     APIRouter,
     Depends,
@@ -14,11 +15,15 @@ from app.core.auth import (
 
 from app.schemas.connection import (
     ConnectionRequestCreate,
-    ConnectionRequestResponse
+    ConnectionRequestResponse,
+    ConnectionResponse
 )
 
 from app.services.connection_service import (
     send_request
+)
+from app.services.connection_service import (
+    accept_request
 )
 
 router = APIRouter(
@@ -82,3 +87,62 @@ def create_connection_request(
         )
 
     return result
+@router.post(
+    "/{request_id}/accept",
+    response_model=ConnectionResponse
+)
+def accept_connection_request(
+
+    request_id: int,
+
+    db: Session = Depends(get_db),
+
+    current_user=Depends(get_current_user)
+
+):
+
+    result = accept_request(
+
+        db=db,
+
+        request_id=request_id,
+
+        current_user_id=current_user.id
+
+    )
+
+    if result == "request_not_found":
+        raise HTTPException(
+            status_code=404,
+            detail="Connection request not found."
+        )
+
+    if result == "not_receiver":
+        raise HTTPException(
+            status_code=403,
+            detail="You cannot accept this request."
+        )
+
+    if result == "already_processed":
+        raise HTTPException(
+            status_code=400,
+            detail="Request already processed."
+        )
+
+    other_user = (
+        db.query(User)
+        .filter(
+            User.id == result.user_one_id
+        )
+        .first()
+    )
+
+    return {
+
+        "id": result.id,
+
+        "user": other_user,
+
+        "connected_at": result.created_at
+
+    }

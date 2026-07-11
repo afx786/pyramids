@@ -39,3 +39,6 @@ class ConnectionResponse(BaseModel):
     user: ConnectionUser
 
     connected_at: datetime
+    
+    class Config:
+        from_attributes = True
