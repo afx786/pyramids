@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from fastapi import Depends, HTTPException
@@ -7,7 +8,7 @@ from sqlalchemy.orm import Session
 from app.deps import get_db
 from app.models.user import User
 
-SECRET_KEY = "your_secret_key"
+SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-change-in-production")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 

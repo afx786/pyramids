@@ -152,6 +152,8 @@ def serialize_project(project):
 
         "owner_id": project.owner_id,
 
+        "owner_name": project.owner.name if project.owner else None,
+
         "created_at": project.created_at,
         
         "verification_status": project.verification_status,

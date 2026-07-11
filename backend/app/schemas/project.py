@@ -25,17 +25,12 @@ class ProjectResponse(BaseModel):
     visibility: str
     status: str
     owner_id: int
+    owner_name: str | None = None
     created_at: datetime
     skills: List[str]
     technologies: list[ProjectTechnologyResponse]
     verification_status: str
-
     verified_at: datetime | None
-
-    verification_notes: str | None
-
-    verified_at: datetime | None
-
     verification_notes: str | None
 
     class Config:
