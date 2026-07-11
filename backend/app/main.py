@@ -86,6 +86,11 @@ from app.routes.github import (
 from app.routes.intelligence import (
     router as intelligence_router
 )
+from app.models.connection_request import ConnectionRequest
+from app.models.connection import Connection
+from app.routes.connections import (
+    router as connection_router
+)
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -155,4 +160,7 @@ app.include_router(
 )
 app.include_router(
     intelligence_router
+)
+app.include_router(
+    connection_router
 )
