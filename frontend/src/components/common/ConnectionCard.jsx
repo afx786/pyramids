@@ -3,7 +3,7 @@ import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import SkillTag from '../ui/SkillTag.jsx';
 
-function ConnectionCard({ person, primaryAction = 'Connect', secondaryAction }) {
+function ConnectionCard({ person, primaryAction = 'Connect', secondaryAction, onPrimary, onSecondary }) {
   return (
     <Card className="p-5">
       <div className="flex items-start gap-4">
@@ -19,9 +19,9 @@ function ConnectionCard({ person, primaryAction = 'Connect', secondaryAction }) 
         </div>
       </div>
       <div className="mt-5 flex gap-3">
-        <Button className="h-9 px-4 text-xs">{primaryAction}</Button>
+        <Button className="h-9 px-4 text-xs" onClick={onPrimary}>{primaryAction}</Button>
         {secondaryAction ? (
-          <Button variant="secondary" className="h-9 px-4 text-xs">
+          <Button variant="secondary" className="h-9 px-4 text-xs" onClick={onSecondary}>
             {secondaryAction}
           </Button>
         ) : null}

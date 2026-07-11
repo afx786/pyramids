@@ -1,7 +1,15 @@
 import PageHeader from '../../components/common/PageHeader.jsx';
 import Card from '../../components/ui/Card.jsx';
 import SkillTag from '../../components/ui/SkillTag.jsx';
-import { domains } from '../../data/mockData.js';
+
+const DOMAINS = [
+  { id: 1, name: 'AI / Machine Learning', skills: ['Python', 'ML', 'Data'] },
+  { id: 2, name: 'Frontend Engineering', skills: ['React', 'CSS', 'UX'] },
+  { id: 3, name: 'Backend Systems', skills: ['Node', 'APIs', 'Databases'] },
+  { id: 4, name: 'Product Design', skills: ['Figma', 'Research', 'UI'] },
+  { id: 5, name: 'Cybersecurity', skills: ['Linux', 'Network', 'Audit'] },
+  { id: 6, name: 'Open Source', skills: ['Git', 'Docs', 'Review'] },
+];
 
 function Domains() {
   return (
@@ -13,19 +21,9 @@ function Domains() {
       />
 
       <section className="mt-10 grid grid-cols-3 gap-5">
-        {domains.map((domain) => (
+        {DOMAINS.map((domain) => (
           <Card key={domain.id} className="p-6">
             <h2 className="text-xl font-black text-primary">{domain.name}</h2>
-            <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
-              <div className="rounded-lg bg-accent-soft p-4">
-                <p className="font-black text-primary">{domain.builders}</p>
-                <p className="mt-1 font-bold text-secondary">Builders</p>
-              </div>
-              <div className="rounded-lg bg-accent-soft p-4">
-                <p className="font-black text-primary">{domain.projects}</p>
-                <p className="mt-1 font-bold text-secondary">Projects</p>
-              </div>
-            </div>
             <div className="mt-5 flex flex-wrap gap-2">
               {domain.skills.map((skill) => (
                 <SkillTag key={skill}>{skill}</SkillTag>

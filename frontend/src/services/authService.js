@@ -1,21 +1,11 @@
-const AUTH_KEY = 'pyramids_mock_auth';
+const TOKEN_KEY = 'pyramids_token';
 
 export const authService = {
   isAuthenticated() {
-    return localStorage.getItem(AUTH_KEY) === 'true';
+    return !!localStorage.getItem(TOKEN_KEY);
   },
 
-  login(credentials) {
-    localStorage.setItem(AUTH_KEY, 'true');
-    return Promise.resolve({ user: credentials.email });
-  },
-
-  signup(payload) {
-    localStorage.setItem(AUTH_KEY, 'true');
-    return Promise.resolve({ user: payload.email });
-  },
-
-  logout() {
-    localStorage.removeItem(AUTH_KEY);
+  getToken() {
+    return localStorage.getItem(TOKEN_KEY);
   },
 };

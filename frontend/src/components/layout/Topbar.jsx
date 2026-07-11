@@ -1,9 +1,10 @@
 import { Bell, Moon, Search, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { currentUser } from '../../data/mockData.js';
 import Avatar from '../ui/Avatar.jsx';
+import { useAuth } from '../../context/AuthContext.jsx';
 
 function Topbar() {
+  const { user, profile } = useAuth();
   const [theme, setTheme] = useState(() => localStorage.getItem('pyramids-theme') || 'light');
 
   useEffect(() => {
@@ -12,10 +13,11 @@ function Topbar() {
   }, [theme]);
 
   const isDark = theme === 'dark';
+  const avatar = profile?.user?.profile_picture ?? null;
+  const name = user?.name ?? '';
 
   return (
     <header className="sticky top-0 z-20 flex h-24 items-center justify-end bg-app/95 px-12 backdrop-blur">
-
       <div className="flex items-center gap-5">
         <button className="flex h-11 w-11 items-center justify-center rounded-full text-primary transition hover:bg-surface" aria-label="Search">
           <Search className="h-6 w-6 text-accent" strokeWidth={1.6} />
@@ -30,7 +32,7 @@ function Topbar() {
         >
           {isDark ? <Sun className="h-6 w-6" strokeWidth={1.6} /> : <Moon className="h-6 w-6" strokeWidth={1.6} />}
         </button>
-        <Avatar src={currentUser.avatar} alt={currentUser.name} />
+        <Avatar src={avatar} alt={name} />
       </div>
     </header>
   );

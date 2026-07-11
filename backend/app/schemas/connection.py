@@ -45,6 +45,30 @@ class ConnectionResponse(BaseModel):
     user: ConnectionUser
 
     connected_at: datetime
-    
+
+    class Config:
+        from_attributes = True
+
+
+class ConnectionRequestWithSenderResponse(BaseModel):
+    id: int
+    sender_id: int
+    receiver_id: int
+    status: str
+    created_at: datetime
+    sender: ConnectionUser | None = None
+
+    class Config:
+        from_attributes = True
+
+
+class ConnectionRequestWithReceiverResponse(BaseModel):
+    id: int
+    sender_id: int
+    receiver_id: int
+    status: str
+    created_at: datetime
+    receiver: ConnectionUser | None = None
+
     class Config:
         from_attributes = True

@@ -1,12 +1,15 @@
-import { currentUser, collaborators } from '../data/mockData.js';
-import { mockApiResponse } from './mockApi.js';
+import { api } from './api.js';
 
 export const userService = {
-  getCurrentUser() {
-    return mockApiResponse(currentUser);
+  getMe() {
+    return api.get('/users/me');
   },
 
-  getCollaborators() {
-    return mockApiResponse(collaborators);
+  getProfile(userId) {
+    return api.get(`/profile/${userId}`);
+  },
+
+  getRank(userId) {
+    return api.get(`/ranks/user/${userId}`);
   },
 };

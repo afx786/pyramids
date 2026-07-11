@@ -1,4 +1,6 @@
+import os
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.routes.auth import router as auth_router
 from app.routes.users import router as user_router
@@ -93,7 +95,21 @@ from app.routes.connections import (
 )
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+app = FastAPI(title="Pyramids API")
+
+_raw_origins = os.environ.get(
+    "ALLOWED_ORIGINS",
+    "http://localhost:5173,https://afx786.github.io"
+)
+_origins = [o.strip() for o in _raw_origins.split(",") if o.strip()]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(auth_router)
 app.include_router(user_router)

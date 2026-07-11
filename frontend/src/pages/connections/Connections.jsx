@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ConnectionCard from '../../components/common/ConnectionCard.jsx';
 import EmptyState from '../../components/common/EmptyState.jsx';
 import PageHeader from '../../components/common/PageHeader.jsx';
-import { connectionGroups } from '../../data/mockData.js';
+import { connectionService } from '../../services/connectionService.js';
 
 const tabs = [
   { id: 'connected', label: 'Connected' },
@@ -12,7 +12,57 @@ const tabs = [
 
 function Connections() {
   const [activeTab, setActiveTab] = useState('connected');
-  const people = connectionGroups[activeTab];
+  const [connected, setConnected] = useState([]);
+  const [pending, setPending] = useState([]);
+  const [sent, setSent] = useState([]);
+
+  useEffect(() => {
+    connectionService.listConnections().then(setConnected).catch(() => {});
+    connectionService.listIncomingRequests().then(setPending).catch(() => {});
+    connectionService.listOutgoingRequests().then(setSent).catch(() => {});
+  }, []);
+
+  const dataMap = {
+    connected: connected.map((conn) => ({
+      id: conn.id,
+      name: conn.user.name,
+      role: conn.user.headline || 'Builder',
+      avatar: conn.user.profile_picture,
+      skills: [],
+    })),
+    pending: pending.map((req) => ({
+      id: req.id,
+      name: req.sender?.name ?? 'Unknown',
+      role: req.sender?.headline || 'Sent you a request',
+      avatar: req.sender?.profile_picture,
+      skills: [],
+      _requestId: req.id,
+    })),
+    sent: sent.map((req) => ({
+      id: req.id,
+      name: req.receiver?.name ?? 'Unknown',
+      role: req.receiver?.headline || 'Awaiting response',
+      avatar: req.receiver?.profile_picture,
+      skills: [],
+      _requestId: req.id,
+    })),
+  };
+
+  const people = dataMap[activeTab];
+
+  async function handleAccept(person) {
+    try {
+      await connectionService.acceptRequest(person._requestId);
+      setPending((prev) => prev.filter((r) => r.id !== person._requestId));
+    } catch {}
+  }
+
+  async function handleReject(person) {
+    try {
+      await connectionService.rejectRequest(person._requestId);
+      setPending((prev) => prev.filter((r) => r.id !== person._requestId));
+    } catch {}
+  }
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -43,16 +93,17 @@ function Connections() {
             <ConnectionCard
               key={person.id}
               person={person}
-              primaryAction={activeTab === 'pending' ? 'Accept' : activeTab === 'sent' ? 'Sent' : 'Message'}
+              primaryAction={
+                activeTab === 'pending' ? 'Accept' : activeTab === 'sent' ? 'Sent' : 'Message'
+              }
               secondaryAction={activeTab === 'pending' ? 'Ignore' : undefined}
+              onPrimary={activeTab === 'pending' ? () => handleAccept(person) : undefined}
+              onSecondary={activeTab === 'pending' ? () => handleReject(person) : undefined}
             />
           ))
         ) : (
           <div className="col-span-3">
-            <EmptyState
-              title="No connections here yet"
-              description="Once backend data is connected, empty lists from this tab will render here cleanly."
-            />
+            <EmptyState title="No connections here yet" description="This tab will show connections once they exist." />
           </div>
         )}
       </section>
