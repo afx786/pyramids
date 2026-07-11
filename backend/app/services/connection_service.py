@@ -156,3 +156,46 @@ def accept_request(
     db.refresh(connection)
 
     return connection
+
+def reject_request(
+    db: Session,
+    request_id: int,
+    current_user_id: int
+):
+
+    request = (
+        db.query(ConnectionRequest)
+        .filter(
+            ConnectionRequest.id == request_id
+        )
+        .first()
+    )
+
+    if not request:
+        return "request_not_found"
+
+    if request.receiver_id != current_user_id:
+        return "not_receiver"
+
+    if request.status != "pending":
+        return "already_processed"
+
+    request.status = "rejected"
+
+    create_notification(
+
+        db=db,
+
+        user_id=request.sender_id,
+
+        title="Connection Request Rejected",
+
+        message="Your connection request was rejected.",
+
+        notification_type="connection"
+
+    )
+
+    db.commit()
+
+    return True

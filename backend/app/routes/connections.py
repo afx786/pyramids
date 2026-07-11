@@ -19,11 +19,11 @@ from app.schemas.connection import (
     ConnectionResponse
 )
 
+
 from app.services.connection_service import (
-    send_request
-)
-from app.services.connection_service import (
-    accept_request
+    accept_request,
+    send_request,
+    reject_request
 )
 
 router = APIRouter(
@@ -145,4 +145,48 @@ def accept_connection_request(
 
         "connected_at": result.created_at
 
+    }
+@router.post(
+    "/{request_id}/reject"
+)
+def reject_connection_request(
+
+    request_id: int,
+
+    db: Session = Depends(get_db),
+
+    current_user=Depends(get_current_user)
+
+):
+
+    result = reject_request(
+
+        db=db,
+
+        request_id=request_id,
+
+        current_user_id=current_user.id
+
+    )
+
+    if result == "request_not_found":
+        raise HTTPException(
+            status_code=404,
+            detail="Connection request not found."
+        )
+
+    if result == "not_receiver":
+        raise HTTPException(
+            status_code=403,
+            detail="You cannot reject this request."
+        )
+
+    if result == "already_processed":
+        raise HTTPException(
+            status_code=400,
+            detail="Request already processed."
+        )
+
+    return {
+        "message": "Connection request rejected."
     }
