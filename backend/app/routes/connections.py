@@ -26,7 +26,9 @@ from app.services.connection_service import (
     reject_request,
     get_connections,
     get_incoming_requests,
-    get_outgoing_requests
+    get_outgoing_requests,
+    remove_connection,
+    cancel_request
 )
 
 router = APIRouter(
@@ -259,3 +261,85 @@ def outgoing_requests(
         current_user.id
 
     )
+@router.delete(
+    "/requests/{request_id}"
+)
+def cancel_connection_request(
+
+    request_id: int,
+
+    db: Session = Depends(get_db),
+
+    current_user=Depends(get_current_user)
+
+):
+
+    result = cancel_request(
+
+        db,
+
+        request_id,
+
+        current_user.id
+
+    )
+
+    if result == "request_not_found":
+        raise HTTPException(
+            status_code=404,
+            detail="Connection request not found."
+        )
+
+    if result == "not_sender":
+        raise HTTPException(
+            status_code=403,
+            detail="Only the sender can cancel this request."
+        )
+
+    if result == "already_processed":
+        raise HTTPException(
+            status_code=400,
+            detail="Request has already been processed."
+        )
+
+    return {
+        "message": "Connection request cancelled."
+    }
+@router.delete(
+    "/{connection_id}"
+)
+def delete_connection(
+
+    connection_id: int,
+
+    db: Session = Depends(get_db),
+
+    current_user=Depends(get_current_user)
+
+):
+
+    result = remove_connection(
+
+        db,
+
+        connection_id,
+
+        current_user.id
+
+    )
+
+    if result == "connection_not_found":
+        raise HTTPException(
+            status_code=404,
+            detail="Connection not found."
+        )
+
+    if result == "forbidden":
+        raise HTTPException(
+            status_code=403,
+            detail="You are not part of this connection."
+        )
+
+    return {
+        "message": "Connection removed successfully."
+    }

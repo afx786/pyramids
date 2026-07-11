@@ -288,3 +288,60 @@ def get_outgoing_requests(
     )
 
     return requests
+def cancel_request(
+    db: Session,
+    request_id: int,
+    current_user_id: int
+):
+
+    request = (
+        db.query(ConnectionRequest)
+        .filter(
+            ConnectionRequest.id == request_id
+        )
+        .first()
+    )
+
+    if not request:
+        return "request_not_found"
+
+    if request.sender_id != current_user_id:
+        return "not_sender"
+
+    if request.status != "pending":
+        return "already_processed"
+
+    db.delete(request)
+
+    db.commit()
+
+    return True
+def remove_connection(
+    db: Session,
+    connection_id: int,
+    current_user_id: int
+):
+
+    connection = (
+        db.query(Connection)
+        .filter(
+            Connection.id == connection_id
+        )
+        .first()
+    )
+
+    if not connection:
+        return "connection_not_found"
+
+    if (
+        connection.user_one_id != current_user_id
+        and
+        connection.user_two_id != current_user_id
+    ):
+        return "forbidden"
+
+    db.delete(connection)
+
+    db.commit()
+
+    return True
