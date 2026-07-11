@@ -5,7 +5,7 @@ from app.models.conversation_participant import ConversationParticipant
 from app.models.user import User
 from app.models.message import Message
 from app.services.notification_service import create_notification
-
+from app.models.connection import Connection
 
 def create_conversation(
     db: Session,
@@ -22,6 +22,26 @@ def create_conversation(
 
     if not other_user:
         return "user_not_found"
+    connection = (
+        db.query(Connection)
+        .filter(
+            (
+                (Connection.user_one_id == current_user_id)
+                &
+                (Connection.user_two_id == other_user_id)
+            )
+            |
+            (
+                (Connection.user_one_id == other_user_id)
+                &
+                (Connection.user_two_id == current_user_id)
+            )
+        )
+        .first()
+    )
+
+    if not connection:
+        return "not_connected"
 
     existing = (
         db.query(ConversationParticipant)

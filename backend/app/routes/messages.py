@@ -48,6 +48,11 @@ def start_conversation(
     )
 
     if result == "user_not_found":
+        if result == "not_connected":
+            raise HTTPException(
+                status_code=403,
+                detail="You can only message connected users."
+            )
         raise HTTPException(
             status_code=404,
             detail="User not found"
