@@ -5,21 +5,38 @@ from app.services.github.tree import (
 from app.services.github.contents import (
     get_file
 )
-
+from app.services.intelligence.ignore_engine import (
+    should_ignore
+)
 
 SUPPORTED_PROJECT_FILES = {
 
     "requirements.txt",
 
-    "package.json",
-
     "pyproject.toml",
+
+    "package.json",
 
     "Dockerfile",
 
     "docker-compose.yml",
 
     "README.md"
+
+}
+
+
+SUPPORTED_SOURCE_EXTENSIONS = {
+
+    ".py",
+
+    ".js",
+
+    ".jsx",
+
+    ".ts",
+
+    ".tsx"
 
 }
 
@@ -52,10 +69,21 @@ def fetch_repository_files(
             continue
 
         path = item["path"]
+        
+        if should_ignore(path):
+            continue
 
         filename = path.split("/")[-1]
 
-        if filename not in SUPPORTED_PROJECT_FILES:
+        extension = ""
+
+        if "." in filename:
+            extension = "." + filename.split(".")[-1]
+ 
+        if (
+            filename not in SUPPORTED_PROJECT_FILES
+            and extension not in SUPPORTED_SOURCE_EXTENSIONS
+        ):
             continue
 
         content = get_file(
@@ -68,5 +96,7 @@ def fetch_repository_files(
 
             # Store the FULL PATH instead of only the filename
             files[path] = content
+        
+        
 
     return files
