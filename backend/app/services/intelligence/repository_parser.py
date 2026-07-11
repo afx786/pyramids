@@ -39,6 +39,16 @@ SUPPORTED_SOURCE_EXTENSIONS = {
     ".tsx",
     
     ".sql"
+    
+    ".java",
+
+    ".go",
+
+    ".rs",
+
+    ".cpp",
+
+    ".c"
 
 }
 MAX_SOURCE_FILES = 100
