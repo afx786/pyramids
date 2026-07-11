@@ -28,6 +28,12 @@ class ConnectionUser(BaseModel):
 
     name: str
 
+    username: str | None = None
+
+    profile_picture: str | None = None
+
+    headline: str | None = None
+
     class Config:
         from_attributes = True
 

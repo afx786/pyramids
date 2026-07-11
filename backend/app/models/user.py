@@ -136,6 +136,21 @@ class User(Base):
     messages = relationship(
         "Message"
     )
+    username = Column(
+        String,
+        unique=True,
+        nullable=True
+    )
+
+    headline = Column(
+        String,
+        nullable=True
+    )
+
+    profile_picture = Column(
+        String,
+        nullable=True
+    )
 
     # -----------------------------
     # Hackathons Created
