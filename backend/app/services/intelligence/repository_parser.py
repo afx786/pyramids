@@ -36,10 +36,12 @@ SUPPORTED_SOURCE_EXTENSIONS = {
 
     ".ts",
 
-    ".tsx"
+    ".tsx",
+    
+    ".sql"
 
 }
-
+MAX_SOURCE_FILES = 100
 
 def fetch_repository_files(
     owner: str,
@@ -61,6 +63,7 @@ def fetch_repository_files(
         return {}
 
     files = {}
+    source_files = 0
 
     for item in tree.get("tree", []):
 
@@ -94,8 +97,15 @@ def fetch_repository_files(
 
         if content:
 
-            # Store the FULL PATH instead of only the filename
-            files[path] = content
+           files[path] = content
+
+           if extension in SUPPORTED_SOURCE_EXTENSIONS:
+
+               source_files += 1
+
+               if source_files >= MAX_SOURCE_FILES:
+
+                   break
         
         
 
