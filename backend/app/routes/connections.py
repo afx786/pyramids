@@ -23,7 +23,10 @@ from app.schemas.connection import (
 from app.services.connection_service import (
     accept_request,
     send_request,
-    reject_request
+    reject_request,
+    get_connections,
+    get_incoming_requests,
+    get_outgoing_requests
 )
 
 router = APIRouter(
@@ -190,3 +193,69 @@ def reject_connection_request(
     return {
         "message": "Connection request rejected."
     }
+@router.get(
+
+    "",
+
+    response_model=list[ConnectionResponse]
+
+)
+def list_connections(
+
+    db: Session = Depends(get_db),
+
+    current_user=Depends(get_current_user)
+
+):
+
+    return get_connections(
+
+        db,
+
+        current_user.id
+
+    )
+@router.get(
+
+    "/requests/incoming",
+
+    response_model=list[ConnectionRequestResponse]
+
+)
+def incoming_requests(
+
+    db: Session = Depends(get_db),
+
+    current_user=Depends(get_current_user)
+
+):
+
+    return get_incoming_requests(
+
+        db,
+
+        current_user.id
+
+    )
+@router.get(
+
+    "/requests/outgoing",
+
+    response_model=list[ConnectionRequestResponse]
+
+)
+def outgoing_requests(
+
+    db: Session = Depends(get_db),
+
+    current_user=Depends(get_current_user)
+
+):
+
+    return get_outgoing_requests(
+
+        db,
+
+        current_user.id
+
+    )

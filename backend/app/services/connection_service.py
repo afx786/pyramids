@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-
+from sqlalchemy import or_
 from app.models.user import User
 from app.models.connection import Connection
 from app.models.connection_request import ConnectionRequest
@@ -199,3 +199,92 @@ def reject_request(
     db.commit()
 
     return True
+def get_connections(
+    db: Session,
+    current_user_id: int
+):
+
+    connections = (
+        db.query(Connection)
+        .filter(
+            or_(
+                Connection.user_one_id == current_user_id,
+                Connection.user_two_id == current_user_id
+            )
+        )
+        .all()
+    )
+
+    results = []
+
+    for connection in connections:
+
+        other_user_id = (
+            connection.user_two_id
+            if connection.user_one_id == current_user_id
+            else connection.user_one_id
+        )
+
+        user = (
+            db.query(User)
+            .filter(User.id == other_user_id)
+            .first()
+        )
+
+        if user:
+
+            results.append({
+
+                "id": connection.id,
+
+                "user": user,
+
+                "connected_at": connection.created_at
+
+            })
+
+    return results
+def get_incoming_requests(
+    db: Session,
+    current_user_id: int
+):
+
+    requests = (
+
+        db.query(ConnectionRequest)
+
+        .filter(
+
+            ConnectionRequest.receiver_id == current_user_id,
+
+            ConnectionRequest.status == "pending"
+
+        )
+
+        .all()
+
+    )
+
+    return requests
+def get_outgoing_requests(
+    db: Session,
+    current_user_id: int
+):
+
+    requests = (
+
+        db.query(ConnectionRequest)
+
+        .filter(
+
+            ConnectionRequest.sender_id == current_user_id,
+
+            ConnectionRequest.status == "pending"
+
+        )
+
+        .all()
+
+    )
+
+    return requests
