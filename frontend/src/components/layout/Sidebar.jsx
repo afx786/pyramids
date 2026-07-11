@@ -1,6 +1,6 @@
 import { LogOut, Triangle } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { authService } from '../../services/authService.js';
+import { useAuth } from '../../context/AuthContext.jsx';
 
 const navigation = [
   { label: 'Dashboard', to: '/dashboard' },
@@ -16,9 +16,10 @@ const navigation = [
 
 function Sidebar() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   function handleLogout() {
-    authService.logout();
+    logout();
     navigate('/login');
   }
 
@@ -32,23 +33,19 @@ function Sidebar() {
       </div>
 
       <nav className="mt-10 flex flex-1 flex-col gap-2">
-        {navigation.map((item) => {
-          return (
-            <NavLink
-              key={item.label}
-              to={item.to}
-              className={({ isActive }) =>
-                `flex h-9 items-center justify-center rounded-md px-2 text-center text-base font-black transition ${
-                  isActive
-                    ? 'bg-surface/70 text-primary'
-                    : 'text-primary hover:bg-surface/50'
-                }`
-              }
-            >
-              {item.label}
-            </NavLink>
-          );
-        })}
+        {navigation.map((item) => (
+          <NavLink
+            key={item.label}
+            to={item.to}
+            className={({ isActive }) =>
+              `flex h-9 items-center justify-center rounded-md px-2 text-center text-base font-black transition ${
+                isActive ? 'bg-surface/70 text-primary' : 'text-primary hover:bg-surface/50'
+              }`
+            }
+          >
+            {item.label}
+          </NavLink>
+        ))}
       </nav>
 
       <button

@@ -16,7 +16,9 @@ from app.core.auth import (
 from app.schemas.connection import (
     ConnectionRequestCreate,
     ConnectionRequestResponse,
-    ConnectionResponse
+    ConnectionResponse,
+    ConnectionRequestWithSenderResponse,
+    ConnectionRequestWithReceiverResponse
 )
 
 
@@ -218,49 +220,59 @@ def list_connections(
 
     )
 @router.get(
-
     "/requests/incoming",
-
-    response_model=list[ConnectionRequestResponse]
-
+    response_model=list[ConnectionRequestWithSenderResponse]
 )
 def incoming_requests(
-
     db: Session = Depends(get_db),
-
     current_user=Depends(get_current_user)
-
 ):
+    reqs = get_incoming_requests(db, current_user.id)
+    result = []
+    for req in reqs:
+        sender = db.query(User).filter(User.id == req.sender_id).first()
+        result.append({
+            "id": req.id,
+            "sender_id": req.sender_id,
+            "receiver_id": req.receiver_id,
+            "status": req.status,
+            "created_at": req.created_at,
+            "sender": {
+                "id": sender.id,
+                "name": sender.name,
+                "headline": getattr(sender, "headline", None),
+                "profile_picture": getattr(sender, "profile_picture", None),
+            } if sender else None,
+        })
+    return result
 
-    return get_incoming_requests(
 
-        db,
-
-        current_user.id
-
-    )
 @router.get(
-
     "/requests/outgoing",
-
-    response_model=list[ConnectionRequestResponse]
-
+    response_model=list[ConnectionRequestWithReceiverResponse]
 )
 def outgoing_requests(
-
     db: Session = Depends(get_db),
-
     current_user=Depends(get_current_user)
-
 ):
-
-    return get_outgoing_requests(
-
-        db,
-
-        current_user.id
-
-    )
+    reqs = get_outgoing_requests(db, current_user.id)
+    result = []
+    for req in reqs:
+        receiver = db.query(User).filter(User.id == req.receiver_id).first()
+        result.append({
+            "id": req.id,
+            "sender_id": req.sender_id,
+            "receiver_id": req.receiver_id,
+            "status": req.status,
+            "created_at": req.created_at,
+            "receiver": {
+                "id": receiver.id,
+                "name": receiver.name,
+                "headline": getattr(receiver, "headline", None),
+                "profile_picture": getattr(receiver, "profile_picture", None),
+            } if receiver else None,
+        })
+    return result
 @router.delete(
     "/requests/{request_id}"
 )
