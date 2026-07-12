@@ -44,6 +44,11 @@ def search_users_by_skill(
         results.append({
             "id": user.id,
             "name": user.name,
+            "username": user.username,
+            "profile_picture": user.profile_picture,
+            "headline": user.headline,
+            "branch": user.branch,
+            "domain": user.domain,
             "rank": rank_data["rank"],
             "points": rank_data["points"]
         })
@@ -74,6 +79,11 @@ def search_users_by_name(
         results.append({
             "id": user.id,
             "name": user.name,
+            "username": user.username,
+            "profile_picture": user.profile_picture,
+            "headline": user.headline,
+            "branch": user.branch,
+            "domain": user.domain,
             "rank": rank_data["rank"],
             "points": rank_data["points"]
         })
@@ -101,6 +111,11 @@ def search_users_by_rank(
         results.append({
             "id": user.id,
             "name": user.name,
+            "username": user.username,
+            "profile_picture": user.profile_picture,
+            "headline": user.headline,
+            "branch": user.branch,
+            "domain": user.domain,
             "rank": rank_data["rank"],
             "points": rank_data["points"]
         })
@@ -204,3 +219,93 @@ def unified_search(
             for hackathon in hackathons
         ]
     }
+def search_users_by_branch(
+    db: Session,
+    branch: str
+):
+
+    users = (
+        db.query(User)
+        .filter(
+            User.branch.ilike(branch)
+        )
+        .all()
+    )
+
+    results = []
+
+    for user in users:
+
+        rank_data = get_user_rank(
+            db,
+            user.id
+        )
+
+        results.append({
+
+            "id": user.id,
+
+            "name": user.name,
+
+            "username": user.username,
+
+            "profile_picture": user.profile_picture,
+
+            "headline": user.headline,
+
+            "branch": user.branch,
+
+            "domain": user.domain,
+
+            "rank": rank_data["rank"],
+
+            "points": rank_data["points"]
+
+        })
+
+    return results
+def search_users_by_domain(
+    db: Session,
+    domain: str
+):
+
+    users = (
+        db.query(User)
+        .filter(
+            User.domain.ilike(domain)
+        )
+        .all()
+    )
+
+    results = []
+
+    for user in users:
+
+        rank_data = get_user_rank(
+            db,
+            user.id
+        )
+
+        results.append({
+
+            "id": user.id,
+
+            "name": user.name,
+
+            "username": user.username,
+
+            "profile_picture": user.profile_picture,
+
+            "headline": user.headline,
+
+            "branch": user.branch,
+
+            "domain": user.domain,
+
+            "rank": rank_data["rank"],
+
+            "points": rank_data["points"]
+
+        })
+
+    return results

@@ -13,6 +13,21 @@ from app.services.search_service import (
     search_users_by_rank,
     unified_search
 )
+from app.services.search_service import (
+
+    search_users_by_skill,
+
+    search_users_by_name,
+
+    search_users_by_rank,
+
+    search_users_by_branch,
+
+    search_users_by_domain,
+
+    unified_search
+
+)
 
 router = APIRouter(
     prefix="/search",
@@ -67,4 +82,42 @@ def global_search(
     return unified_search(
         db=db,
         query=q
+    )
+@router.get(
+    "/users/by-branch",
+    response_model=list[UserSearchResponse]
+)
+def search_by_branch(
+
+    branch: str,
+
+    db: Session = Depends(get_db)
+
+):
+
+    return search_users_by_branch(
+
+        db,
+
+        branch
+
+    )
+@router.get(
+    "/users/by-domain",
+    response_model=list[UserSearchResponse]
+)
+def search_by_domain(
+
+    domain: str,
+
+    db: Session = Depends(get_db)
+
+):
+
+    return search_users_by_domain(
+
+        db,
+
+        domain
+
     )
