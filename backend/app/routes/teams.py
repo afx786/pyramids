@@ -20,7 +20,10 @@ from app.services.team_service import (
     get_team,
     leave_team,
     transfer_team_ownership,
-    delete_team
+    delete_team,
+    add_team_member,
+    remove_team_member,
+    change_team_member_role
 )
 from app.schemas.team import (
     TeamDetailResponse
@@ -35,6 +38,10 @@ router = APIRouter(
 
 from app.schemas.team import (
     TransferOwnershipRequest
+)
+from app.schemas.team import (
+    TeamMemberInviteRequest,
+    TeamMemberRoleUpdate
 )
 from app.schemas.team_join_request import TeamJoinRequestResponse
 from app.services.team_join_request_service import create_join_request
@@ -63,9 +70,6 @@ def create_new_team(
         owner_id=current_user.id
     )
     
-@router.post(
-    "/{team_id}/join"
-)
 @router.post(
     "/{team_id}/join",
     response_model=TeamJoinRequestResponse
@@ -298,7 +302,6 @@ def approve_request(
         )
 
     return result
-    return result
 @router.post(
     "/requests/{request_id}/reject",
     response_model=TeamJoinRequestResponse
@@ -333,3 +336,111 @@ def reject_request(
         )
 
     return result
+
+
+@router.post(
+    "/{team_id}/members"
+)
+def invite_member(
+    team_id: int,
+    data: TeamMemberInviteRequest,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    result = add_team_member(
+        db=db,
+        team_id=team_id,
+        current_user_id=current_user.id,
+        user_id=data.user_id,
+        role=data.role
+    )
+
+    if result == "team_not_found":
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    if result == "forbidden":
+        raise HTTPException(status_code=403, detail="Not allowed to manage team")
+
+    if result == "invalid_role":
+        raise HTTPException(status_code=400, detail="Invalid role")
+
+    if result == "user_not_found":
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if result == "already_member":
+        raise HTTPException(status_code=400, detail="Already a team member")
+
+    return {
+        "message": "Member added successfully"
+    }
+
+
+@router.delete(
+    "/{team_id}/members/{user_id}"
+)
+def remove_member(
+    team_id: int,
+    user_id: int,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    result = remove_team_member(
+        db=db,
+        team_id=team_id,
+        current_user_id=current_user.id,
+        user_id=user_id
+    )
+
+    if result == "team_not_found":
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    if result == "forbidden":
+        raise HTTPException(status_code=403, detail="Not allowed to manage team")
+
+    if result == "not_member":
+        raise HTTPException(status_code=404, detail="User is not a team member")
+
+    if result == "cannot_remove_owner":
+        raise HTTPException(status_code=400, detail="Owner cannot be removed")
+
+    return {
+        "message": "Member removed successfully"
+    }
+
+
+@router.patch(
+    "/{team_id}/members/{user_id}/role"
+)
+def update_member_role(
+    team_id: int,
+    user_id: int,
+    data: TeamMemberRoleUpdate,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    result = change_team_member_role(
+        db=db,
+        team_id=team_id,
+        current_user_id=current_user.id,
+        user_id=user_id,
+        role=data.role
+    )
+
+    if result == "team_not_found":
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    if result == "forbidden":
+        raise HTTPException(status_code=403, detail="Only owner can change roles")
+
+    if result == "invalid_role":
+        raise HTTPException(status_code=400, detail="Invalid role")
+
+    if result == "not_member":
+        raise HTTPException(status_code=404, detail="User is not a team member")
+
+    if result == "cannot_change_owner":
+        raise HTTPException(status_code=400, detail="Owner role cannot be changed")
+
+    return {
+        "message": "Role updated successfully"
+    }

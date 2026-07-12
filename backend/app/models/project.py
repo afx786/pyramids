@@ -6,6 +6,7 @@ from sqlalchemy import (
     ForeignKey,
     DateTime
 )
+from sqlalchemy import JSON
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.models.project_technology import ProjectTechnology
@@ -47,6 +48,26 @@ class Project(Base):
         nullable=True
     )
 
+    github_url = Column(
+        String,
+        nullable=True
+    )
+
+    repository_score = Column(
+        Integer,
+        nullable=True
+    )
+
+    repository_analysis = Column(
+        JSON,
+        nullable=True
+    )
+
+    verified_skills = Column(
+        JSON,
+        nullable=True
+    )
+
     owner_id = Column(
         Integer,
         ForeignKey("users.id"),
@@ -84,5 +105,25 @@ class Project(Base):
         back_populates="project",
         cascade="all, delete-orphan"
     )
+
+    members = relationship(
+        "ProjectMember",
+        back_populates="project",
+        cascade="all, delete-orphan"
+    )
+
+    invitations = relationship(
+        "ProjectInvitation",
+        back_populates="project",
+        cascade="all, delete-orphan"
+    )
+
+    @property
+    def verification_status(self):
+        return self.is_verified
+
+    @verification_status.setter
+    def verification_status(self, value):
+        self.is_verified = value
     
     

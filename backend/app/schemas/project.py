@@ -32,6 +32,9 @@ class ProjectResponse(BaseModel):
     verification_status: str
     verified_at: datetime | None
     verification_notes: str | None
+    github_url: str | None = None
+    repository_score: int | None = None
+    verified_skills: list | None = None
 
     class Config:
         from_attributes = True

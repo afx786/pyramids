@@ -99,6 +99,12 @@ class User(Base):
         cascade="all, delete-orphan"
     )
 
+    project_memberships = relationship(
+        "ProjectMember",
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )
+
     # -----------------------------
     # Research Owned
     # -----------------------------

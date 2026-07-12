@@ -10,3 +10,7 @@ class ProjectVerificationRequest(BaseModel):
     ]
 
     notes: str | None = None
+
+
+class ProjectRepositoryVerificationRequest(BaseModel):
+    github_url: str

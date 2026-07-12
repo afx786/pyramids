@@ -22,6 +22,9 @@ from app.services.github.tree import (
 from app.services.intelligence.skill_inference import (
     infer_skills
 )
+from app.services.intelligence.repository_score import (
+    score_repository_analysis
+)
 def calculate_repository_statistics(
     tree_paths: list[str]
 ):
@@ -114,7 +117,7 @@ def analyze_repository(
         tree_paths
     )
 
-    return {
+    result = {
 
         "repository": {
 
@@ -177,3 +180,9 @@ def analyze_repository(
         "repository_statistics": statistics,
         "verified_skills": skills,
     }
+
+    result["repository_score"] = score_repository_analysis(
+        result
+    )
+
+    return result

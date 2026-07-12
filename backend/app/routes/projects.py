@@ -1,30 +1,52 @@
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from app.deps import get_db
 from app.core.auth import get_current_user
-from app.services.project_service import serialize_project
 from app.core.admin import get_current_admin
+from app.models.connection import Connection
+from app.models.project import Project
 from app.schemas.project import (
     ProjectCreate,
-    ProjectResponse
+    ProjectResponse,
+    ProjectUpdate
 )
-
+from app.schemas.project_invitation import (
+    ProjectInvitationCreate,
+    ProjectInvitationResponse,
+    ProjectMemberResponse
+)
+from app.schemas.project_verification import (
+    ProjectVerificationRequest,
+    ProjectRepositoryVerificationRequest
+)
+from app.services.pagination import (
+    apply_created_sort,
+    paginate_query,
+    paginate_list
+)
+from app.services.project_invitation_service import (
+    invite_project_member,
+    list_project_invitations,
+    list_my_project_invitations,
+    accept_project_invitation,
+    reject_project_invitation,
+    get_project_members
+)
 from app.services.project_service import (
     create_project,
     get_project,
     get_all_projects,
+    get_projects_query,
+    serialize_project,
     update_project,
-    delete_project
+    delete_project,
+    verify_project,
+    trigger_project_verification
 )
+from app.services.rank_service import get_user_rank
 
-from app.schemas.project import (
-    ProjectUpdate
-)
-from app.schemas.project_verification import (
-    ProjectVerificationRequest
-)
-from app.services.project_service import verify_project
 router = APIRouter(
     prefix="/projects",
     tags=["Projects"]
@@ -49,16 +71,176 @@ def create_new_project(
     return serialize_project(project)
 
 
-@router.get("", response_model=list[ProjectResponse])
+@router.get("")
 def list_projects(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    limit: int | None = None,
+    offset: int = 0,
+    sort: str = "newest"
 ):
+    if limit is not None:
+        if sort in [
+            "highest_rank",
+            "most_active",
+            "most_connected",
+            "most_verified"
+        ]:
+            projects = get_all_projects(db)
+
+            if sort == "highest_rank":
+                projects = sorted(
+                    projects,
+                    key=lambda project: get_user_rank(db, project.owner_id)["points"],
+                    reverse=True
+                )
+
+            elif sort == "most_active":
+                projects = sorted(
+                    projects,
+                    key=lambda project: len(project.owner.projects) if project.owner else 0,
+                    reverse=True
+                )
+
+            elif sort == "most_connected":
+                def connection_count(project):
+                    return (
+                        db.query(Connection)
+                        .filter(
+                            or_(
+                                Connection.user_one_id == project.owner_id,
+                                Connection.user_two_id == project.owner_id
+                            )
+                        )
+                        .count()
+                    )
+
+                projects = sorted(
+                    projects,
+                    key=connection_count,
+                    reverse=True
+                )
+
+            elif sort == "most_verified":
+                projects = sorted(
+                    projects,
+                    key=lambda project: project.verification_status == "verified",
+                    reverse=True
+                )
+
+            items, meta = paginate_list(
+                projects,
+                limit,
+                offset
+            )
+
+            return {
+                "items": [
+                    serialize_project(project)
+                    for project in items
+                ],
+                "meta": {
+                    **meta,
+                    "sort": sort
+                }
+            }
+
+        query = apply_created_sort(
+            get_projects_query(db),
+            Project,
+            sort
+        )
+
+        projects, meta = paginate_query(
+            query,
+            limit,
+            offset
+        )
+
+        return {
+            "items": [
+                serialize_project(project)
+                for project in projects
+            ],
+            "meta": {
+                **meta,
+                "sort": sort
+            }
+        }
+
     projects = get_all_projects(db)
 
     return [
         serialize_project(project)
         for project in projects
     ]
+
+
+@router.get(
+    "/invitations/my",
+    response_model=list[ProjectInvitationResponse]
+)
+def my_project_invitations(
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    return list_my_project_invitations(
+        db,
+        current_user.id
+    )
+
+
+@router.post(
+    "/invitations/{invitation_id}/accept",
+    response_model=ProjectInvitationResponse
+)
+def accept_invitation(
+    invitation_id: int,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    result = accept_project_invitation(
+        db=db,
+        invitation_id=invitation_id,
+        current_user_id=current_user.id
+    )
+
+    if result == "not_found":
+        raise HTTPException(status_code=404, detail="Invitation not found")
+
+    if result == "forbidden":
+        raise HTTPException(status_code=403, detail="Not allowed")
+
+    if result == "already_processed":
+        raise HTTPException(status_code=400, detail="Invitation already processed")
+
+    return result
+
+
+@router.post(
+    "/invitations/{invitation_id}/reject",
+    response_model=ProjectInvitationResponse
+)
+def reject_invitation(
+    invitation_id: int,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    result = reject_project_invitation(
+        db=db,
+        invitation_id=invitation_id,
+        current_user_id=current_user.id
+    )
+
+    if result == "not_found":
+        raise HTTPException(status_code=404, detail="Invitation not found")
+
+    if result == "forbidden":
+        raise HTTPException(status_code=403, detail="Not allowed")
+
+    if result == "already_processed":
+        raise HTTPException(status_code=400, detail="Invitation already processed")
+
+    return result
 
 
 @router.get(
@@ -78,6 +260,83 @@ def get_single_project(
         )
 
     return serialize_project(project)
+
+
+@router.post(
+    "/{project_id}/invitations",
+    response_model=ProjectInvitationResponse
+)
+def invite_user_to_project(
+    project_id: int,
+    data: ProjectInvitationCreate,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    result = invite_project_member(
+        db=db,
+        project_id=project_id,
+        invited_user_id=data.user_id,
+        current_user_id=current_user.id
+    )
+
+    if result == "project_not_found":
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    if result == "forbidden":
+        raise HTTPException(status_code=403, detail="Only project owner can invite")
+
+    if result == "cannot_invite_self":
+        raise HTTPException(status_code=400, detail="Cannot invite yourself")
+
+    if result == "user_not_found":
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if result == "already_member":
+        raise HTTPException(status_code=400, detail="User is already a project member")
+
+    if result == "already_invited":
+        raise HTTPException(status_code=400, detail="Invitation already pending")
+
+    return result
+
+
+@router.get(
+    "/{project_id}/invitations",
+    response_model=list[ProjectInvitationResponse]
+)
+def project_invitations(
+    project_id: int,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    result = list_project_invitations(
+        db=db,
+        project_id=project_id,
+        current_user_id=current_user.id
+    )
+
+    if result == "project_not_found":
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    if result == "forbidden":
+        raise HTTPException(status_code=403, detail="Only project owner can view invitations")
+
+    return result
+
+
+@router.get(
+    "/{project_id}/members",
+    response_model=list[ProjectMemberResponse]
+)
+def project_members(
+    project_id: int,
+    db: Session = Depends(get_db)
+):
+    return get_project_members(
+        db,
+        project_id
+    )
+
 
 @router.put(
     "/{project_id}",
@@ -114,6 +373,7 @@ def edit_project(
 
     return serialize_project(project)
 
+
 @router.delete(
     "/{project_id}"
 )
@@ -143,6 +403,8 @@ def remove_project(
     return {
         "message": "Project deleted successfully"
     }
+
+
 @router.patch(
     "/{project_id}/verify",
     response_model=ProjectResponse
@@ -168,3 +430,43 @@ def verify_existing_project(
         )
 
     return serialize_project(project)
+
+
+@router.post(
+    "/{project_id}/verify"
+)
+def verify_project_repository(
+    project_id: int,
+    data: ProjectRepositoryVerificationRequest,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    result = trigger_project_verification(
+        db=db,
+        project_id=project_id,
+        current_user_id=current_user.id,
+        github_url=data.github_url
+    )
+
+    if result == "not_found":
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    if result == "forbidden":
+        raise HTTPException(status_code=403, detail="Only project owner can verify repository")
+
+    if result == "invalid_github_url":
+        raise HTTPException(status_code=400, detail="Invalid GitHub URL")
+
+    if result == "rate_limit":
+        raise HTTPException(status_code=429, detail="GitHub API rate limit exceeded")
+
+    if result == "repository_not_found":
+        raise HTTPException(status_code=404, detail="Repository not found")
+
+    if result == "github_error":
+        raise HTTPException(status_code=502, detail="GitHub API unavailable")
+
+    return {
+        "project": serialize_project(result["project"]),
+        "analysis": result["analysis"]
+    }

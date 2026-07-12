@@ -18,6 +18,11 @@ from app.services.notification_service import (
     get_notifications,
     mark_as_read
 )
+from app.models.notification import Notification
+from app.services.pagination import (
+    apply_created_sort,
+    paginate_query
+)
 
 router = APIRouter(
     prefix="/notifications",
@@ -25,14 +30,38 @@ router = APIRouter(
 )
 
 
-@router.get(
-    "",
-    response_model=list[NotificationResponse]
-)
+@router.get("")
 def list_notifications(
     db: Session = Depends(get_db),
-    current_user=Depends(get_current_user)
+    current_user=Depends(get_current_user),
+    limit: int | None = None,
+    offset: int = 0,
+    sort: str = "newest"
 ):
+    if limit is not None:
+        query = (
+            db.query(Notification)
+            .filter(Notification.user_id == current_user.id)
+        )
+        query = apply_created_sort(
+            query,
+            Notification,
+            sort
+        )
+        notifications, meta = paginate_query(
+            query,
+            limit,
+            offset
+        )
+
+        return {
+            "items": notifications,
+            "meta": {
+                **meta,
+                "sort": sort
+            }
+        }
+
     return get_notifications(
         db,
         current_user.id

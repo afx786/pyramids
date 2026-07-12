@@ -3,11 +3,14 @@ from sqlalchemy.orm import Session
 from app.models.project import Project
 from app.models.skill import Skill
 from app.models.project_skill import ProjectSkill
+from app.models.project_member import ProjectMember
 from app.models.technology import Technology
 from app.models.project_technology import ProjectTechnology
 from datetime import datetime
 
 from app.services.notification_service import create_notification
+from app.services.github_service import extract_repo
+from app.services.intelligence.orchestrator import analyze_repository
 
 def create_project(
     db: Session,
@@ -25,6 +28,14 @@ def create_project(
 
     db.add(project)
     db.flush()
+
+    db.add(
+        ProjectMember(
+            project_id=project.id,
+            user_id=owner_id,
+            role="Owner"
+        )
+    )
 
     # ----------------------------------
     # Skills
@@ -133,6 +144,10 @@ def get_project(db: Session, project_id: int):
 
 def get_all_projects(db: Session):
     return db.query(Project).all()
+
+
+def get_projects_query(db: Session):
+    return db.query(Project)
     
 def serialize_project(project):
 
@@ -161,6 +176,12 @@ def serialize_project(project):
         "verified_at": project.verified_at,
         
         "verification_notes": project.verification_notes,
+
+        "github_url": project.github_url,
+
+        "repository_score": project.repository_score,
+
+        "verified_skills": project.verified_skills,
 
         "skills": [
 
@@ -290,3 +311,72 @@ def verify_project(
     )
 
     return project
+
+
+def trigger_project_verification(
+    db: Session,
+    project_id: int,
+    current_user_id: int,
+    github_url: str
+):
+    project = (
+        db.query(Project)
+        .filter(Project.id == project_id)
+        .first()
+    )
+
+    if not project:
+        return "not_found"
+
+    if project.owner_id != current_user_id:
+        return "forbidden"
+
+    repo = extract_repo(
+        github_url
+    )
+
+    if repo is None:
+        return "invalid_github_url"
+
+    owner, repository = repo
+
+    result = analyze_repository(
+        owner,
+        repository
+    )
+
+    if result in [
+        "rate_limit",
+        "repository_not_found",
+        "github_error"
+    ]:
+        return result
+
+    score_data = result.get(
+        "repository_score",
+        {}
+    )
+
+    project.verification_status = "verified"
+    project.verified_at = datetime.utcnow()
+    project.verification_notes = (
+        f"Repository score: {score_data.get('overall_score', 0)}"
+    )
+    project.github_url = github_url
+    project.repository_score = score_data.get(
+        "overall_score",
+        0
+    )
+    project.repository_analysis = result
+    project.verified_skills = [
+        item.get("skill")
+        for item in result.get("verified_skills", [])
+    ]
+
+    db.commit()
+    db.refresh(project)
+
+    return {
+        "project": project,
+        "analysis": result
+    }

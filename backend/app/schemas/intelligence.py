@@ -58,3 +58,5 @@ class RepositoryAnalysisResponse(BaseModel):
     repository_statistics: RepositoryStatistics
 
     verified_skills: list[VerifiedSkill]
+
+    repository_score: dict | None = None

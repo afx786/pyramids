@@ -7,9 +7,12 @@ from app.routes.users import router as user_router
 
 from app.models.user import User
 from app.models.project import Project
+from app.models.project_member import ProjectMember
+from app.models.project_invitation import ProjectInvitation
 
 from app.database.base import Base
 from app.database.session import engine
+from app.database.compat import ensure_project_verification_columns
 
 from app.routes.projects import router as project_router
 from app.models.skill import Skill
@@ -41,6 +44,7 @@ from app.routes.teams import (
     router as teams_router
 )
 from app.models.hackathon import Hackathon
+from app.models.hackathon_invitation import HackathonInvitation
 
 from app.routes.hackathons import (
     router as hackathon_router
@@ -93,7 +97,11 @@ from app.models.connection import Connection
 from app.routes.connections import (
     router as connection_router
 )
+from app.routes.dashboard import (
+    router as dashboard_router
+)
 Base.metadata.create_all(bind=engine)
+ensure_project_verification_columns(engine)
 
 app = FastAPI(title="Pyramids API")
 
@@ -179,4 +187,7 @@ app.include_router(
 )
 app.include_router(
     connection_router
+)
+app.include_router(
+    dashboard_router
 )

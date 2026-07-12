@@ -193,12 +193,13 @@ def approve_hackathon(
 
     db.refresh(hackathon)
 
-    create_notification(
-        db=db,
-        user_id=hackathon.owner_id,
-        title="Hackathon Approved",
-        message=f"Your hackathon '{hackathon.title}' has been approved.",
-        notification_type="hackathon"
-    )
+    if hackathon.created_by:
+        create_notification(
+            db=db,
+            user_id=hackathon.created_by,
+            title="Hackathon Approved",
+            message=f"Your hackathon '{hackathon.title}' has been approved.",
+            notification_type="hackathon"
+        )
 
     return hackathon

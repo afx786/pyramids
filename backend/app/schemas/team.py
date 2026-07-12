@@ -34,3 +34,12 @@ class TeamDetailResponse(BaseModel):
     
 class TransferOwnershipRequest(BaseModel):
     new_owner_id: int
+
+
+class TeamMemberInviteRequest(BaseModel):
+    user_id: int
+    role: str = "Member"
+
+
+class TeamMemberRoleUpdate(BaseModel):
+    role: str

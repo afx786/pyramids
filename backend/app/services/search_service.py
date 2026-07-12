@@ -47,8 +47,8 @@ def search_users_by_skill(
             "username": user.username,
             "profile_picture": user.profile_picture,
             "headline": user.headline,
-            "branch": user.branch,
-            "domain": user.domain,
+            "branch": getattr(user, "branch", None),
+            "domain": getattr(user, "domain", None),
             "rank": rank_data["rank"],
             "points": rank_data["points"]
         })
@@ -82,8 +82,8 @@ def search_users_by_name(
             "username": user.username,
             "profile_picture": user.profile_picture,
             "headline": user.headline,
-            "branch": user.branch,
-            "domain": user.domain,
+            "branch": getattr(user, "branch", None),
+            "domain": getattr(user, "domain", None),
             "rank": rank_data["rank"],
             "points": rank_data["points"]
         })
@@ -114,8 +114,8 @@ def search_users_by_rank(
             "username": user.username,
             "profile_picture": user.profile_picture,
             "headline": user.headline,
-            "branch": user.branch,
-            "domain": user.domain,
+            "branch": getattr(user, "branch", None),
+            "domain": getattr(user, "domain", None),
             "rank": rank_data["rank"],
             "points": rank_data["points"]
         })
@@ -224,6 +224,9 @@ def search_users_by_branch(
     branch: str
 ):
 
+    if not hasattr(User, "branch"):
+        return []
+
     users = (
         db.query(User)
         .filter(
@@ -253,9 +256,9 @@ def search_users_by_branch(
 
             "headline": user.headline,
 
-            "branch": user.branch,
+            "branch": getattr(user, "branch", None),
 
-            "domain": user.domain,
+            "domain": getattr(user, "domain", None),
 
             "rank": rank_data["rank"],
 
@@ -268,6 +271,9 @@ def search_users_by_domain(
     db: Session,
     domain: str
 ):
+
+    if not hasattr(User, "domain"):
+        return []
 
     users = (
         db.query(User)
@@ -298,9 +304,9 @@ def search_users_by_domain(
 
             "headline": user.headline,
 
-            "branch": user.branch,
+            "branch": getattr(user, "branch", None),
 
-            "domain": user.domain,
+            "domain": getattr(user, "domain", None),
 
             "rank": rank_data["rank"],
 

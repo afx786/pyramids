@@ -25,6 +25,10 @@ from app.services.message_service import (
     delete_message,
     delete_conversation
 )
+from app.models.message import Message
+from app.services.pagination import (
+    paginate_query
+)
 
 router = APIRouter(
     prefix="/messages",
@@ -47,12 +51,13 @@ def start_conversation(
         other_user_id=data.user_id
     )
 
+    if result == "not_connected":
+        raise HTTPException(
+            status_code=403,
+            detail="You can only message connected users."
+        )
+
     if result == "user_not_found":
-        if result == "not_connected":
-            raise HTTPException(
-                status_code=403,
-                detail="You can only message connected users."
-            )
         raise HTTPException(
             status_code=404,
             detail="User not found"
@@ -87,13 +92,15 @@ def create_message(
 
 
 @router.get(
-    "/conversations/{conversation_id}",
-    response_model=list[MessageResponse]
+    "/conversations/{conversation_id}"
 )
 def conversation_messages(
     conversation_id: int,
     db: Session = Depends(get_db),
-    current_user=Depends(get_current_user)
+    current_user=Depends(get_current_user),
+    limit: int | None = None,
+    offset: int = 0,
+    sort: str = "oldest"
 ):
     result = get_messages(
         db=db,
@@ -107,7 +114,36 @@ def conversation_messages(
             detail="Not part of conversation"
         )
 
-    return result
+    if limit is None:
+        return result
+
+    ordered = result
+
+    if sort == "newest":
+        ordered = sorted(
+            ordered,
+            key=lambda message: message.created_at,
+            reverse=True
+        )
+
+    else:
+        ordered = sorted(
+            ordered,
+            key=lambda message: message.created_at
+        )
+
+    total = len(ordered)
+    items = ordered[offset:offset + limit]
+
+    return {
+        "items": items,
+        "meta": {
+            "total": total,
+            "limit": limit,
+            "offset": offset,
+            "sort": sort
+        }
+    }
 
 
 @router.get(

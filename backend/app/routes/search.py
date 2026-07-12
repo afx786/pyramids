@@ -13,6 +13,7 @@ from app.services.search_service import (
     search_users_by_rank,
     unified_search
 )
+from app.services.pagination import paginate_list
 from app.services.search_service import (
 
     search_users_by_skill,
@@ -35,89 +36,157 @@ router = APIRouter(
 )
 
 
-@router.get(
-    "/users",
-    response_model=list[UserSearchResponse]
-)
+@router.get("/users")
 def search_users(
     skill: str,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    limit: int | None = None,
+    offset: int = 0,
+    sort: str = "newest"
 ):
-    return search_users_by_skill(
+    results = search_users_by_skill(
         db,
         skill
     )
 
-@router.get(
-    "/users/by-name",
-    response_model=list[UserSearchResponse]
-)
+    if limit is None:
+        return results
+
+    items, meta = paginate_list(results, limit, offset)
+    return {"items": items, "meta": {**meta, "sort": sort}}
+
+
+@router.get("/users/by-name")
 def search_by_name(
     name: str,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    limit: int | None = None,
+    offset: int = 0,
+    sort: str = "newest"
 ):
-    return search_users_by_name(
+    results = search_users_by_name(
         db,
         name
     )
 
-@router.get(
-    "/users/by-rank",
-    response_model=list[UserSearchResponse]
-)
+    if sort == "highest_rank":
+        results = sorted(results, key=lambda item: item["points"], reverse=True)
+
+    if limit is None:
+        return results
+
+    items, meta = paginate_list(results, limit, offset)
+    return {"items": items, "meta": {**meta, "sort": sort}}
+
+
+@router.get("/users/by-rank")
 def search_by_rank(
     rank: str,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    limit: int | None = None,
+    offset: int = 0,
+    sort: str = "newest"
 ):
-    return search_users_by_rank(
+    results = search_users_by_rank(
         db,
         rank
     )
 
+    if sort == "highest_rank":
+        results = sorted(results, key=lambda item: item["points"], reverse=True)
+
+    if limit is None:
+        return results
+
+    items, meta = paginate_list(results, limit, offset)
+    return {"items": items, "meta": {**meta, "sort": sort}}
+
 @router.get("")
 def global_search(
     q: str,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    limit: int | None = None,
+    offset: int = 0,
+    sort: str = "newest"
 ):
-    return unified_search(
+    results = unified_search(
         db=db,
         query=q
     )
-@router.get(
-    "/users/by-branch",
-    response_model=list[UserSearchResponse]
-)
+
+    if limit is None:
+        return results
+
+    paginated = {}
+
+    for key, value in results.items():
+        items, meta = paginate_list(value, limit, offset)
+        paginated[key] = {
+            "items": items,
+            "meta": {
+                **meta,
+                "sort": sort
+            }
+        }
+
+    return paginated
+
+
+@router.get("/users/by-branch")
 def search_by_branch(
 
     branch: str,
 
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+
+    limit: int | None = None,
+
+    offset: int = 0,
+
+    sort: str = "newest"
 
 ):
 
-    return search_users_by_branch(
+    results = search_users_by_branch(
 
         db,
 
         branch
 
     )
-@router.get(
-    "/users/by-domain",
-    response_model=list[UserSearchResponse]
-)
+
+    if limit is None:
+        return results
+
+    items, meta = paginate_list(results, limit, offset)
+    return {"items": items, "meta": {**meta, "sort": sort}}
+
+
+@router.get("/users/by-domain")
 def search_by_domain(
 
     domain: str,
 
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+
+    limit: int | None = None,
+
+    offset: int = 0,
+
+    sort: str = "newest"
 
 ):
 
-    return search_users_by_domain(
+    results = search_users_by_domain(
 
         db,
 
         domain
 
     )
+
+    if limit is None:
+        return results
+
+    items, meta = paginate_list(results, limit, offset)
+    return {"items": items, "meta": {**meta, "sort": sort}}

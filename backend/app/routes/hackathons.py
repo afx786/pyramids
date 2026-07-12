@@ -18,6 +18,10 @@ from app.schemas.hackathon import (
 from app.schemas.hackathon_registration import (
     TeamRegistrationRequest
 )
+from app.schemas.hackathon_invitation import (
+    HackathonInvitationCreate,
+    HackathonInvitationResponse
+)
 
 from app.schemas.hackathon_team import (
     HackathonTeamResponse
@@ -32,6 +36,12 @@ from app.services.hackathon_service import (
     submit_hackathon,
     get_pending_hackathons,
     approve_hackathon
+)
+from app.services.hackathon_invitation_service import (
+    invite_hackathon_member,
+    list_my_hackathon_invitations,
+    accept_hackathon_invitation,
+    reject_hackathon_invitation
 )
 
 router = APIRouter(
@@ -66,6 +76,74 @@ def list_hackathons(
     db: Session = Depends(get_db)
 ):
     return get_all_hackathons(db)
+
+
+@router.get(
+    "/invitations/my",
+    response_model=list[HackathonInvitationResponse]
+)
+def my_hackathon_invitations(
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    return list_my_hackathon_invitations(
+        db,
+        current_user.id
+    )
+
+
+@router.post(
+    "/invitations/{invitation_id}/accept",
+    response_model=HackathonInvitationResponse
+)
+def accept_hackathon_invite(
+    invitation_id: int,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    result = accept_hackathon_invitation(
+        db=db,
+        invitation_id=invitation_id,
+        current_user_id=current_user.id
+    )
+
+    if result == "not_found":
+        raise HTTPException(status_code=404, detail="Invitation not found")
+
+    if result == "forbidden":
+        raise HTTPException(status_code=403, detail="Not allowed")
+
+    if result == "already_processed":
+        raise HTTPException(status_code=400, detail="Invitation already processed")
+
+    return result
+
+
+@router.post(
+    "/invitations/{invitation_id}/reject",
+    response_model=HackathonInvitationResponse
+)
+def reject_hackathon_invite(
+    invitation_id: int,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    result = reject_hackathon_invitation(
+        db=db,
+        invitation_id=invitation_id,
+        current_user_id=current_user.id
+    )
+
+    if result == "not_found":
+        raise HTTPException(status_code=404, detail="Invitation not found")
+
+    if result == "forbidden":
+        raise HTTPException(status_code=403, detail="Not allowed")
+
+    if result == "already_processed":
+        raise HTTPException(status_code=400, detail="Invitation already processed")
+
+    return result
 
 
 
@@ -157,6 +235,45 @@ def register_team(
     return {
         "message": "Team registered successfully"
     }
+
+
+@router.post(
+    "/{hackathon_id}/invitations",
+    response_model=HackathonInvitationResponse
+)
+def invite_to_hackathon_team(
+    hackathon_id: int,
+    data: HackathonInvitationCreate,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    result = invite_hackathon_member(
+        db=db,
+        hackathon_id=hackathon_id,
+        team_id=data.team_id,
+        invited_user_id=data.user_id,
+        current_user_id=current_user.id
+    )
+
+    if result == "hackathon_not_found":
+        raise HTTPException(status_code=404, detail="Hackathon not found")
+
+    if result == "team_not_found":
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    if result == "forbidden":
+        raise HTTPException(status_code=403, detail="Only team owner/admin can invite")
+
+    if result == "user_not_found":
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if result == "already_member":
+        raise HTTPException(status_code=400, detail="User is already a team member")
+
+    if result == "already_invited":
+        raise HTTPException(status_code=400, detail="Invitation already pending")
+
+    return result
 
 
 
