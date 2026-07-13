@@ -1,31 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
   color-scheme: light;
-  --color-app: 246 248 251;
-  --color-sidebar: 13 24 39;
-  --color-surface: 238 243 248;
+  --color-app: 247 247 245;
+  --color-sidebar: 5 5 5;
+  --color-surface: 255 255 255;
   --color-elevated: 255 255 255;
-  --color-text-primary: 17 24 39;
-  --color-text-secondary: 86 101 119;
-  --color-border-subtle: 213 222 232;
-  --color-accent: 20 146 146;
-  --color-accent-soft: 216 242 238;
+  --color-text-primary: 5 5 5;
+  --color-text-secondary: 86 86 86;
+  --color-border-subtle: 217 217 214;
+  --color-accent: 5 5 5;
+  --color-accent-soft: 235 235 232;
 }
 
 .dark {
   color-scheme: dark;
   --color-app: 5 5 5;
-  --color-sidebar: 14 14 14;
-  --color-surface: 22 22 22;
-  --color-elevated: 30 30 30;
-  --color-text-primary: 248 248 248;
-  --color-text-secondary: 178 178 178;
-  --color-border-subtle: 48 48 48;
-  --color-accent: 232 232 232;
-  --color-accent-soft: 36 36 36;
+  --color-sidebar: 5 5 5;
+  --color-surface: 23 24 27;
+  --color-elevated: 23 24 27;
+  --color-text-primary: 247 247 245;
+  --color-text-secondary: 138 138 138;
+  --color-border-subtle: 41 41 41;
+  --color-accent: 247 247 245;
+  --color-accent-soft: 41 41 41;
 }
 
 * {
@@ -36,7 +38,8 @@ body {
   margin: 0;
   background: rgb(var(--color-app));
   color: rgb(var(--color-text-primary));
-  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-family: Manrope, Inter, ui-sans-serif, system-ui, sans-serif;
+  text-rendering: geometricPrecision;
 }
 
 button,
@@ -44,4 +47,21 @@ input,
 textarea,
 select {
   font: inherit;
+}
+
+::selection {
+  background: rgb(var(--color-text-primary));
+  color: rgb(var(--color-app));
+}
+
+.font-editorial {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.045em;
+}
+
+.font-mono-label {
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }

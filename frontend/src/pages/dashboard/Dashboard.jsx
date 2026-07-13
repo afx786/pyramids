@@ -50,20 +50,17 @@ function Dashboard() {
 
   return (
     <div className="mx-auto max-w-7xl pb-16 lg:pb-0">
-      <section className="grid gap-6 pt-4 lg:grid-cols-[minmax(0,1fr)_340px] lg:pt-8">
-        <div className="rounded-lg border border-subtle bg-elevated p-6 shadow-sm sm:p-8">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-accent-soft px-3 py-1 text-xs font-black uppercase tracking-[0.16em] text-accent">
-              {rankData?.rank ?? 'Explorer'}
-            </span>
-            <span className="text-sm font-semibold text-secondary">{rankData?.points ?? 0} points</span>
+      <section className="grid gap-5 pt-4 lg:grid-cols-[minmax(0,1fr)_340px] lg:pt-6">
+        <Card className="bg-elevated p-6 sm:p-8">
+          <p className="font-mono-label text-[11px] text-secondary">Dashboard / builder workspace</p>
+          <div className="mt-5 max-w-3xl">
+            <h1 className="text-3xl font-semibold leading-tight tracking-[-0.025em] text-primary sm:text-4xl">
+              Welcome back, {firstName}. Keep building proof that compounds.
+            </h1>
+            <p className="mt-4 max-w-2xl text-sm font-medium leading-6 text-secondary sm:text-base">
+              Track verified projects, find collaborators, and move your Pyramids rank forward with real repository evidence.
+            </p>
           </div>
-          <h1 className="mt-5 max-w-3xl text-3xl font-black leading-tight text-primary sm:text-5xl">
-            Welcome back, {firstName}. Build the proof behind your skills.
-          </h1>
-          <p className="mt-4 max-w-2xl text-base font-medium leading-7 text-secondary">
-            Add projects, verify GitHub repositories, find collaborators, and turn real work into rank progress.
-          </p>
           <div className="mt-7 flex flex-wrap gap-3">
             <Link to="/projects/new">
               <Button>
@@ -84,46 +81,46 @@ function Dashboard() {
               </Button>
             </Link>
           </div>
-        </div>
+        </Card>
 
         <Card className="bg-sidebar p-6 text-white">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-white/55">Rank Progress</p>
-              <h2 className="mt-3 text-3xl font-black text-white">{rankData?.rank ?? 'Explorer'}</h2>
+              <p className="font-mono-label text-[11px] text-white/50">Rank progress</p>
+              <h2 className="mt-3 text-2xl font-semibold text-white">{rankData?.rank ?? 'Explorer'}</h2>
             </div>
-            <ShieldCheck className="h-8 w-8 text-accent" strokeWidth={1.7} />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/5">
+              <ShieldCheck className="h-5 w-5 text-white/80" strokeWidth={1.8} />
+            </div>
           </div>
-          <p className="mt-4 text-sm font-medium leading-6 text-white/72">
+          <p className="mt-4 text-sm font-medium leading-6 text-white/62">
             {remaining > 0 ? `${remaining} points until ${nextRank}.` : 'You have reached the highest rank.'}
           </p>
-          <div className="mt-6 h-2 overflow-hidden rounded-full bg-white/12">
-            <div className="h-full rounded-full bg-accent" style={{ width: `${progress}%` }} />
+          <div className="mt-6 h-2 overflow-hidden rounded-full bg-white/10">
+            <div className="h-full rounded-full bg-white" style={{ width: `${progress}%` }} />
           </div>
-          <div className="mt-4 flex items-center justify-between text-sm font-bold text-white">
-            <span>{progress}%</span>
-            <span>{verifiedSkillCount} verified skills</span>
+          <div className="mt-4 flex items-center justify-between text-xs font-semibold text-white/70">
+            <span>{progress}% complete</span>
+            <span>{verifiedSkillCount} skills</span>
           </div>
         </Card>
       </section>
 
-      <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card className="bg-elevated p-5">
-          <p className="text-sm font-bold text-secondary">Projects</p>
-          <strong className="mt-2 block text-3xl font-black text-primary">{rankData?.projects_count ?? projects.length}</strong>
-        </Card>
-        <Card className="bg-elevated p-5">
-          <p className="text-sm font-bold text-secondary">Verified skills</p>
-          <strong className="mt-2 block text-3xl font-black text-primary">{verifiedSkillCount}</strong>
-        </Card>
-        <Card className="bg-elevated p-5">
-          <p className="text-sm font-bold text-secondary">Connections</p>
-          <strong className="mt-2 block text-3xl font-black text-primary">{connections.length}</strong>
-        </Card>
-        <Card className="bg-elevated p-5">
-          <p className="text-sm font-bold text-secondary">Next action</p>
-          <Link className="mt-3 inline-flex items-center gap-2 text-sm font-black text-accent" to="/projects/new">
-            Verify a repo
+      <section className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {[
+          ['Projects', rankData?.projects_count ?? projects.length],
+          ['Verified skills', verifiedSkillCount],
+          ['Connections', connections.length],
+        ].map(([label, value]) => (
+          <Card key={label} className="p-5">
+            <p className="text-sm font-medium text-secondary">{label}</p>
+            <strong className="mt-3 block text-3xl font-semibold tracking-[-0.025em] text-primary">{value}</strong>
+          </Card>
+        ))}
+        <Card className="p-5">
+          <p className="text-sm font-medium text-secondary">Next action</p>
+          <Link className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary" to="/projects/new">
+            Verify a repository
             <ArrowUpRight className="h-4 w-4" />
           </Link>
         </Card>
@@ -133,22 +130,25 @@ function Dashboard() {
         <div className="min-w-0">
           <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
             <div>
-              <h2 className="text-xl font-black text-primary">Project Feed</h2>
-              <p className="mt-1 text-sm font-medium text-secondary">Recent builds from students across your campus network.</p>
+              <p className="font-mono-label text-[11px] text-secondary">Project feed</p>
+              <h2 className="mt-2 text-xl font-semibold tracking-[-0.02em] text-primary">Recent proof of work</h2>
             </div>
-            <Link className="text-sm font-black text-accent" to="/domains">
+            <Link className="inline-flex items-center gap-2 text-sm font-semibold text-primary" to="/domains">
               Browse domains
+              <ArrowUpRight className="h-4 w-4" />
             </Link>
           </div>
           <div className="space-y-4">
             {visibleProjects.length === 0 ? (
-              <Card className="bg-elevated p-8 text-center">
-                <GitBranch className="mx-auto h-10 w-10 text-accent" strokeWidth={1.6} />
-                <h3 className="mt-4 text-lg font-black text-primary">No projects yet</h3>
-                <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-secondary">
+              <Card className="p-8 text-center">
+                <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-xl border border-subtle bg-accent-soft">
+                  <GitBranch className="h-5 w-5 text-primary" strokeWidth={1.8} />
+                </div>
+                <h3 className="mt-5 text-lg font-semibold text-primary">No projects yet</h3>
+                <p className="mx-auto mt-2 max-w-md text-sm font-medium leading-6 text-secondary">
                   Add your first build and connect it to a public GitHub repository so Pyramids can verify your skills.
                 </p>
-                <Link className="mt-5 inline-flex" to="/projects/new">
+                <Link className="mt-6 inline-flex" to="/projects/new">
                   <Button>
                     <Plus className="h-4 w-4" />
                     Add Project
@@ -177,38 +177,34 @@ function Dashboard() {
         </div>
 
         <aside className="space-y-4">
-          <Card className="bg-elevated p-6">
-            <h2 className="text-lg font-black text-primary">Quick Build Path</h2>
-            <div className="mt-5 space-y-4">
+          <Card className="p-6">
+            <p className="font-mono-label text-[11px] text-secondary">How Pyramids works</p>
+            <div className="mt-5 space-y-5">
               {[
-                ['1', 'Create a project profile', 'Explain the problem, stack, and what you built.'],
-                ['2', 'Attach GitHub evidence', 'Let repository intelligence read languages, files, tests, and CI.'],
-                ['3', 'Invite collaborators', 'Bring teammates into the project and grow your network.'],
+                ['01', 'Create a project profile', 'Explain the problem, stack, and what you built.'],
+                ['02', 'Attach GitHub evidence', 'Repository intelligence reads languages, files, tests, and CI.'],
+                ['03', 'Invite collaborators', 'Bring teammates into projects and grow your network.'],
               ].map(([step, title, description]) => (
-                <div key={step} className="flex gap-3">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-accent-soft text-xs font-black text-accent">
-                    {step}
-                  </span>
-                  <div>
-                    <p className="text-sm font-black text-primary">{title}</p>
-                    <p className="mt-1 text-sm leading-6 text-secondary">{description}</p>
-                  </div>
+                <div key={step} className="border-t border-subtle pt-4 first:border-t-0 first:pt-0">
+                  <p className="font-mono-label text-[11px] text-secondary">{step}</p>
+                  <p className="mt-2 text-sm font-semibold text-primary">{title}</p>
+                  <p className="mt-1 text-sm leading-6 text-secondary">{description}</p>
                 </div>
               ))}
             </div>
           </Card>
 
           {connections.length > 0 && (
-            <Card className="bg-elevated p-6">
-              <h2 className="text-lg font-black text-primary">Recent Connections</h2>
-              <div className="mt-4 space-y-3">
+            <Card className="p-6">
+              <p className="font-mono-label text-[11px] text-secondary">Recent connections</p>
+              <div className="mt-5 space-y-4">
                 {connections.slice(0, 4).map((conn) => (
-                  <div key={conn.id} className="flex items-center justify-between gap-3">
+                  <div key={conn.id} className="flex items-center justify-between gap-3 border-t border-subtle pt-4 first:border-t-0 first:pt-0">
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-black text-primary">{conn.user.name}</p>
-                      <p className="truncate text-xs font-semibold text-secondary">{conn.user.headline || 'Builder'}</p>
+                      <p className="truncate text-sm font-semibold text-primary">{conn.user.name}</p>
+                      <p className="truncate text-xs font-medium text-secondary">{conn.user.headline || 'Builder'}</p>
                     </div>
-                    <Link className="shrink-0 text-xs font-black text-accent" to="/messages">
+                    <Link className="shrink-0 text-xs font-semibold text-primary" to="/messages">
                       Message
                     </Link>
                   </div>

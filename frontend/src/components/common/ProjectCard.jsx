@@ -6,10 +6,10 @@ function ProjectCard({ project }) {
   const stack = project.stack ?? [];
 
   return (
-    <Card className="p-5 transition hover:-translate-y-0.5 hover:border-accent/30 hover:shadow-sm">
+    <Card className="p-5 transition duration-200 hover:-translate-y-0.5 hover:border-primary/15 hover:shadow-md">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
-          <h3 className="text-lg font-bold text-primary">{project.title}</h3>
+          <h3 className="text-base font-semibold text-primary">{project.title}</h3>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-secondary">{project.description}</p>
         </div>
         <div className="flex shrink-0 items-center gap-3 sm:text-right">

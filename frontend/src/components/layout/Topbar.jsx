@@ -17,20 +17,20 @@ function Topbar() {
   const name = user?.name ?? '';
 
   return (
-    <header className="sticky top-0 z-20 flex h-20 items-center justify-between bg-app/92 px-4 backdrop-blur sm:px-6 lg:px-10 xl:px-12">
+    <header className="sticky top-0 z-20 flex h-20 items-center justify-between border-b border-subtle bg-app/92 px-4 backdrop-blur sm:px-6 lg:px-10 xl:px-12">
       <div>
-        <p className="text-xs font-black uppercase tracking-[0.18em] text-secondary">Pyramids</p>
-        <p className="mt-1 hidden text-sm font-semibold text-primary sm:block">Projects, teams, skills, and rank in one workspace.</p>
+        <p className="font-mono-label text-xs text-secondary">Pyramids</p>
+        <p className="mt-1 hidden text-sm font-semibold text-primary sm:block">Verified projects, teams, skills, and rank.</p>
       </div>
       <div className="flex items-center gap-2 sm:gap-3">
-        <button className="flex h-10 w-10 items-center justify-center rounded-md text-primary transition hover:bg-surface" aria-label="Search">
+        <button className="flex h-10 w-10 items-center justify-center rounded-none border border-transparent text-primary transition hover:border-subtle hover:bg-surface" aria-label="Search">
           <Search className="h-5 w-5 text-accent" strokeWidth={1.8} />
         </button>
-        <button className="flex h-10 w-10 items-center justify-center rounded-md text-primary transition hover:bg-surface" aria-label="Notifications">
+        <button className="flex h-10 w-10 items-center justify-center rounded-none border border-transparent text-primary transition hover:border-subtle hover:bg-surface" aria-label="Notifications">
           <Bell className="h-5 w-5" strokeWidth={1.8} />
         </button>
         <button
-          className="flex h-10 w-10 items-center justify-center rounded-md text-primary transition hover:bg-surface"
+          className="flex h-10 w-10 items-center justify-center rounded-none border border-transparent text-primary transition hover:border-subtle hover:bg-surface"
           aria-label="Toggle theme"
           onClick={() => setTheme(isDark ? 'light' : 'dark')}
         >

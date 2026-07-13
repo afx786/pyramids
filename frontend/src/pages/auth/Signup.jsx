@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import FieldError from '../../components/common/FieldError.jsx';
 import Button from '../../components/ui/Button.jsx';
-import Card from '../../components/ui/Card.jsx';
 import Input from '../../components/ui/Input.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 
@@ -44,65 +43,92 @@ function Signup() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-app px-6 text-primary">
-      <Card className="w-full max-w-lg p-8">
-        <p className="text-xs font-black uppercase tracking-[0.32em] text-secondary">Pyramids</p>
-        <h1 className="mt-4 text-4xl font-black text-primary">Create builder profile</h1>
-        <p className="mt-3 text-sm font-medium leading-6 text-secondary">
-          Join the campus builder network to showcase projects and find teammates.
-        </p>
+    <main className="grid min-h-screen bg-app text-primary lg:grid-cols-[0.92fr_1.08fr]">
+      <section className="flex items-center justify-center px-6 py-12 sm:px-10">
+        <div className="w-full max-w-xl">
+          <p className="font-mono-label text-xs text-secondary">Join Pyramids</p>
+          <h1 className="font-editorial mt-4 text-6xl leading-none text-primary sm:text-7xl">Create builder profile.</h1>
+          <p className="mt-4 max-w-lg text-sm font-semibold leading-6 text-secondary">
+            Build a verified profile for your projects, technical skills, teammates, and campus collaborations.
+          </p>
 
-        {apiError && (
-          <p className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-600">{apiError}</p>
-        )}
+          {apiError && (
+            <p className="mt-5 border border-red-300 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">{apiError}</p>
+          )}
 
-        <form className="mt-8 grid grid-cols-2 gap-5" onSubmit={handleSubmit}>
-          <label className="space-y-2">
-            <span className="text-sm font-black">Name</span>
-            <Input placeholder="Aarav Mehta" value={form.name} onChange={(event) => updateField('name', event.target.value)} />
-            <FieldError>{errors.name}</FieldError>
-          </label>
-          <label className="space-y-2">
-            <span className="text-sm font-black">Program</span>
-            <Input
-              placeholder="BTech CSE"
-              value={form.program}
-              onChange={(event) => updateField('program', event.target.value)}
-            />
-            <FieldError>{errors.program}</FieldError>
-          </label>
-          <label className="col-span-2 space-y-2">
-            <span className="text-sm font-black">Email</span>
-            <Input
-              type="email"
-              placeholder="student@campus.edu"
-              value={form.email}
-              onChange={(event) => updateField('email', event.target.value)}
-            />
-            <FieldError>{errors.email}</FieldError>
-          </label>
-          <label className="col-span-2 space-y-2">
-            <span className="text-sm font-black">Password</span>
-            <Input
-              type="password"
-              placeholder="Password"
-              value={form.password}
-              onChange={(event) => updateField('password', event.target.value)}
-            />
-            <FieldError>{errors.password}</FieldError>
-          </label>
-          <Button className="col-span-2 w-full" type="submit" disabled={loading}>
-            {loading ? 'Creating account...' : 'Create Account'}
-          </Button>
-        </form>
+          <form className="mt-8 grid gap-5 sm:grid-cols-2" onSubmit={handleSubmit}>
+            <label className="space-y-2">
+              <span className="font-mono-label text-xs text-secondary">Name</span>
+              <Input placeholder="Aarav Mehta" value={form.name} onChange={(event) => updateField('name', event.target.value)} />
+              <FieldError>{errors.name}</FieldError>
+            </label>
+            <label className="space-y-2">
+              <span className="font-mono-label text-xs text-secondary">Program</span>
+              <Input
+                placeholder="BTech CSE"
+                value={form.program}
+                onChange={(event) => updateField('program', event.target.value)}
+              />
+              <FieldError>{errors.program}</FieldError>
+            </label>
+            <label className="space-y-2 sm:col-span-2">
+              <span className="font-mono-label text-xs text-secondary">Email</span>
+              <Input
+                type="email"
+                placeholder="student@campus.edu"
+                value={form.email}
+                onChange={(event) => updateField('email', event.target.value)}
+              />
+              <FieldError>{errors.email}</FieldError>
+            </label>
+            <label className="space-y-2 sm:col-span-2">
+              <span className="font-mono-label text-xs text-secondary">Password</span>
+              <Input
+                type="password"
+                placeholder="Password"
+                value={form.password}
+                onChange={(event) => updateField('password', event.target.value)}
+              />
+              <FieldError>{errors.password}</FieldError>
+            </label>
+            <Button className="w-full sm:col-span-2" type="submit" disabled={loading}>
+              {loading ? 'Creating account...' : 'Create Account'}
+            </Button>
+          </form>
 
-        <p className="mt-6 text-center text-sm font-medium text-secondary">
-          Already have an account?{' '}
-          <Link className="font-black text-primary" to="/login">
-            Log in
-          </Link>
-        </p>
-      </Card>
+          <p className="mt-7 text-center text-sm font-semibold text-secondary">
+            Already have an account?{' '}
+            <Link className="font-extrabold text-primary underline decoration-primary/30 underline-offset-4" to="/login">
+              Log in
+            </Link>
+          </p>
+        </div>
+      </section>
+
+      <section className="relative hidden overflow-hidden bg-sidebar px-12 py-10 text-white lg:block">
+        <div className="relative z-10 flex h-full flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <Link className="text-base font-extrabold text-white" to="/login">Pyramids</Link>
+            <span className="font-mono-label text-xs text-white/45">Explorer to Pyramidion</span>
+          </div>
+          <div>
+            <p className="font-mono-label text-xs text-white/45">Repository intelligence / verified skills</p>
+            <h2 className="font-editorial mt-6 text-[112px] leading-[0.84] text-white">
+              Turn real work into visible rank.
+            </h2>
+          </div>
+          <div className="grid grid-cols-2 gap-px bg-white/15">
+            {['Analyze GitHub repositories', 'Showcase projects', 'Find builders', 'Form teams'].map((item, index) => (
+              <div className="bg-[#050505] p-5" key={item}>
+                <p className="font-mono-label text-[11px] text-white/38">0{index + 1}</p>
+                <p className="mt-4 text-sm font-extrabold text-white">{item}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="pointer-events-none absolute left-[-20%] top-[20%] h-[560px] w-[560px] rounded-full border border-white/10" />
+        <div className="pointer-events-none absolute bottom-[-25%] left-[22%] h-[440px] w-[440px] rounded-full bg-white/10 blur-3xl" />
+      </section>
     </main>
   );
 }
