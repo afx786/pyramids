@@ -1,17 +1,30 @@
-import { LogOut, Triangle } from 'lucide-react';
+import {
+  Bell,
+  LayoutDashboard,
+  LogOut,
+  MessageSquare,
+  Network,
+  Pyramid,
+  Send,
+  Shapes,
+  Sparkles,
+  Triangle,
+  UserRound,
+  UsersRound,
+} from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 
 const navigation = [
-  { label: 'Dashboard', to: '/dashboard' },
-  { label: 'Domains', to: '/domains' },
-  { label: 'Teams', to: '/teams' },
-  { label: 'Messages', to: '/messages' },
-  { label: 'Connections', to: '/connections' },
-  { label: 'Requests', to: '/requests' },
-  { label: "What's New?", to: '/updates' },
-  { label: 'Pyramidion', to: '/pyramidion' },
-  { label: 'Profile', to: '/profile' },
+  { label: 'Dashboard', to: '/dashboard', icon: LayoutDashboard },
+  { label: 'Domains', to: '/domains', icon: Shapes },
+  { label: 'Teams', to: '/teams', icon: UsersRound },
+  { label: 'Messages', to: '/messages', icon: MessageSquare },
+  { label: 'Connections', to: '/connections', icon: Network },
+  { label: 'Requests', to: '/requests', icon: Send },
+  { label: 'Updates', to: '/updates', icon: Bell },
+  { label: 'Pyramidion', to: '/pyramidion', icon: Pyramid },
+  { label: 'Profile', to: '/profile', icon: UserRound },
 ];
 
 function Sidebar() {
@@ -24,38 +37,47 @@ function Sidebar() {
   }
 
   return (
-    <aside className="fixed inset-y-0 left-0 flex w-44 flex-col bg-sidebar px-4 py-7">
-      <div className="flex flex-col items-center">
-        <div className="flex h-16 w-16 items-center justify-center">
-          <Triangle className="h-14 w-14 text-accent" strokeWidth={1.1} />
+    <aside className="fixed inset-x-0 bottom-0 z-30 border-t border-white/10 bg-sidebar px-2 py-2 text-white lg:inset-y-0 lg:left-0 lg:right-auto lg:flex lg:w-64 lg:flex-col lg:border-r lg:border-t-0 lg:px-4 lg:py-6">
+      <div className="hidden items-center gap-3 px-2 lg:flex">
+        <div className="flex h-11 w-11 items-center justify-center rounded-md bg-white/10">
+          <Triangle className="h-8 w-8 text-accent" strokeWidth={1.4} />
         </div>
-        <p className="mt-2 text-[10px] font-black uppercase tracking-[0.42em] text-primary">Pyramids</p>
+        <div>
+          <p className="text-base font-black tracking-normal text-white">Pyramids</p>
+          <p className="text-xs font-semibold text-white/55">Builder network</p>
+        </div>
       </div>
 
-      <nav className="mt-10 flex flex-1 flex-col gap-2">
-        {navigation.map((item) => (
+      <nav className="flex gap-1 overflow-x-auto lg:mt-8 lg:flex-1 lg:flex-col lg:overflow-visible lg:gap-1.5">
+        {navigation.map((item) => {
+          const Icon = item.icon;
+          return (
           <NavLink
             key={item.label}
             to={item.to}
             className={({ isActive }) =>
-              `flex h-9 items-center justify-center rounded-md px-2 text-center text-base font-black transition ${
-                isActive ? 'bg-surface/70 text-primary' : 'text-primary hover:bg-surface/50'
+              `flex h-12 min-w-12 items-center justify-center gap-3 rounded-md px-2 text-xs font-bold transition lg:h-10 lg:min-w-0 lg:justify-start lg:px-3 lg:text-sm ${
+                isActive ? 'bg-white text-sidebar shadow-sm' : 'text-white/72 hover:bg-white/10 hover:text-white'
               }`
             }
+            title={item.label}
           >
-            {item.label}
+            <Icon className="h-4 w-4 shrink-0" strokeWidth={1.9} aria-hidden="true" />
+            <span className="hidden lg:inline">{item.label}</span>
           </NavLink>
-        ))}
+          );
+        })}
       </nav>
 
       <button
-        className="flex h-9 items-center justify-center gap-2 rounded-md px-2 text-sm font-black text-primary transition hover:bg-surface/50"
+        className="mt-3 hidden h-10 items-center justify-center gap-2 rounded-md px-3 text-sm font-bold text-white/72 transition hover:bg-white/10 hover:text-white lg:flex"
         type="button"
         onClick={handleLogout}
       >
         <LogOut className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
         Logout
       </button>
+      <Sparkles className="pointer-events-none absolute bottom-5 right-5 hidden h-5 w-5 text-accent/70 lg:block" aria-hidden="true" />
     </aside>
   );
 }

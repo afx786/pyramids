@@ -17,20 +17,24 @@ function Topbar() {
   const name = user?.name ?? '';
 
   return (
-    <header className="sticky top-0 z-20 flex h-24 items-center justify-end bg-app/95 px-12 backdrop-blur">
-      <div className="flex items-center gap-5">
-        <button className="flex h-11 w-11 items-center justify-center rounded-full text-primary transition hover:bg-surface" aria-label="Search">
-          <Search className="h-6 w-6 text-accent" strokeWidth={1.6} />
+    <header className="sticky top-0 z-20 flex h-20 items-center justify-between bg-app/92 px-4 backdrop-blur sm:px-6 lg:px-10 xl:px-12">
+      <div>
+        <p className="text-xs font-black uppercase tracking-[0.18em] text-secondary">Pyramids</p>
+        <p className="mt-1 hidden text-sm font-semibold text-primary sm:block">Projects, teams, skills, and rank in one workspace.</p>
+      </div>
+      <div className="flex items-center gap-2 sm:gap-3">
+        <button className="flex h-10 w-10 items-center justify-center rounded-md text-primary transition hover:bg-surface" aria-label="Search">
+          <Search className="h-5 w-5 text-accent" strokeWidth={1.8} />
         </button>
-        <button className="flex h-11 w-11 items-center justify-center rounded-full text-primary transition hover:bg-surface" aria-label="Notifications">
-          <Bell className="h-6 w-6" strokeWidth={1.6} />
+        <button className="flex h-10 w-10 items-center justify-center rounded-md text-primary transition hover:bg-surface" aria-label="Notifications">
+          <Bell className="h-5 w-5" strokeWidth={1.8} />
         </button>
         <button
-          className="flex h-11 w-11 items-center justify-center rounded-full text-primary transition hover:bg-surface"
+          className="flex h-10 w-10 items-center justify-center rounded-md text-primary transition hover:bg-surface"
           aria-label="Toggle theme"
           onClick={() => setTheme(isDark ? 'light' : 'dark')}
         >
-          {isDark ? <Sun className="h-6 w-6" strokeWidth={1.6} /> : <Moon className="h-6 w-6" strokeWidth={1.6} />}
+          {isDark ? <Sun className="h-5 w-5" strokeWidth={1.8} /> : <Moon className="h-5 w-5" strokeWidth={1.8} />}
         </button>
         <Avatar src={avatar} alt={name} />
       </div>
