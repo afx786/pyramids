@@ -54,6 +54,9 @@ from app.services.team_join_request_service import (
 from app.schemas.team_join_request import (
     TeamJoinRequestResponse
 )
+from app.services.pagination import paginate_list
+
+
 @router.post(
     "",
     response_model=TeamResponse
@@ -111,13 +114,24 @@ def join_existing_team(
 
     return result
 @router.get(
-    "",
-    response_model=list[TeamDetailResponse]
+    ""
 )
 def list_teams(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    limit: int | None = None,
+    offset: int = 0,
+    sort: str = "newest"
 ):
-    return get_all_teams(db)
+    results = get_all_teams(db)
+
+    if sort == "oldest":
+        results = list(reversed(results))
+
+    if limit is None:
+        return results
+
+    items, meta = paginate_list(results, limit, offset)
+    return {"items": items, "meta": {**meta, "sort": sort}}
 
 @router.get(
     "/{team_id}",

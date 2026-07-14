@@ -7,3 +7,7 @@ passlib[bcrypt]
 pydantic[email]
 requests
 python-dotenv
+alembic
+pytest
+pytest-cov
+httpx

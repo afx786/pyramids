@@ -20,6 +20,7 @@ from app.services.bookmark_service import (
     get_bookmarks,
     delete_bookmark
 )
+from app.services.pagination import paginate_list
 
 router = APIRouter(
     prefix="/bookmarks",
@@ -64,17 +65,25 @@ def add_bookmark(
 
 
 @router.get(
-    "",
-    response_model=list[BookmarkResponse]
+    ""
 )
 def list_bookmarks(
     db: Session = Depends(get_db),
-    current_user=Depends(get_current_user)
+    current_user=Depends(get_current_user),
+    limit: int | None = None,
+    offset: int = 0,
+    sort: str = "newest"
 ):
-    return get_bookmarks(
+    results = get_bookmarks(
         db,
         current_user.id
     )
+
+    if limit is None:
+        return results
+
+    items, meta = paginate_list(results, limit, offset)
+    return {"items": items, "meta": {**meta, "sort": sort}}
 
 
 @router.delete(

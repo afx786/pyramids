@@ -33,16 +33,7 @@ def get_user_rank(
         + skills_count * 5
     )
 
-    if points >= 400:
-        rank = "Pyramidion"
-    elif points >= 200:
-        rank = "Architect"
-    elif points >= 100:
-        rank = "Creator"
-    elif points >= 50:
-        rank = "Builder"
-    else:
-        rank = "Explorer"
+    rank = get_rank_from_points(points)
 
     return {
         "user_id": user.id,
@@ -51,3 +42,16 @@ def get_user_rank(
         "projects_count": projects_count,
         "skills_count": skills_count
     }
+
+
+def get_rank_from_points(points: int) -> str:
+    if points >= 400:
+        return "Pyramidion"
+    elif points >= 200:
+        return "Architect"
+    elif points >= 100:
+        return "Creator"
+    elif points >= 50:
+        return "Builder"
+    else:
+        return "Explorer"

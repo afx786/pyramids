@@ -35,6 +35,7 @@ from app.services.research_join_request_service import (
     approve_research_request,
     reject_research_request
 )
+from app.services.pagination import paginate_list
 
 router = APIRouter(
     prefix="/research",
@@ -59,13 +60,24 @@ def create_research(
 
 
 @router.get(
-    "",
-    response_model=list[ResearchProjectResponse]
+    ""
 )
 def list_research(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    limit: int | None = None,
+    offset: int = 0,
+    sort: str = "newest"
 ):
-    return get_all_research_projects(db)
+    results = get_all_research_projects(db)
+
+    if sort == "oldest":
+        results = list(reversed(results))
+
+    if limit is None:
+        return results
+
+    items, meta = paginate_list(results, limit, offset)
+    return {"items": items, "meta": {**meta, "sort": sort}}
 
 
 @router.get(

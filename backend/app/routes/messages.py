@@ -27,7 +27,8 @@ from app.services.message_service import (
 )
 from app.models.message import Message
 from app.services.pagination import (
-    paginate_query
+    paginate_query,
+    paginate_list
 )
 
 router = APIRouter(
@@ -147,17 +148,25 @@ def conversation_messages(
 
 
 @router.get(
-    "/conversations",
-    response_model=list[ConversationListResponse]
+    "/conversations"
 )
 def my_conversations(
     db: Session = Depends(get_db),
-    current_user=Depends(get_current_user)
+    current_user=Depends(get_current_user),
+    limit: int | None = None,
+    offset: int = 0,
+    sort: str = "newest"
 ):
-    return get_user_conversations(
+    results = get_user_conversations(
         db=db,
         user_id=current_user.id
     )
+
+    if limit is None:
+        return results
+
+    items, meta = paginate_list(results, limit, offset)
+    return {"items": items, "meta": {**meta, "sort": sort}}
 @router.delete(
     "/{message_id}"
 )

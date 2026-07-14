@@ -16,6 +16,7 @@ from app.services.opportunity_service import (
     create_opportunity,
     get_all_opportunities
 )
+from app.services.pagination import paginate_list
 
 router = APIRouter(
     prefix="/opportunities",
@@ -38,10 +39,21 @@ def create_new_opportunity(
 
 
 @router.get(
-    "",
-    response_model=list[OpportunityResponse]
+    ""
 )
 def list_opportunities(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    limit: int | None = None,
+    offset: int = 0,
+    sort: str = "newest"
 ):
-    return get_all_opportunities(db)
+    results = get_all_opportunities(db)
+
+    if sort == "oldest":
+        results = list(reversed(results))
+
+    if limit is None:
+        return results
+
+    items, meta = paginate_list(results, limit, offset)
+    return {"items": items, "meta": {**meta, "sort": sort}}

@@ -42,5 +42,7 @@ IGNORE_FILES = {
     "yarn.lock",
 
     "pnpm-lock.yaml"
+    
+    "poetry.lock"
 
 }

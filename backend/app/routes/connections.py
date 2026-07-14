@@ -32,6 +32,7 @@ from app.services.connection_service import (
     remove_connection,
     cancel_request
 )
+from app.services.pagination import paginate_list
 
 router = APIRouter(
 
@@ -199,33 +200,42 @@ def reject_connection_request(
     }
 @router.get(
 
-    "",
-
-    response_model=list[ConnectionResponse]
+    ""
 
 )
 def list_connections(
 
     db: Session = Depends(get_db),
 
-    current_user=Depends(get_current_user)
+    current_user=Depends(get_current_user),
+    limit: int | None = None,
+    offset: int = 0,
+    sort: str = "newest"
 
 ):
 
-    return get_connections(
+    results = get_connections(
 
         db,
 
         current_user.id
 
     )
+
+    if limit is None:
+        return results
+
+    items, meta = paginate_list(results, limit, offset)
+    return {"items": items, "meta": {**meta, "sort": sort}}
 @router.get(
-    "/requests/incoming",
-    response_model=list[ConnectionRequestWithSenderResponse]
+    "/requests/incoming"
 )
 def incoming_requests(
     db: Session = Depends(get_db),
-    current_user=Depends(get_current_user)
+    current_user=Depends(get_current_user),
+    limit: int | None = None,
+    offset: int = 0,
+    sort: str = "newest"
 ):
     reqs = get_incoming_requests(db, current_user.id)
     result = []
@@ -244,16 +254,22 @@ def incoming_requests(
                 "profile_picture": getattr(sender, "profile_picture", None),
             } if sender else None,
         })
-    return result
+    if limit is None:
+        return result
+
+    items, meta = paginate_list(result, limit, offset)
+    return {"items": items, "meta": {**meta, "sort": sort}}
 
 
 @router.get(
-    "/requests/outgoing",
-    response_model=list[ConnectionRequestWithReceiverResponse]
+    "/requests/outgoing"
 )
 def outgoing_requests(
     db: Session = Depends(get_db),
-    current_user=Depends(get_current_user)
+    current_user=Depends(get_current_user),
+    limit: int | None = None,
+    offset: int = 0,
+    sort: str = "newest"
 ):
     reqs = get_outgoing_requests(db, current_user.id)
     result = []
@@ -272,7 +288,11 @@ def outgoing_requests(
                 "profile_picture": getattr(receiver, "profile_picture", None),
             } if receiver else None,
         })
-    return result
+    if limit is None:
+        return result
+
+    items, meta = paginate_list(result, limit, offset)
+    return {"items": items, "meta": {**meta, "sort": sort}}
 @router.delete(
     "/requests/{request_id}"
 )

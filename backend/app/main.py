@@ -100,14 +100,17 @@ from app.routes.connections import (
 from app.routes.dashboard import (
     router as dashboard_router
 )
-Base.metadata.create_all(bind=engine)
-ensure_project_verification_columns(engine)
-
 app = FastAPI(title="Pyramids API")
+
+
+@app.on_event("startup")
+def on_startup():
+    Base.metadata.create_all(bind=engine)
+    ensure_project_verification_columns(engine)
 
 _raw_origins = os.environ.get(
     "ALLOWED_ORIGINS",
-    "http://localhost:5173,https://afx786.github.io"
+    "http://localhost:5173,http://127.0.0.1:5173,https://afx786.github.io"
 )
 _origins = [o.strip() for o in _raw_origins.split(",") if o.strip()]
 

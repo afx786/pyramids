@@ -43,6 +43,7 @@ from app.services.hackathon_invitation_service import (
     accept_hackathon_invitation,
     reject_hackathon_invitation
 )
+from app.services.pagination import paginate_list
 
 router = APIRouter(
     prefix="/hackathons",
@@ -69,13 +70,24 @@ def create_new_hackathon(
 
 
 @router.get(
-    "",
-    response_model=list[HackathonResponse]
+    ""
 )
 def list_hackathons(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    limit: int | None = None,
+    offset: int = 0,
+    sort: str = "newest"
 ):
-    return get_all_hackathons(db)
+    results = get_all_hackathons(db)
+
+    if sort == "oldest":
+        results = list(reversed(results))
+
+    if limit is None:
+        return results
+
+    items, meta = paginate_list(results, limit, offset)
+    return {"items": items, "meta": {**meta, "sort": sort}}
 
 
 @router.get(

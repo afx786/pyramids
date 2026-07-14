@@ -10,6 +10,7 @@ from app.schemas.leaderboard import (
 from app.services.leaderboard_service import (
     get_leaderboard
 )
+from app.services.pagination import paginate_list
 
 router = APIRouter(
     prefix="/leaderboard",
@@ -18,10 +19,17 @@ router = APIRouter(
 
 
 @router.get(
-    "",
-    response_model=list[LeaderboardUser]
+    ""
 )
 def leaderboard(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    limit: int | None = None,
+    offset: int = 0
 ):
-    return get_leaderboard(db)
+    results = get_leaderboard(db)
+
+    if limit is None:
+        return results
+
+    items, meta = paginate_list(results, limit, offset)
+    return {"items": items, "meta": {**meta}}
