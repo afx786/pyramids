@@ -54,7 +54,7 @@ function Dashboard() {
         <Card className="bg-elevated p-6 sm:p-8">
           <p className="font-mono-label text-[11px] text-secondary">Dashboard / builder workspace</p>
           <div className="mt-5 max-w-3xl">
-            <h1 className="text-3xl font-semibold leading-tight tracking-[-0.025em] text-primary sm:text-4xl">
+            <h1 className="font-editorial text-3xl leading-tight text-primary sm:text-4xl">
               Welcome back, {firstName}. Keep building proof that compounds.
             </h1>
             <p className="mt-4 max-w-2xl text-sm font-medium leading-6 text-secondary sm:text-base">
@@ -89,15 +89,15 @@ function Dashboard() {
               <p className="font-mono-label text-[11px] text-white/50">Rank progress</p>
               <h2 className="mt-3 text-2xl font-semibold text-white">{rankData?.rank ?? 'Explorer'}</h2>
             </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/5">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/15 bg-white/5">
               <ShieldCheck className="h-5 w-5 text-white/80" strokeWidth={1.8} />
             </div>
           </div>
           <p className="mt-4 text-sm font-medium leading-6 text-white/62">
             {remaining > 0 ? `${remaining} points until ${nextRank}.` : 'You have reached the highest rank.'}
           </p>
-          <div className="mt-6 h-2 overflow-hidden rounded-full bg-white/10">
-            <div className="h-full rounded-full bg-white" style={{ width: `${progress}%` }} />
+          <div className="mt-6 h-2 overflow-hidden rounded bg-white/10">
+            <div className="h-full rounded bg-white" style={{ width: `${progress}%` }} />
           </div>
           <div className="mt-4 flex items-center justify-between text-xs font-semibold text-white/70">
             <span>{progress}% complete</span>
@@ -141,7 +141,7 @@ function Dashboard() {
           <div className="space-y-4">
             {visibleProjects.length === 0 ? (
               <Card className="p-8 text-center">
-                <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-xl border border-subtle bg-accent-soft">
+                <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-lg border border-subtle bg-accent-soft">
                   <GitBranch className="h-5 w-5 text-primary" strokeWidth={1.8} />
                 </div>
                 <h3 className="mt-5 text-lg font-semibold text-primary">No projects yet</h3>

@@ -23,14 +23,14 @@ function Topbar() {
         <p className="mt-1 hidden text-sm font-semibold text-primary sm:block">Verified projects, teams, skills, and rank.</p>
       </div>
       <div className="flex items-center gap-2 sm:gap-3">
-        <button className="flex h-10 w-10 items-center justify-center rounded-none border border-transparent text-primary transition hover:border-subtle hover:bg-surface" aria-label="Search">
+        <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-transparent text-primary transition duration-200 hover:border-subtle hover:bg-surface" aria-label="Search">
           <Search className="h-5 w-5 text-accent" strokeWidth={1.8} />
         </button>
-        <button className="flex h-10 w-10 items-center justify-center rounded-none border border-transparent text-primary transition hover:border-subtle hover:bg-surface" aria-label="Notifications">
+        <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-transparent text-primary transition duration-200 hover:border-subtle hover:bg-surface" aria-label="Notifications">
           <Bell className="h-5 w-5" strokeWidth={1.8} />
         </button>
         <button
-          className="flex h-10 w-10 items-center justify-center rounded-none border border-transparent text-primary transition hover:border-subtle hover:bg-surface"
+          className="flex h-9 w-9 items-center justify-center rounded-lg border border-transparent text-primary transition duration-200 hover:border-subtle hover:bg-surface"
           aria-label="Toggle theme"
           onClick={() => setTheme(isDark ? 'light' : 'dark')}
         >

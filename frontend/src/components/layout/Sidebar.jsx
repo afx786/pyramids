@@ -7,7 +7,6 @@ import {
   Pyramid,
   Send,
   Shapes,
-  Sparkles,
   Triangle,
   UserRound,
   UsersRound,
@@ -37,18 +36,18 @@ function Sidebar() {
   }
 
   return (
-    <aside className="fixed inset-x-0 bottom-0 z-30 border-t border-white/10 bg-sidebar px-2 py-2 text-white lg:inset-y-0 lg:left-0 lg:right-auto lg:flex lg:w-64 lg:flex-col lg:border-r lg:border-t-0 lg:px-4 lg:py-6">
-      <div className="hidden items-center gap-3 px-2 lg:flex">
-        <div className="flex h-11 w-11 items-center justify-center border border-white/20">
-          <Triangle className="h-8 w-8 text-white" strokeWidth={1.2} />
+    <aside className="fixed inset-x-0 bottom-0 z-30 border-t border-white/10 bg-sidebar px-2 py-2 text-white lg:inset-y-0 lg:left-0 lg:right-auto lg:flex lg:w-64 lg:flex-col lg:border-r lg:border-t-0 lg:border-white/10 lg:px-3 lg:py-4">
+      <div className="hidden items-center gap-3 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-3 lg:flex">
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/[0.04]">
+          <Triangle className="h-5 w-5 text-white" strokeWidth={1.7} />
         </div>
         <div>
-          <p className="text-base font-extrabold tracking-normal text-white">Pyramids</p>
-          <p className="font-mono-label text-[10px] text-white/45">Builder network</p>
+          <p className="text-sm font-semibold tracking-normal text-white">Pyramids</p>
+          <p className="font-mono-label mt-0.5 text-[10px] text-white/42">Builder network</p>
         </div>
       </div>
 
-      <nav className="flex gap-1 overflow-x-auto lg:mt-8 lg:flex-1 lg:flex-col lg:overflow-visible lg:gap-1.5">
+      <nav className="flex gap-1 overflow-x-auto lg:mt-4 lg:flex-1 lg:flex-col lg:overflow-visible lg:gap-1">
         {navigation.map((item) => {
           const Icon = item.icon;
           return (
@@ -56,8 +55,10 @@ function Sidebar() {
             key={item.label}
             to={item.to}
             className={({ isActive }) =>
-              `flex h-12 min-w-12 items-center justify-center gap-3 rounded-none px-2 text-xs font-extrabold transition lg:h-10 lg:min-w-0 lg:justify-start lg:px-3 lg:text-sm ${
-                isActive ? 'bg-white text-sidebar' : 'text-white/60 hover:bg-white/10 hover:text-white'
+              `flex h-11 min-w-11 items-center justify-center gap-3 rounded-lg border px-2 text-xs font-medium transition duration-200 lg:h-9 lg:min-w-0 lg:justify-start lg:px-3 lg:text-sm ${
+                isActive
+                  ? 'border-white/12 bg-white/10 text-white'
+                  : 'border-transparent text-white/58 hover:border-white/8 hover:bg-white/[0.06] hover:text-white'
               }`
             }
             title={item.label}
@@ -70,14 +71,13 @@ function Sidebar() {
       </nav>
 
       <button
-        className="mt-3 hidden h-10 items-center justify-center gap-2 rounded-none border border-white/15 px-3 text-sm font-extrabold text-white/60 transition hover:bg-white hover:text-black lg:flex"
+        className="mt-3 hidden h-9 items-center justify-center gap-2 rounded-lg border border-white/10 px-3 text-sm font-medium text-white/58 transition duration-200 hover:bg-white/[0.06] hover:text-white lg:flex"
         type="button"
         onClick={handleLogout}
       >
         <LogOut className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
         Logout
       </button>
-      <Sparkles className="pointer-events-none absolute bottom-5 right-5 hidden h-5 w-5 text-white/45 lg:block" aria-hidden="true" />
     </aside>
   );
 }

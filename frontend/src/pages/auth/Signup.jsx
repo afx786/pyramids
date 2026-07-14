@@ -47,7 +47,7 @@ function Signup() {
       <section className="flex items-center justify-center px-6 py-12 sm:px-10">
         <div className="w-full max-w-xl">
           <p className="font-mono-label text-xs text-secondary">Join Pyramids</p>
-          <h1 className="font-editorial mt-4 text-6xl leading-none text-primary sm:text-7xl">Create builder profile.</h1>
+          <h1 className="mt-4 text-3xl font-semibold leading-tight tracking-[-0.025em] text-primary sm:text-4xl">Create builder profile.</h1>
           <p className="mt-4 max-w-lg text-sm font-semibold leading-6 text-secondary">
             Build a verified profile for your projects, technical skills, teammates, and campus collaborations.
           </p>
@@ -113,7 +113,7 @@ function Signup() {
           </div>
           <div>
             <p className="font-mono-label text-xs text-white/45">Repository intelligence / verified skills</p>
-            <h2 className="font-editorial mt-6 text-[112px] leading-[0.84] text-white">
+            <h2 className="mt-6 text-5xl font-semibold leading-tight tracking-[-0.03em] text-white">
               Turn real work into visible rank.
             </h2>
           </div>

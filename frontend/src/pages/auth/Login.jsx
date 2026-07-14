@@ -52,7 +52,7 @@ function Login() {
           </div>
           <div>
             <p className="font-mono-label text-xs text-white/45">Login / continue building</p>
-            <h1 className="font-editorial mt-6 max-w-4xl text-[76px] leading-[0.86] text-white sm:text-[112px]">
+            <h1 className="mt-6 max-w-4xl text-4xl font-semibold leading-tight tracking-[-0.025em] text-white sm:text-5xl">
               Your proof of work belongs in motion.
             </h1>
             <p className="mt-7 max-w-xl text-base font-semibold leading-7 text-white/62">
@@ -75,7 +75,7 @@ function Login() {
       <section className="flex items-center justify-center px-6 py-12 sm:px-10">
         <div className="w-full max-w-md">
           <p className="font-mono-label text-xs text-secondary">Secure access</p>
-          <h2 className="font-editorial mt-4 text-6xl leading-none text-primary">Welcome back.</h2>
+          <h2 className="mt-4 text-3xl font-semibold leading-tight tracking-[-0.025em] text-primary">Welcome back.</h2>
           <p className="mt-4 text-sm font-semibold leading-6 text-secondary">Enter your credentials to continue to your Pyramids workspace.</p>
 
           {apiError && (

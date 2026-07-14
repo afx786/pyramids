@@ -24,7 +24,7 @@ function ProjectCard({ project }) {
         {stack.slice(0, 8).map((item) => (
           <SkillTag key={item}>{item}</SkillTag>
         ))}
-        {stack.length === 0 && <span className="text-xs font-semibold text-secondary">No stack tagged yet</span>}
+        {stack.length === 0 && <span className="text-xs font-medium text-secondary">No stack tagged yet</span>}
       </div>
     </Card>
   );

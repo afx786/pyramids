@@ -8,7 +8,7 @@ function Button({ children, className = '', variant = 'primary', type = 'button'
   return (
     <button
       type={type}
-      className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition duration-200 ${variants[variant]} ${className}`}
+      className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition duration-200 ${variants[variant]} ${className}`}
       {...props}
     >
       {children}
