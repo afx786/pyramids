@@ -10,8 +10,8 @@
     "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "latest",
-    "vite": "latest",
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.19",
     "react": "latest",
     "react-dom": "latest",
     "react-router-dom": "latest",
