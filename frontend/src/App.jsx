@@ -11,6 +11,7 @@ import ProjectCreate from './pages/projects/ProjectCreate.jsx';
 import ProjectDetail from './pages/projects/ProjectDetail.jsx';
 import Pyramidion from './pages/pyramidion/Pyramidion.jsx';
 import Requests from './pages/requests/Requests.jsx';
+import Hackathons from './pages/hackathons/Hackathons.jsx';
 import Teams from './pages/teams/Teams.jsx';
 import Updates from './pages/updates/Updates.jsx';
 import ProtectedRoute from './routes/ProtectedRoute.jsx';
@@ -29,6 +30,7 @@ function App() {
           <Route path="messages" element={<Messages />} />
           <Route path="connections" element={<Connections />} />
           <Route path="requests" element={<Requests />} />
+          <Route path="hackathons" element={<Hackathons />} />
           <Route path="updates" element={<Updates />} />
           <Route path="pyramidion" element={<Pyramidion />} />
           <Route path="profile" element={<Profile />} />

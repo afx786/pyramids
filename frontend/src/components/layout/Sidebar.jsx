@@ -2,12 +2,16 @@ import {
   Bell,
   LayoutDashboard,
   LogOut,
+  Medal,
   MessageSquare,
   Network,
   Pyramid,
+  Search,
   Send,
   Shapes,
+  Star,
   Triangle,
+  Trophy,
   UserRound,
   UsersRound,
 } from 'lucide-react';
@@ -16,12 +20,15 @@ import { useAuth } from '../../context/AuthContext.jsx';
 
 const navigation = [
   { label: 'Dashboard', to: '/dashboard', icon: LayoutDashboard },
+  { label: 'Feed', to: '/updates', icon: Bell },
   { label: 'Domains', to: '/domains', icon: Shapes },
   { label: 'Teams', to: '/teams', icon: UsersRound },
+  { label: 'Hackathons', to: '/hackathons', icon: Trophy },
   { label: 'Messages', to: '/messages', icon: MessageSquare },
   { label: 'Connections', to: '/connections', icon: Network },
   { label: 'Requests', to: '/requests', icon: Send },
-  { label: 'Updates', to: '/updates', icon: Bell },
+  { label: 'Search', to: '/search', icon: Search },
+  { label: 'Leaderboard', to: '/leaderboard', icon: Medal },
   { label: 'Pyramidion', to: '/pyramidion', icon: Pyramid },
   { label: 'Profile', to: '/profile', icon: UserRound },
 ];
