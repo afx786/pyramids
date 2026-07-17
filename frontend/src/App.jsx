@@ -2,17 +2,25 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout.jsx';
 import Login from './pages/auth/Login.jsx';
 import Signup from './pages/auth/Signup.jsx';
+import Bookmarks from './pages/bookmarks/Bookmarks.jsx';
 import Connections from './pages/connections/Connections.jsx';
 import Dashboard from './pages/dashboard/Dashboard.jsx';
 import Domains from './pages/domains/Domains.jsx';
+import Hackathons from './pages/hackathons/Hackathons.jsx';
+import Leaderboard from './pages/leaderboard/Leaderboard.jsx';
 import Messages from './pages/messages/Messages.jsx';
+import Notifications from './pages/notifications/Notifications.jsx';
+import Opportunities from './pages/opportunities/Opportunities.jsx';
 import Profile from './pages/profile/Profile.jsx';
 import ProjectCreate from './pages/projects/ProjectCreate.jsx';
 import ProjectDetail from './pages/projects/ProjectDetail.jsx';
 import Pyramidion from './pages/pyramidion/Pyramidion.jsx';
 import Requests from './pages/requests/Requests.jsx';
-import Hackathons from './pages/hackathons/Hackathons.jsx';
+import Search from './pages/search/Search.jsx';
+import SkillAnalytics from './pages/skill_analytics/SkillAnalytics.jsx';
+import Stats from './pages/stats/Stats.jsx';
 import Teams from './pages/teams/Teams.jsx';
+import Technologies from './pages/technologies/Technologies.jsx';
 import Updates from './pages/updates/Updates.jsx';
 import ProtectedRoute from './routes/ProtectedRoute.jsx';
 
@@ -27,10 +35,18 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="domains" element={<Domains />} />
           <Route path="teams" element={<Teams />} />
+          <Route path="hackathons" element={<Hackathons />} />
           <Route path="messages" element={<Messages />} />
           <Route path="connections" element={<Connections />} />
           <Route path="requests" element={<Requests />} />
-          <Route path="hackathons" element={<Hackathons />} />
+          <Route path="notifications" element={<Notifications />} />
+          <Route path="bookmarks" element={<Bookmarks />} />
+          <Route path="search" element={<Search />} />
+          <Route path="leaderboard" element={<Leaderboard />} />
+          <Route path="opportunities" element={<Opportunities />} />
+          <Route path="technologies" element={<Technologies />} />
+          <Route path="skills/top" element={<SkillAnalytics />} />
+          <Route path="stats" element={<Stats />} />
           <Route path="updates" element={<Updates />} />
           <Route path="pyramidion" element={<Pyramidion />} />
           <Route path="profile" element={<Profile />} />
