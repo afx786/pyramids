@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import { Trash2, X } from 'lucide-react';
 import ConnectionCard from '../../components/common/ConnectionCard.jsx';
 import EmptyState from '../../components/common/EmptyState.jsx';
 import PageHeader from '../../components/common/PageHeader.jsx';
+import Button from '../../components/ui/Button.jsx';
 import { connectionService } from '../../services/connectionService.js';
 
 const tabs = [
@@ -22,30 +24,34 @@ function Connections() {
     connectionService.listOutgoingRequests().then(setSent).catch(() => {});
   }, []);
 
-  const dataMap = {
-    connected: connected.map((conn) => ({
+  function mapConnected(conn) {
+    const user = conn.user || conn;
+    return {
       id: conn.id,
-      name: conn.user.name,
-      role: conn.user.headline || 'Builder',
-      avatar: conn.user.profile_picture,
+      _connectionId: conn.id,
+      name: user.name || 'Unknown',
+      role: user.headline || 'Builder',
+      avatar: user.profile_picture,
       skills: [],
-    })),
-    pending: pending.map((req) => ({
+    };
+  }
+
+  function mapRequest(req, role) {
+    const person = role === 'sender' ? (req.sender || req) : (req.receiver || req);
+    return {
       id: req.id,
-      name: req.sender?.name ?? 'Unknown',
-      role: req.sender?.headline || 'Sent you a request',
-      avatar: req.sender?.profile_picture,
-      skills: [],
       _requestId: req.id,
-    })),
-    sent: sent.map((req) => ({
-      id: req.id,
-      name: req.receiver?.name ?? 'Unknown',
-      role: req.receiver?.headline || 'Awaiting response',
-      avatar: req.receiver?.profile_picture,
+      name: person.name || 'Unknown',
+      role: person.headline || (role === 'sender' ? 'Wants to connect' : 'Awaiting response'),
+      avatar: person.profile_picture,
       skills: [],
-      _requestId: req.id,
-    })),
+    };
+  }
+
+  const dataMap = {
+    connected: connected.map(mapConnected),
+    pending: pending.map((r) => ({ ...mapRequest(r, 'sender'), _requestId: r.id })),
+    sent: sent.map((r) => ({ ...mapRequest(r, 'receiver'), _requestId: r.id })),
   };
 
   const people = dataMap[activeTab];
@@ -64,6 +70,20 @@ function Connections() {
     } catch {}
   }
 
+  async function handleCancel(person) {
+    try {
+      await connectionService.cancelRequest(person._requestId);
+      setSent((prev) => prev.filter((r) => r.id !== person._requestId));
+    } catch {}
+  }
+
+  async function handleRemove(person) {
+    try {
+      await connectionService.removeConnection(person._connectionId);
+      setConnected((prev) => prev.filter((c) => c.id !== person._connectionId));
+    } catch {}
+  }
+
   return (
     <div className="mx-auto max-w-6xl">
       <PageHeader
@@ -77,7 +97,7 @@ function Connections() {
           <button
             key={tab.id}
             className={`rounded-lg px-5 py-3 text-sm font-black transition ${
-              activeTab === tab.id ? 'bg-primary text-app' : 'bg-surface text-primary'
+              activeTab === tab.id ? 'bg-primary text-app' : 'bg-surface text-primary border border-subtle'
             }`}
             type="button"
             onClick={() => setActiveTab(tab.id)}
@@ -90,20 +110,43 @@ function Connections() {
       <section className="mt-8 grid grid-cols-3 gap-5">
         {people.length > 0 ? (
           people.map((person) => (
-            <ConnectionCard
-              key={person.id}
-              person={person}
-              primaryAction={
-                activeTab === 'pending' ? 'Accept' : activeTab === 'sent' ? 'Sent' : 'Message'
-              }
-              secondaryAction={activeTab === 'pending' ? 'Ignore' : undefined}
-              onPrimary={activeTab === 'pending' ? () => handleAccept(person) : undefined}
-              onSecondary={activeTab === 'pending' ? () => handleReject(person) : undefined}
-            />
+            <div key={person.id} className="relative">
+              <ConnectionCard
+                person={person}
+                primaryAction={
+                  activeTab === 'pending' ? 'Accept' : activeTab === 'sent' ? 'Sent' : 'Message'
+                }
+                secondaryAction={
+                  activeTab === 'pending' ? 'Ignore' : undefined
+                }
+                onPrimary={activeTab === 'pending' ? () => handleAccept(person) : undefined}
+                onSecondary={activeTab === 'pending' ? () => handleReject(person) : undefined}
+              />
+              {activeTab === 'connected' && (
+                <button
+                  type="button"
+                  onClick={() => handleRemove(person)}
+                  className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full text-secondary hover:bg-red-50 hover:text-red-500 transition"
+                  title="Remove connection"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+              {activeTab === 'sent' && (
+                <button
+                  type="button"
+                  onClick={() => handleCancel(person)}
+                  className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full text-secondary hover:bg-red-50 hover:text-red-500 transition"
+                  title="Cancel request"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
           ))
         ) : (
           <div className="col-span-3">
-            <EmptyState title="No connections here yet" description="This tab will show connections once they exist." />
+            <EmptyState title={`No ${activeTab} connections yet`} description={`${activeTab === 'connected' ? 'Connect with builders to grow your network.' : activeTab === 'pending' ? 'Incoming requests will appear here.' : 'Sent requests will appear here.'}`} />
           </div>
         )}
       </section>
