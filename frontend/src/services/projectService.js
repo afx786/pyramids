@@ -28,4 +28,20 @@ export const projectService = {
   deleteProject(id) {
     return api.delete(`/projects/${id}`);
   },
+
+  listMembers(projectId) {
+    return api.get(`/projects/${projectId}/members`);
+  },
+
+  listInvitations(projectId) {
+    return api.get(`/projects/${projectId}/invitations`);
+  },
+
+  inviteUser(projectId, userId) {
+    return api.post(`/projects/${projectId}/invitations`, { user_id: userId });
+  },
+
+  verifyRepository(projectId, githubUrl) {
+    return api.post(`/projects/${projectId}/verify`, { github_url: githubUrl });
+  },
 };

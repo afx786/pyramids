@@ -8,6 +8,7 @@ import Domains from './pages/domains/Domains.jsx';
 import Messages from './pages/messages/Messages.jsx';
 import Profile from './pages/profile/Profile.jsx';
 import ProjectCreate from './pages/projects/ProjectCreate.jsx';
+import ProjectDetail from './pages/projects/ProjectDetail.jsx';
 import Pyramidion from './pages/pyramidion/Pyramidion.jsx';
 import Requests from './pages/requests/Requests.jsx';
 import Teams from './pages/teams/Teams.jsx';
@@ -32,6 +33,7 @@ function App() {
           <Route path="pyramidion" element={<Pyramidion />} />
           <Route path="profile" element={<Profile />} />
           <Route path="projects/new" element={<ProjectCreate />} />
+          <Route path="projects/:id" element={<ProjectDetail />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Route>
       </Route>
