@@ -9,7 +9,7 @@ export const projectService = {
     return api.get(`/projects/${id}`);
   },
 
-  createProject({ title, domain, description, skills, technologies = [] }) {
+  createProject({ title, domain, description, skills, technologies = [], github_url }) {
     return api.post('/projects', {
       title,
       domain,
@@ -18,6 +18,7 @@ export const projectService = {
       status: 'building',
       skills,
       technologies,
+      ...(github_url ? { github_url } : {}),
     });
   },
 

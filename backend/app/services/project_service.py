@@ -23,7 +23,8 @@ def create_project(
         domain=data.domain,
         visibility=data.visibility,
         status=data.status,
-        owner_id=owner_id
+        owner_id=owner_id,
+        github_url=getattr(data, 'github_url', None)
     )
 
     db.add(project)

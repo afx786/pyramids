@@ -16,6 +16,8 @@ class ProjectCreate(BaseModel):
 
     technologies: list[ProjectTechnologyCreate] = []
 
+    github_url: str | None = None
+
 
 class ProjectResponse(BaseModel):
     id: int
