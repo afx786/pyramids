@@ -1,6 +1,7 @@
 import {
   Bell,
   LayoutDashboard,
+  List,
   LogOut,
   Medal,
   MessageSquare,
@@ -16,12 +17,15 @@ import {
   UserRound,
   UsersRound,
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { notificationService } from '../../services/notificationService.js';
 
 const navigation = [
   { label: 'Dashboard', to: '/dashboard', icon: LayoutDashboard },
-  { label: 'Feed', to: '/updates', icon: Bell },
+  { label: 'Notifications', to: '/notifications', icon: Bell },
+  { label: 'Feed', to: '/updates', icon: List },
   { label: 'Domains', to: '/domains', icon: Shapes },
   { label: 'Teams', to: '/teams', icon: UsersRound },
   { label: 'Hackathons', to: '/hackathons', icon: Trophy },
@@ -39,6 +43,14 @@ const navigation = [
 function Sidebar() {
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    notificationService.listNotifications().then((data) => {
+      const count = Array.isArray(data) ? data.filter((n) => !n.is_read).length : 0;
+      setUnreadCount(count);
+    }).catch(() => {});
+  }, []);
 
   function handleLogout() {
     logout();
@@ -75,6 +87,11 @@ function Sidebar() {
           >
             <Icon className="h-4 w-4 shrink-0" strokeWidth={1.9} aria-hidden="true" />
             <span className="hidden lg:inline">{item.label}</span>
+          {item.label === 'Notifications' && unreadCount > 0 && (
+            <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-white text-[10px] font-bold text-sidebar px-1">
+              {unreadCount}
+            </span>
+          )}
           </NavLink>
           );
         })}

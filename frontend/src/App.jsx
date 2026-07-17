@@ -60,6 +60,7 @@ function App() {
           <Route path="admin" element={<Admin />} />
           <Route path="pyramidion" element={<Pyramidion />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="profile/:id" element={<Profile />} />
           <Route path="projects/new" element={<ProjectCreate />} />
           <Route path="projects/:id" element={<ProjectDetail />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />

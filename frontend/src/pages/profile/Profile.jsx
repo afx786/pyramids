@@ -1,4 +1,8 @@
-import { Pencil, Plus } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { ArrowLeft, MessageSquare, Pencil, Plus, UserPlus } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import LoadingState from '../../components/common/LoadingState.jsx';
 import ProjectCard from '../../components/common/ProjectCard.jsx';
 import PageHeader from '../../components/common/PageHeader.jsx';
 import Avatar from '../../components/ui/Avatar.jsx';
@@ -6,6 +10,9 @@ import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import SkillTag from '../../components/ui/SkillTag.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { connectionService } from '../../services/connectionService.js';
+import { messageService } from '../../services/messageService.js';
+import { userService } from '../../services/userService.js';
 
 function SkillMeter({ skill }) {
   return (
@@ -19,39 +26,121 @@ function SkillMeter({ skill }) {
 }
 
 function Profile() {
+  const { id } = useParams();
   const { user, profile, rankData } = useAuth();
+  const [otherProfile, setOtherProfile] = useState(null);
+  const [otherRank, setOtherRank] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const displayUser = profile?.user ?? user;
-  const skills = profile?.skills ?? [];
-  const projects = profile?.projects ?? [];
-  const stats = profile?.statistics ?? {};
+  const isOwnProfile = !id || String(user?.id) === String(id);
+  const userId = isOwnProfile ? user?.id : id;
+
+  useEffect(() => {
+    if (!userId || isOwnProfile) return;
+    setLoading(true);
+    Promise.all([
+      userService.getProfile(userId),
+      userService.getRank(userId),
+    ])
+      .then(([p, r]) => { setOtherProfile(p); setOtherRank(r); })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [userId]);
+
+  const displayUser = isOwnProfile
+    ? (profile?.user ?? user)
+    : (otherProfile?.user ?? { name: 'User', id: userId });
+
+  const displaySkills = isOwnProfile
+    ? (profile?.skills ?? [])
+    : (otherProfile?.skills ?? []);
+
+  const displayProjects = isOwnProfile
+    ? (profile?.projects ?? [])
+    : (otherProfile?.projects ?? []);
+
+  const displayRank = isOwnProfile
+    ? rankData
+    : otherRank;
+
+  const displayStats = isOwnProfile
+    ? (profile?.statistics ?? {})
+    : (otherProfile?.statistics ?? {});
+
+  async function handleConnect() {
+    try {
+      await connectionService.sendRequest(userId);
+    } catch {}
+  }
+
+  async function handleMessage() {
+    try {
+      await messageService.startConversation(userId);
+    } catch {}
+  }
+
+  if (loading) return <LoadingState label="Loading profile..." />;
+
+  if (!isOwnProfile && !otherProfile) {
+    return (
+      <div className="mx-auto max-w-6xl">
+        <Link to="/search" className="mb-6 flex items-center gap-2 text-sm font-semibold text-secondary hover:text-primary transition">
+          <ArrowLeft className="h-4 w-4" />
+          Back to Search
+        </Link>
+        <Card className="p-8 text-center">
+          <p className="text-sm text-secondary">User not found.</p>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-6xl">
+      {!isOwnProfile && (
+        <Link to="/search" className="mb-6 flex items-center gap-2 text-sm font-semibold text-secondary hover:text-primary transition">
+          <ArrowLeft className="h-4 w-4" />
+          Back to Search
+        </Link>
+      )}
+
       <PageHeader
         eyebrow="Profile"
-        title={`Hi ${displayUser?.name?.split(' ')[0] ?? '...'}` }
-        description={rankData ? `${rankData.rank} · ${rankData.points} points` : 'Loading rank...'}
+        title={isOwnProfile ? `Hi ${displayUser?.name?.split(' ')[0] ?? '...'}` : displayUser?.name ?? 'Builder'}
+        description={displayRank ? `${displayRank.rank} · ${displayRank.points} points` : 'Loading rank...'}
         actions={
-          <>
-            <Button variant="secondary">
-              <Plus className="h-4 w-4" />
-              Add Skills
-            </Button>
-            <Button>
-              <Pencil className="h-4 w-4" />
-              Update
-            </Button>
-          </>
+          isOwnProfile ? (
+            <>
+              <Button variant="secondary">
+                <Plus className="h-4 w-4" />
+                Add Skills
+              </Button>
+              <Button>
+                <Pencil className="h-4 w-4" />
+                Update
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="secondary" onClick={handleMessage}>
+                <MessageSquare className="h-4 w-4" />
+                Message
+              </Button>
+              <Button onClick={handleConnect}>
+                <UserPlus className="h-4 w-4" />
+                Connect
+              </Button>
+            </>
+          )
         }
       />
 
       <section className="mt-12 grid grid-cols-[280px_1fr_220px] gap-8">
         <Card className="p-6">
           <h2 className="mb-6 text-lg font-black text-primary">Skills</h2>
-          {skills.length > 0 ? (
+          {displaySkills.length > 0 ? (
             <div className="space-y-5">
-              {skills.slice(0, 6).map((skill) => (
+              {displaySkills.slice(0, 6).map((skill) => (
                 <SkillMeter key={skill} skill={skill} />
               ))}
             </div>
@@ -64,9 +153,6 @@ function Profile() {
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-black text-primary">About</h2>
-              <button className="text-primary" type="button" aria-label="Edit about">
-                <Pencil className="h-5 w-5" />
-              </button>
             </div>
             {displayUser?.program && (
               <p className="mt-4 rounded-lg bg-accent px-4 py-3 text-sm font-black text-app">
@@ -82,11 +168,11 @@ function Profile() {
             )}
           </Card>
 
-          {skills.length > 0 && (
+          {displaySkills.length > 0 && (
             <Card className="p-6">
               <h2 className="text-xl font-black text-primary">All Skills</h2>
               <div className="mt-4 flex flex-wrap gap-2">
-                {skills.map((skill) => (
+                {displaySkills.map((skill) => (
                   <SkillTag key={skill}>{skill}</SkillTag>
                 ))}
               </div>
@@ -106,33 +192,33 @@ function Profile() {
             <div className="mt-5 space-y-4">
               <div className="flex justify-between text-sm">
                 <span className="font-bold text-secondary">Projects</span>
-                <strong>{stats.total_projects ?? rankData?.projects_count ?? '—'}</strong>
+                <strong>{displayStats.total_projects ?? displayRank?.projects_count ?? '—'}</strong>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="font-bold text-secondary">Skills</span>
-                <strong>{rankData?.skills_count ?? skills.length}</strong>
+                <strong>{displayRank?.skills_count ?? displaySkills.length}</strong>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="font-bold text-secondary">Rank points</span>
-                <strong>{rankData?.points ?? '—'}</strong>
+                <strong>{displayRank?.points ?? '—'}</strong>
               </div>
             </div>
           </Card>
         </aside>
       </section>
 
-      {projects.length > 0 && (
+      {displayProjects.length > 0 && (
         <section className="mt-10">
           <h2 className="mb-5 text-xl font-black text-primary">Projects</h2>
           <div className="space-y-4">
-            {projects.slice(0, 3).map((project) => (
+            {displayProjects.slice(0, 3).map((project) => (
               <ProjectCard
                 key={project.id}
                 project={{
                   id: project.id,
                   title: project.title,
                   description: project.description,
-                  creator: user?.name ?? 'You',
+                  creator: displayUser?.name ?? 'Builder',
                   avatar: displayUser?.profile_picture,
                   stack: project.skills ?? [],
                 }}
