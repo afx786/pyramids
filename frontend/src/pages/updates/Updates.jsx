@@ -1,54 +1,70 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import PageHeader from '../../components/common/PageHeader.jsx';
 import Card from '../../components/ui/Card.jsx';
 import SkillTag from '../../components/ui/SkillTag.jsx';
-import { projectService } from '../../services/projectService.js';
-
-const STATIC_UPDATES = [
-  { id: 1, title: 'Connect with builders', detail: 'Send connection requests to collaborate on projects.', tag: 'Connections' },
-  { id: 2, title: 'Showcase your work', detail: 'Add projects to build your verified skill profile.', tag: 'Projects' },
-  { id: 3, title: 'Climb the ranks', detail: 'Complete projects and verify skills to reach Pyramidion.', tag: 'Pyramidion' },
-];
+import { discoveryService } from '../../services/discoveryService.js';
 
 function Updates() {
-  const [projects, setProjects] = useState([]);
+  const [feed, setFeed] = useState({ projects: [], research: [], hackathons: [] });
 
   useEffect(() => {
-    projectService.listProjects().then(setProjects).catch(() => {});
+    discoveryService.getFeed('all').then(setFeed).catch(() => {});
   }, []);
+
+  const allItems = [
+    ...(feed.projects || []).map((p) => ({ ...p, _type: 'Project' })),
+    ...(feed.research || []).map((r) => ({ ...r, _type: 'Research' })),
+    ...(feed.hackathons || []).map((h) => ({ ...h, _type: 'Hackathon' })),
+  ];
 
   return (
     <div className="mx-auto max-w-6xl">
       <PageHeader
         eyebrow="Activity"
-        title="What's New?"
-        description="A simple activity surface for project updates, invites, and rank progress."
+        title="Feed"
+        description="Recent projects, research, and hackathons across the platform."
       />
 
       <section className="mt-10 grid grid-cols-[1fr_340px] gap-8">
         <div className="space-y-4">
-          {STATIC_UPDATES.map((update) => (
-            <Card key={update.id} className="p-6">
-              <SkillTag>{update.tag}</SkillTag>
-              <h2 className="mt-4 text-xl font-black text-primary">{update.title}</h2>
-              <p className="mt-2 text-sm font-medium leading-6 text-secondary">{update.detail}</p>
+          {allItems.length > 0 ? (
+            allItems.map((item, idx) => (
+              <Card key={`${item._type}-${item.id}`} className="p-6">
+                <SkillTag>{item._type}</SkillTag>
+                <h2 className="mt-4 text-xl font-black text-primary">{item.title}</h2>
+                {item.description && (
+                  <p className="mt-2 text-sm font-medium leading-6 text-secondary">
+                    {item.description.length > 200 ? item.description.slice(0, 200) + '...' : item.description}
+                  </p>
+                )}
+                {item.owner_name && (
+                  <p className="mt-3 text-sm font-semibold text-secondary">by {item.owner_name}</p>
+                )}
+              </Card>
+            ))
+          ) : (
+            <Card className="p-8 text-center">
+              <p className="text-sm text-secondary">No activity yet. Be the first to create a project!</p>
             </Card>
-          ))}
+          )}
         </div>
 
         <Card className="p-6">
-          <h2 className="text-xl font-black text-primary">Recent Projects</h2>
+          <h2 className="text-xl font-black text-primary">Quick Actions</h2>
           <div className="mt-5 space-y-4">
-            {projects.length === 0 ? (
-              <p className="text-sm text-secondary">No projects yet.</p>
-            ) : (
-              projects.slice(0, 5).map((project) => (
-                <div key={project.id} className="border-b border-subtle pb-4 last:border-b-0 last:pb-0">
-                  <p className="font-black text-primary">{project.title}</p>
-                  <p className="mt-1 text-sm font-medium text-secondary">{project.status} · {project.domain}</p>
-                </div>
-              ))
-            )}
+            <Link to="/projects/new" className="block rounded-lg border border-subtle p-4 transition hover:border-primary/20">
+              <p className="font-bold text-primary">Create Project</p>
+              <p className="mt-1 text-sm text-secondary">Showcase your build</p>
+            </Link>
+            <Link to="/search" className="block rounded-lg border border-subtle p-4 transition hover:border-primary/20">
+              <p className="font-bold text-primary">Find Builders</p>
+              <p className="mt-1 text-sm text-secondary">Search by name or skill</p>
+            </Link>
+            <Link to="/leaderboard" className="block rounded-lg border border-subtle p-4 transition hover:border-primary/20">
+              <p className="font-bold text-primary">Leaderboard</p>
+              <p className="mt-1 text-sm text-secondary">Top builders this week</p>
+            </Link>
           </div>
         </Card>
       </section>
