@@ -19,9 +19,14 @@ import Requests from './pages/requests/Requests.jsx';
 import Search from './pages/search/Search.jsx';
 import SkillAnalytics from './pages/skill_analytics/SkillAnalytics.jsx';
 import Stats from './pages/stats/Stats.jsx';
+import TeamCreate from './pages/teams/TeamCreate.jsx';
+import TeamDetail from './pages/teams/TeamDetail.jsx';
 import Teams from './pages/teams/Teams.jsx';
 import Technologies from './pages/technologies/Technologies.jsx';
 import Updates from './pages/updates/Updates.jsx';
+import Research from './pages/research/Research.jsx';
+import ResearchDetail from './pages/research/ResearchDetail.jsx';
+import Admin from './pages/admin/Admin.jsx';
 import ProtectedRoute from './routes/ProtectedRoute.jsx';
 
 function App() {
@@ -35,6 +40,8 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="domains" element={<Domains />} />
           <Route path="teams" element={<Teams />} />
+          <Route path="teams/new" element={<TeamCreate />} />
+          <Route path="teams/:id" element={<TeamDetail />} />
           <Route path="hackathons" element={<Hackathons />} />
           <Route path="messages" element={<Messages />} />
           <Route path="connections" element={<Connections />} />
@@ -45,9 +52,12 @@ function App() {
           <Route path="leaderboard" element={<Leaderboard />} />
           <Route path="opportunities" element={<Opportunities />} />
           <Route path="technologies" element={<Technologies />} />
+          <Route path="research" element={<Research />} />
+          <Route path="research/:id" element={<ResearchDetail />} />
           <Route path="skills/top" element={<SkillAnalytics />} />
           <Route path="stats" element={<Stats />} />
           <Route path="updates" element={<Updates />} />
+          <Route path="admin" element={<Admin />} />
           <Route path="pyramidion" element={<Pyramidion />} />
           <Route path="profile" element={<Profile />} />
           <Route path="projects/new" element={<ProjectCreate />} />

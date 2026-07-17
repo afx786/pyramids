@@ -9,6 +9,7 @@ import {
   Search,
   Send,
   Shapes,
+  ShieldCheck,
   Star,
   Triangle,
   Trophy,
@@ -24,6 +25,7 @@ const navigation = [
   { label: 'Domains', to: '/domains', icon: Shapes },
   { label: 'Teams', to: '/teams', icon: UsersRound },
   { label: 'Hackathons', to: '/hackathons', icon: Trophy },
+  { label: 'Research', to: '/research', icon: Star },
   { label: 'Messages', to: '/messages', icon: MessageSquare },
   { label: 'Connections', to: '/connections', icon: Network },
   { label: 'Requests', to: '/requests', icon: Send },
@@ -31,6 +33,7 @@ const navigation = [
   { label: 'Leaderboard', to: '/leaderboard', icon: Medal },
   { label: 'Pyramidion', to: '/pyramidion', icon: Pyramid },
   { label: 'Profile', to: '/profile', icon: UserRound },
+  { label: 'Admin', to: '/admin', icon: ShieldCheck },
 ];
 
 function Sidebar() {
