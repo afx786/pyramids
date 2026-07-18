@@ -81,6 +81,8 @@ def send_request(
 
     )
 
+    sender = db.query(User).filter(User.id == sender_id).first()
+
     db.add(request)
 
     db.commit()
@@ -95,7 +97,7 @@ def send_request(
 
         title="Connection Request",
 
-        message="You received a new connection request.",
+        message=f"{sender.name} sent you a connection request.",
 
         notification_type="connection"
 
@@ -125,6 +127,8 @@ def accept_request(
     if request.status != "pending":
         return "already_processed"
 
+    accepter = db.query(User).filter(User.id == current_user_id).first()
+
     request.status = "accepted"
 
     connection = Connection(
@@ -145,7 +149,7 @@ def accept_request(
 
         title="Connection Accepted",
 
-        message="Your connection request has been accepted.",
+        message=f"Your connection request has been accepted by {accepter.name}.",
 
         notification_type="connection"
 
