@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { BarChart3, ShieldCheck, Users, GitBranch } from 'lucide-react';
+import { ShieldCheck, Users, GitBranch } from 'lucide-react';
+import ErrorState from '../../components/common/ErrorState.jsx';
 import LoadingState from '../../components/common/LoadingState.jsx';
 import PageHeader from '../../components/common/PageHeader.jsx';
 import Card from '../../components/ui/Card.jsx';
@@ -10,23 +11,25 @@ function Admin() {
   const [recentUsers, setRecentUsers] = useState([]);
   const [recentProjects, setRecentProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     Promise.all([
-      api.get('/admin/dashboard/cards').catch(() => null),
-      api.get('/admin/recent/users').catch(() => []),
-      api.get('/admin/recent/projects').catch(() => []),
+      api.get('/admin/dashboard/cards'),
+      api.get('/admin/recent/users'),
+      api.get('/admin/recent/projects'),
     ])
       .then(([dash, users, projects]) => {
         setDashboard(dash);
         setRecentUsers(Array.isArray(users) ? users.slice(0, 10) : []);
         setRecentProjects(Array.isArray(projects) ? projects.slice(0, 10) : []);
       })
-      .catch(() => {})
+      .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
 
   if (loading) return <LoadingState label="Loading admin..." />;
+  if (error) return <ErrorState title={error} />;
 
   const stats = dashboard ? [
     { label: 'Total Users', value: dashboard.total_users ?? '—', icon: Users },
