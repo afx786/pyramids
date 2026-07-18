@@ -20,11 +20,12 @@ function Connections() {
   const [connected, setConnected] = useState([]);
   const [pending, setPending] = useState([]);
   const [sent, setSent] = useState([]);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    connectionService.listConnections().then(setConnected).catch(() => {});
-    connectionService.listIncomingRequests().then(setPending).catch(() => {});
-    connectionService.listOutgoingRequests().then(setSent).catch(() => {});
+    connectionService.listConnections().then(setConnected).catch((err) => setError(err.message));
+    connectionService.listIncomingRequests().then(setPending).catch((err) => setError(err.message));
+    connectionService.listOutgoingRequests().then(setSent).catch((err) => setError(err.message));
   }, []);
 
   function mapConnected(conn) {
@@ -64,35 +65,35 @@ function Connections() {
     try {
       await connectionService.acceptRequest(person._requestId);
       setPending((prev) => prev.filter((r) => r.id !== person._requestId));
-    } catch {}
+    } catch (err) { setError(err.message); }
   }
 
   async function handleReject(person) {
     try {
       await connectionService.rejectRequest(person._requestId);
       setPending((prev) => prev.filter((r) => r.id !== person._requestId));
-    } catch {}
+    } catch (err) { setError(err.message); }
   }
 
   async function handleCancel(person) {
     try {
       await connectionService.cancelRequest(person._requestId);
       setSent((prev) => prev.filter((r) => r.id !== person._requestId));
-    } catch {}
+    } catch (err) { setError(err.message); }
   }
 
   async function handleRemove(person) {
     try {
       await connectionService.removeConnection(person._connectionId);
       setConnected((prev) => prev.filter((c) => c.id !== person._connectionId));
-    } catch {}
+    } catch (err) { setError(err.message); }
   }
 
   async function handleMessage(person) {
     try {
       await messageService.startConversation(person._userId || person.id);
       navigate('/messages');
-    } catch {}
+    } catch (err) { setError(err.message); }
   }
 
   return (
@@ -102,6 +103,12 @@ function Connections() {
         title="Connections"
         description="Manage builders you are connected with, incoming requests, and invites you have sent."
       />
+
+      {error && (
+        <div className="mt-5 border border-red-200 bg-red-50 px-5 py-3 rounded-lg">
+          <p className="text-sm font-semibold text-red-700">{error}</p>
+        </div>
+      )}
 
       <div className="mt-10 flex gap-3">
         {tabs.map((tab) => (

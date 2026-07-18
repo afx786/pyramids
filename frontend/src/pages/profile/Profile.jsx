@@ -32,6 +32,7 @@ function Profile() {
   const [otherProfile, setOtherProfile] = useState(null);
   const [otherRank, setOtherRank] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [actionError, setActionError] = useState('');
 
   const isOwnProfile = !id || String(user?.id) === String(id);
   const userId = isOwnProfile ? user?.id : id;
@@ -71,14 +72,15 @@ function Profile() {
   async function handleConnect() {
     try {
       await connectionService.sendRequest(userId);
-    } catch {}
+      setActionError('');
+    } catch (err) { setActionError(err.message); }
   }
 
   async function handleMessage() {
     try {
       await messageService.startConversation(userId);
       navigate('/messages');
-    } catch {}
+    } catch (err) { setActionError(err.message); }
   }
 
   if (loading) return <LoadingState label="Loading profile..." />;
@@ -136,6 +138,12 @@ function Profile() {
           )
         }
       />
+
+      {actionError && (
+        <div className="mt-5 border border-red-200 bg-red-50 px-5 py-3 rounded-lg">
+          <p className="text-sm font-semibold text-red-700">{actionError}</p>
+        </div>
+      )}
 
       <section className="mt-12 grid grid-cols-[280px_1fr_220px] gap-8">
         <Card className="p-6">

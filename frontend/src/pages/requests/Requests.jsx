@@ -6,23 +6,24 @@ import { connectionService } from '../../services/connectionService.js';
 
 function Requests() {
   const [requests, setRequests] = useState([]);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    connectionService.listIncomingRequests().then(setRequests).catch(() => {});
+    connectionService.listIncomingRequests().then(setRequests).catch((err) => setError(err.message));
   }, []);
 
   async function handleAccept(req) {
     try {
       await connectionService.acceptRequest(req.id);
       setRequests((prev) => prev.filter((r) => r.id !== req.id));
-    } catch {}
+    } catch (err) { setError(err.message); }
   }
 
   async function handleReject(req) {
     try {
       await connectionService.rejectRequest(req.id);
       setRequests((prev) => prev.filter((r) => r.id !== req.id));
-    } catch {}
+    } catch (err) { setError(err.message); }
   }
 
   const people = requests.map((req) => ({
@@ -40,6 +41,12 @@ function Requests() {
         title="Requests"
         description="Review connection requests from other builders."
       />
+
+      {error && (
+        <div className="mb-5 border border-red-200 bg-red-50 px-5 py-3 rounded-lg">
+          <p className="text-sm font-semibold text-red-700">{error}</p>
+        </div>
+      )}
 
       <section className="mt-10 grid grid-cols-2 gap-5">
         {people.length > 0 ? (
