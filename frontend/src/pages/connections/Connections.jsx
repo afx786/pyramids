@@ -114,34 +114,18 @@ function Connections() {
               <ConnectionCard
                 person={person}
                 primaryAction={
-                  activeTab === 'pending' ? 'Accept' : activeTab === 'sent' ? 'Sent' : 'Message'
+                  activeTab === 'pending' ? 'Accept' : activeTab === 'sent' ? 'Cancel' : 'Message'
                 }
                 secondaryAction={
                   activeTab === 'pending' ? 'Ignore' : undefined
                 }
-                onPrimary={activeTab === 'pending' ? () => handleAccept(person) : undefined}
+                onPrimary={
+                  activeTab === 'pending' ? () => handleAccept(person) :
+                  activeTab === 'sent' ? () => handleCancel(person) :
+                  activeTab === 'connected' ? () => handleRemove(person) : undefined
+                }
                 onSecondary={activeTab === 'pending' ? () => handleReject(person) : undefined}
               />
-              {activeTab === 'connected' && (
-                <button
-                  type="button"
-                  onClick={() => handleRemove(person)}
-                  className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full text-secondary hover:bg-red-50 hover:text-red-500 transition"
-                  title="Remove connection"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
-              {activeTab === 'sent' && (
-                <button
-                  type="button"
-                  onClick={() => handleCancel(person)}
-                  className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full text-secondary hover:bg-red-50 hover:text-red-500 transition"
-                  title="Cancel request"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
             </div>
           ))
         ) : (
