@@ -1,6 +1,7 @@
 export const COURSES = [
   { value: 'B.Tech Computer Science and Engineering', label: 'B.Tech Computer Science and Engineering' },
-  { value: 'B.Tech Computer Science and Engineering (AI & ML)', label: 'B.Tech CSE (AI & ML)' },
+  { value: 'B.Tech in Artificial Intelligence', label: 'B.Tech in Artificial Intelligence' },
+  { value: 'B.Tech Computer Science and Engineering (ML)', label: 'B.Tech CSE (ML)' },
   { value: 'B.Tech Computer Science and Engineering (Data Science)', label: 'B.Tech CSE (Data Science)' },
   { value: 'B.Tech Computer Science and Engineering (Cyber Security)', label: 'B.Tech CSE (Cyber Security)' },
   { value: 'B.Tech Information Technology (Data Science & ML)', label: 'B.Tech IT (Data Science & ML)' },
@@ -26,14 +27,14 @@ export const COURSES = [
 export const COURSES_BY_CATEGORY = [
   {
     category: 'Undergraduate (Bachelors)',
-    courses: COURSES.slice(0, 7),
+    courses: COURSES.slice(0, 8),
   },
   {
     category: 'Postgraduate (Masters)',
-    courses: COURSES.slice(7, 18),
+    courses: COURSES.slice(8, 19),
   },
   {
     category: 'Integrated Programmes',
-    courses: COURSES.slice(18),
+    courses: COURSES.slice(19),
   },
 ];
