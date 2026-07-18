@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Trash2, X } from 'lucide-react';
 import ConnectionCard from '../../components/common/ConnectionCard.jsx';
 import EmptyState from '../../components/common/EmptyState.jsx';
 import PageHeader from '../../components/common/PageHeader.jsx';
 import Button from '../../components/ui/Button.jsx';
 import { connectionService } from '../../services/connectionService.js';
+import { messageService } from '../../services/messageService.js';
 
 const tabs = [
   { id: 'connected', label: 'Connected' },
@@ -13,6 +15,7 @@ const tabs = [
 ];
 
 function Connections() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('connected');
   const [connected, setConnected] = useState([]);
   const [pending, setPending] = useState([]);
@@ -27,8 +30,9 @@ function Connections() {
   function mapConnected(conn) {
     const user = conn.user || conn;
     return {
-      id: conn.id,
+      id: user.id || conn.id,
       _connectionId: conn.id,
+      _userId: user.id,
       name: user.name || 'Unknown',
       role: user.headline || 'Builder',
       avatar: user.profile_picture,
@@ -84,6 +88,13 @@ function Connections() {
     } catch {}
   }
 
+  async function handleMessage(person) {
+    try {
+      await messageService.startConversation(person._userId || person.id);
+      navigate('/messages');
+    } catch {}
+  }
+
   return (
     <div className="mx-auto max-w-6xl">
       <PageHeader
@@ -122,7 +133,7 @@ function Connections() {
                 onPrimary={
                   activeTab === 'pending' ? () => handleAccept(person) :
                   activeTab === 'sent' ? () => handleCancel(person) :
-                  activeTab === 'connected' ? () => handleRemove(person) : undefined
+                  activeTab === 'connected' ? () => handleMessage(person) : undefined
                 }
                 onSecondary={activeTab === 'pending' ? () => handleReject(person) : undefined}
               />
