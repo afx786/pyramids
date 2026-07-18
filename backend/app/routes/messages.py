@@ -93,7 +93,8 @@ def create_message(
 
 
 @router.get(
-    "/conversations/{conversation_id}"
+    "/conversations/{conversation_id}",
+    response_model=list[MessageResponse]
 )
 def conversation_messages(
     conversation_id: int,
@@ -148,7 +149,8 @@ def conversation_messages(
 
 
 @router.get(
-    "/conversations"
+    "/conversations",
+    response_model=list[ConversationListResponse]
 )
 def my_conversations(
     db: Session = Depends(get_db),

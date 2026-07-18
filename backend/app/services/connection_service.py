@@ -54,11 +54,17 @@ def send_request(
         db.query(ConnectionRequest)
         .filter(
             (
-                ConnectionRequest.sender_id == sender_id
-            )
-            &
-            (
-                ConnectionRequest.receiver_id == receiver_id
+                (
+                    (ConnectionRequest.sender_id == sender_id)
+                    &
+                    (ConnectionRequest.receiver_id == receiver_id)
+                )
+                |
+                (
+                    (ConnectionRequest.sender_id == receiver_id)
+                    &
+                    (ConnectionRequest.receiver_id == sender_id)
+                )
             )
             &
             (
