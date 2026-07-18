@@ -37,10 +37,11 @@ function Dashboard() {
   const { user, rankData } = useAuth();
   const [projects, setProjects] = useState([]);
   const [connections, setConnections] = useState([]);
+  const [loadError, setLoadError] = useState('');
 
   useEffect(() => {
-    projectService.listProjects().then(setProjects).catch(() => {});
-    connectionService.listConnections().then(setConnections).catch(() => {});
+    projectService.listProjects().then(setProjects).catch((err) => setLoadError(err.message));
+    connectionService.listConnections().then(setConnections).catch((err) => setLoadError(err.message));
   }, []);
 
   const { progress, nextRank, remaining } = getRankProgress(rankData);
@@ -105,6 +106,12 @@ function Dashboard() {
           </div>
         </Card>
       </section>
+
+      {loadError && (
+        <div className="mt-5 border border-red-200 bg-red-50 px-5 py-3 rounded-lg">
+          <p className="text-sm font-semibold text-red-700">{loadError}</p>
+        </div>
+      )}
 
       <section className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {[
