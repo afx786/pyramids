@@ -14,12 +14,12 @@ import { connectionService } from '../../services/connectionService.js';
 import { messageService } from '../../services/messageService.js';
 import { userService } from '../../services/userService.js';
 
-function SkillMeter({ skill }) {
+function SkillMeter({ skill, width }) {
   return (
     <div className="grid grid-cols-[88px_1fr] items-center gap-4">
       <span className="font-black text-primary">{skill}</span>
       <div className="h-4 overflow-hidden rounded-full bg-accent-soft">
-        <div className="h-full rounded-full bg-accent" style={{ width: '60%' }} />
+        <div className="h-full rounded-full bg-accent" style={{ width: `${width}%` }} />
       </div>
     </div>
   );
@@ -140,8 +140,8 @@ function Profile() {
           <h2 className="mb-6 text-lg font-black text-primary">Skills</h2>
           {displaySkills.length > 0 ? (
             <div className="space-y-5">
-              {displaySkills.slice(0, 6).map((skill) => (
-                <SkillMeter key={skill} skill={skill} />
+              {displaySkills.slice(0, 6).map((skill, i) => (
+                <SkillMeter key={skill} skill={skill} width={40 + (skill.length * 3) % 45} />
               ))}
             </div>
           ) : (
