@@ -18,18 +18,23 @@ function Search() {
   const [type, setType] = useState('users');
   const [results, setResults] = useState([]);
   const [searched, setSearched] = useState(false);
+  const [error, setError] = useState('');
 
   async function handleSearch() {
     if (!query.trim()) return;
     setSearched(true);
+    setError('');
     try {
       if (type === 'users') {
         const data = await searchService.searchUsersByName(query);
         setResults(Array.isArray(data) ? data : []);
       } else {
-        setResults([]);
+        const data = await searchService.searchProjects(query);
+        const projects = data?.projects ?? [];
+        setResults(Array.isArray(projects) ? projects : []);
       }
-    } catch {
+    } catch (err) {
+      setError(err.message);
       setResults([]);
     }
   }
@@ -38,7 +43,7 @@ function Search() {
     try {
       await connectionService.sendRequest(userId);
       setResults((prev) => prev.map((u) => (u.id === userId ? { ...u, _requestSent: true } : u)));
-    } catch {}
+    } catch (err) { setError(err.message); }
   }
 
   return (
@@ -75,13 +80,19 @@ function Search() {
           <Button onClick={handleSearch} className="shrink-0">Search</Button>
         </div>
 
-        {searched && results.length === 0 && (
+        {error && (
+          <Card className="mt-6 p-4 text-center border border-red-200 bg-red-50">
+            <p className="text-sm font-semibold text-red-700">{error}</p>
+          </Card>
+        )}
+
+        {searched && results.length === 0 && !error && (
           <Card className="mt-6 p-8 text-center">
             <p className="text-sm text-secondary">No results found for "{query}".</p>
           </Card>
         )}
 
-        {results.length > 0 && (
+        {results.length > 0 && type === 'users' && (
           <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {results.map((u) => (
               <Card key={u.id} className="p-5">
@@ -107,6 +118,30 @@ function Search() {
                       </Button>
                     )}
                   </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+
+        {results.length > 0 && type === 'projects' && (
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {results.map((p) => (
+              <Card key={p.id} className="p-5">
+                <p className="text-sm font-bold text-primary">{p.title}</p>
+                {p.domain && <p className="mt-1 text-xs font-medium text-secondary">{p.domain}</p>}
+                {p.description && <p className="mt-2 text-xs text-secondary line-clamp-2">{p.description}</p>}
+                {p.skills && p.skills.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-1">
+                    {p.skills.slice(0, 4).map((s) => (
+                      <SkillTag key={s}>{s}</SkillTag>
+                    ))}
+                  </div>
+                )}
+                <div className="mt-3">
+                  <Link to={`/projects/${p.id}`}>
+                    <Button variant="secondary" className="text-xs">View Project</Button>
+                  </Link>
                 </div>
               </Card>
             ))}
