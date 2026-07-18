@@ -46,10 +46,17 @@ function Sidebar() {
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    notificationService.listNotifications().then((data) => {
-      const count = Array.isArray(data) ? data.filter((n) => !n.is_read).length : 0;
-      setUnreadCount(count);
-    }).catch(() => {});
+    function fetchUnread() {
+      notificationService.listNotifications().then((data) => {
+        const count = Array.isArray(data) ? data.filter((n) => !n.is_read).length : 0;
+        setUnreadCount(count);
+      }).catch(() => {});
+    }
+
+    fetchUnread();
+    const interval = setInterval(fetchUnread, 30000);
+    document.addEventListener('visibilitychange', fetchUnread);
+    return () => { clearInterval(interval); document.removeEventListener('visibilitychange', fetchUnread); };
   }, []);
 
   function handleLogout() {
