@@ -149,7 +149,12 @@ def accept_connection_request(
 
         "id": result.id,
 
-        "user": other_user,
+        "user": {
+            "id": other_user.id,
+            "name": other_user.name,
+            "headline": getattr(other_user, "headline", None),
+            "profile_picture": getattr(other_user, "profile_picture", None),
+        },
 
         "connected_at": result.created_at
 

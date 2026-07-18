@@ -241,7 +241,12 @@ def get_connections(
 
                 "id": connection.id,
 
-                "user": user,
+                "user": {
+                    "id": user.id,
+                    "name": user.name,
+                    "headline": getattr(user, "headline", None),
+                    "profile_picture": getattr(user, "profile_picture", None),
+                },
 
                 "connected_at": connection.created_at
 
