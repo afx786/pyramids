@@ -1,5 +1,5 @@
 import { Send, Trash2, UserPlus } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import ConversationListItem from '../../components/common/ConversationListItem.jsx';
 import EmptyState from '../../components/common/EmptyState.jsx';
 import MessageBubble from '../../components/common/MessageBubble.jsx';
@@ -20,18 +20,25 @@ function Messages() {
   const [text, setText] = useState('');
   const [showNewChat, setShowNewChat] = useState(false);
   const [connections, setConnections] = useState([]);
+  const [error, setError] = useState('');
   const bottomRef = useRef(null);
 
-  useEffect(() => {
+  const loadConversations = useCallback(() => {
     messageService.listConversations().then((data) => {
-      setConversations(data);
-      if (data.length > 0) setActiveId(data[0].conversation_id);
-    }).catch(() => {});
+      const list = Array.isArray(data) ? data : (data?.items ?? []);
+      setConversations(list);
+      if (!activeId && list.length > 0) setActiveId(list[0].conversation_id);
+    }).catch((err) => setError(err.message));
+  }, [activeId]);
+
+  useEffect(() => {
+    loadConversations();
   }, []);
 
   useEffect(() => {
     if (!activeId) return;
-    messageService.getMessages(activeId).then(setMessages).catch(() => {});
+    setError('');
+    messageService.getMessages(activeId).then(setMessages).catch((err) => setError(err.message));
   }, [activeId]);
 
   useEffect(() => {
@@ -40,11 +47,12 @@ function Messages() {
 
   async function handleSend() {
     if (!text.trim() || !activeId) return;
+    setError('');
     try {
       const msg = await messageService.sendMessage(activeId, text.trim());
       setMessages((prev) => [...prev, msg]);
       setText('');
-    } catch {}
+    } catch (err) { setError(err.message); }
   }
 
   function handleKeyDown(e) {
@@ -58,7 +66,7 @@ function Messages() {
     try {
       await messageService.deleteMessage(msgId);
       setMessages((prev) => prev.filter((m) => m.id !== msgId));
-    } catch {}
+    } catch (err) { setError(err.message); }
   }
 
   async function handleDeleteConversation(convId) {
@@ -72,23 +80,32 @@ function Messages() {
         }
         return next;
       });
-    } catch {}
+    } catch (err) { setError(err.message); }
   }
 
   async function handleStartConversation(userId) {
+    setError('');
     try {
       const conv = await messageService.startConversation(userId);
+      const otherUser = connections.find((c) => c.user?.id === userId)?.user || { id: userId, name: 'User' };
+      const newConv = {
+        conversation_id: conv.id,
+        other_user: { id: otherUser.id, name: otherUser.name },
+        last_message: null,
+        last_message_time: null,
+        unread_count: 0,
+      };
       setConversations((prev) => {
-        const exists = prev.find((c) => c.conversation_id === conv.conversation_id);
-        return exists ? prev : [conv, ...prev];
+        const exists = prev.find((c) => c.conversation_id === newConv.conversation_id);
+        return exists ? prev : [newConv, ...prev];
       });
-      setActiveId(conv.conversation_id);
+      setActiveId(conv.id);
       setShowNewChat(false);
-    } catch {}
+    } catch (err) { setError(err.message); }
   }
 
   function openNewChat() {
-    connectionService.listConnections().then(setConnections).catch(() => {});
+    connectionService.listConnections().then(setConnections).catch((err) => setError(err.message));
     setShowNewChat(true);
   }
 
@@ -101,6 +118,12 @@ function Messages() {
         title="Messages"
         description="Keep collaboration conversations focused around projects, skills, and next steps."
       />
+
+      {error && (
+        <div className="mt-5 border border-red-200 bg-red-50 px-5 py-3 rounded-lg">
+          <p className="text-sm font-semibold text-red-700">{error}</p>
+        </div>
+      )}
 
       <section className="mt-10 grid h-[620px] grid-cols-[320px_1fr] gap-6">
         <Card className="flex flex-col overflow-hidden p-4">
@@ -142,7 +165,7 @@ function Messages() {
                   <ConversationListItem
                     conversation={{
                       id: conv.conversation_id,
-                      user: conv.other_user.name,
+                      user: conv.other_user?.name || 'Unknown',
                       avatar: null,
                       preview: conv.last_message || '—',
                     }}
@@ -169,9 +192,9 @@ function Messages() {
           <Card className="flex min-h-0 flex-col overflow-hidden">
             <div className="flex items-center justify-between border-b border-subtle p-5">
               <div className="flex items-center gap-3">
-                <Avatar src={null} alt={activeConversation.other_user.name} size="sm" />
+                <Avatar src={null} alt={activeConversation.other_user?.name || 'User'} size="sm" />
                 <div>
-                  <h2 className="font-black text-primary">{activeConversation.other_user.name}</h2>
+                  <h2 className="font-black text-primary">{activeConversation.other_user?.name || 'User'}</h2>
                   <p className="text-sm font-medium text-secondary">Project collaborator</p>
                 </div>
               </div>

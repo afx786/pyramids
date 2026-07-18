@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, MessageSquare, Pencil, Plus, UserPlus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import LoadingState from '../../components/common/LoadingState.jsx';
@@ -27,6 +27,7 @@ function SkillMeter({ skill, width }) {
 
 function Profile() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { user, profile, rankData } = useAuth();
   const [otherProfile, setOtherProfile] = useState(null);
   const [otherRank, setOtherRank] = useState(null);
@@ -76,6 +77,7 @@ function Profile() {
   async function handleMessage() {
     try {
       await messageService.startConversation(userId);
+      navigate('/messages');
     } catch {}
   }
 
