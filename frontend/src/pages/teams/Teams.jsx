@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Plus, UsersRound } from 'lucide-react';
 import EmptyState from '../../components/common/EmptyState.jsx';
 import PageHeader from '../../components/common/PageHeader.jsx';
@@ -9,6 +9,7 @@ import SkillTag from '../../components/ui/SkillTag.jsx';
 import { teamService } from '../../services/teamService.js';
 
 function Teams() {
+  const navigate = useNavigate();
   const [teams, setTeams] = useState([]);
 
   useEffect(() => {
@@ -34,7 +35,7 @@ function Teams() {
       <section className="mt-10 grid grid-cols-3 gap-5">
         {teams.length === 0 ? (
           <div className="col-span-3">
-            <EmptyState title="No teams yet" description="Create a team to start collaborating." actionLabel="Create Team" onAction={() => window.location.href = '/#/teams/new'} />
+            <EmptyState title="No teams yet" description="Create a team to start collaborating." actionLabel="Create Team" onAction={() => navigate('/teams/new')} />
           </div>
         ) : (
           teams.map((team) => (
