@@ -20,6 +20,7 @@ function Messages() {
   const [text, setText] = useState('');
   const [showNewChat, setShowNewChat] = useState(false);
   const [connections, setConnections] = useState([]);
+  const [connectionsLoading, setConnectionsLoading] = useState(false);
   const [error, setError] = useState('');
   const bottomRef = useRef(null);
 
@@ -33,6 +34,14 @@ function Messages() {
 
   useEffect(() => {
     loadConversations();
+    setConnectionsLoading(true);
+    connectionService.listConnections().then((data) => {
+      setConnections(data);
+      setConnectionsLoading(false);
+    }).catch((err) => {
+      setError(err.message);
+      setConnectionsLoading(false);
+    });
   }, []);
 
   useEffect(() => {
@@ -105,7 +114,6 @@ function Messages() {
   }
 
   function openNewChat() {
-    connectionService.listConnections().then(setConnections).catch((err) => setError(err.message));
     setShowNewChat(true);
   }
 
@@ -139,20 +147,26 @@ function Messages() {
             <div className="mb-4 rounded-lg border border-subtle p-3">
               <p className="mb-2 text-xs font-bold text-secondary">Select a connection</p>
               <div className="max-h-32 space-y-1 overflow-y-auto">
-                {connections
-                  .filter((c) => c.user?.id !== activeConversation?.other_user?.id)
-                  .map((c) => (
-                    <button
-                      key={c.id}
-                      type="button"
-                      onClick={() => handleStartConversation(c.user.id)}
-                      className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-accent-soft"
-                    >
-                      <Avatar src={c.user.profile_picture} alt={c.user.name} size="sm" />
-                      <span className="font-medium text-primary">{c.user.name}</span>
-                    </button>
-                  ))}
-                {connections.length === 0 && <p className="text-xs text-secondary">No connections yet.</p>}
+                {connectionsLoading ? (
+                  <p className="text-xs font-medium text-secondary">Loading connections...</p>
+                ) : (
+                  <>
+                    {connections
+                      .filter((c) => c.user?.id !== activeConversation?.other_user?.id)
+                      .map((c) => (
+                        <button
+                          key={c.id}
+                          type="button"
+                          onClick={() => handleStartConversation(c.user.id)}
+                          className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-accent-soft"
+                        >
+                          <Avatar src={c.user.profile_picture} alt={c.user.name} size="sm" />
+                          <span className="font-medium text-primary">{c.user.name}</span>
+                        </button>
+                      ))}
+                    {!connectionsLoading && connections.length === 0 && <p className="text-xs text-secondary">No connections yet.</p>}
+                  </>
+                )}
               </div>
               <button type="button" onClick={() => setShowNewChat(false)} className="mt-2 text-xs font-semibold text-secondary">Cancel</button>
             </div>
