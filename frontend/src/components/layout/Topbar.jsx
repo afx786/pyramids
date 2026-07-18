@@ -1,9 +1,11 @@
 import { Bell, Moon, Search, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Avatar from '../ui/Avatar.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 
 function Topbar() {
+  const navigate = useNavigate();
   const { user, profile } = useAuth();
   const [theme, setTheme] = useState(() => localStorage.getItem('pyramids-theme') || 'light');
 
@@ -23,10 +25,10 @@ function Topbar() {
         <p className="mt-1 hidden text-sm font-semibold text-primary sm:block">Verified projects, teams, skills, and rank.</p>
       </div>
       <div className="flex items-center gap-2 sm:gap-3">
-        <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-transparent text-primary transition duration-200 hover:border-subtle hover:bg-surface" aria-label="Search">
+        <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-transparent text-primary transition duration-200 hover:border-subtle hover:bg-surface" aria-label="Search" onClick={() => navigate('/search')}>
           <Search className="h-5 w-5 text-accent" strokeWidth={1.8} />
         </button>
-        <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-transparent text-primary transition duration-200 hover:border-subtle hover:bg-surface" aria-label="Notifications">
+        <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-transparent text-primary transition duration-200 hover:border-subtle hover:bg-surface" aria-label="Notifications" onClick={() => navigate('/notifications')}>
           <Bell className="h-5 w-5" strokeWidth={1.8} />
         </button>
         <button
