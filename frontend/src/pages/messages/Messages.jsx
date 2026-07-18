@@ -64,11 +64,14 @@ function Messages() {
   async function handleDeleteConversation(convId) {
     try {
       await messageService.deleteConversation(convId);
-      setConversations((prev) => prev.filter((c) => c.conversation_id !== convId));
-      if (activeId === convId) {
-        setActiveId(conversations.length > 1 ? conversations.find((c) => c.conversation_id !== convId)?.conversation_id : null);
-        setMessages([]);
-      }
+      setConversations((prev) => {
+        const next = prev.filter((c) => c.conversation_id !== convId);
+        if (activeId === convId) {
+          setActiveId(next.length > 0 ? next[0].conversation_id : null);
+          setMessages([]);
+        }
+        return next;
+      });
     } catch {}
   }
 
