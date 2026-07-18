@@ -6,14 +6,17 @@ import LoadingState from '../../components/common/LoadingState.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import SkillTag from '../../components/ui/SkillTag.jsx';
+import { useAuth } from '../../context/AuthContext.jsx';
 import { api } from '../../services/api.js';
 
 function ResearchDetail() {
   const { id } = useParams();
+  const { user } = useAuth();
   const [research, setResearch] = useState(null);
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [actionError, setActionError] = useState('');
 
   useEffect(() => {
     Promise.all([
@@ -29,16 +32,40 @@ function ResearchDetail() {
   }, [id]);
 
   async function handleJoin() {
-    try { await api.post(`/research/${id}/join`); window.location.reload(); } catch {}
+    setActionError('');
+    try {
+      await api.post(`/research/${id}/join`);
+      const [data, membersData] = await Promise.all([
+        api.get(`/research/${id}`),
+        api.get(`/research/${id}/members`).catch(() => []),
+      ]);
+      setResearch(data);
+      setMembers(membersData);
+    } catch (err) {
+      setActionError(err.message);
+    }
   }
 
   async function handleLeave() {
-    try { await api.post(`/research/${id}/leave`); window.location.reload(); } catch {}
+    setActionError('');
+    try {
+      await api.post(`/research/${id}/leave`);
+      const [data, membersData] = await Promise.all([
+        api.get(`/research/${id}`),
+        api.get(`/research/${id}/members`).catch(() => []),
+      ]);
+      setResearch(data);
+      setMembers(membersData);
+    } catch (err) {
+      setActionError(err.message);
+    }
   }
 
   if (loading) return <LoadingState label="Loading research..." />;
   if (error) return <ErrorState title={error} />;
   if (!research) return <ErrorState title="Research not found" />;
+
+  const isMember = members.some((m) => m.id === user?.id) || research.owner_id === user?.id;
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -54,9 +81,15 @@ function ResearchDetail() {
             <h1 className="mt-3 text-4xl font-black text-primary">{research.title}</h1>
             <p className="mt-4 max-w-2xl text-sm font-medium leading-6 text-secondary">{research.description}</p>
           </div>
-          <div className="flex shrink-0 gap-2">
-            <Button onClick={handleJoin}><UserPlus className="h-4 w-4" /> Join</Button>
-            <Button variant="ghost" onClick={handleLeave}><LogOut className="h-4 w-4" /> Leave</Button>
+          <div className="flex shrink-0 flex-col items-end gap-2">
+            {isMember ? (
+              <Button variant="ghost" onClick={handleLeave}><LogOut className="h-4 w-4" /> Leave</Button>
+            ) : (
+              <Button onClick={handleJoin}><UserPlus className="h-4 w-4" /> Join</Button>
+            )}
+            {actionError && (
+              <p className="text-xs font-semibold text-red-500">{actionError}</p>
+            )}
           </div>
         </div>
       </Card>
