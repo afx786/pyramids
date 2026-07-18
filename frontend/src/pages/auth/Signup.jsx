@@ -4,6 +4,7 @@ import FieldError from '../../components/common/FieldError.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Input from '../../components/ui/Input.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { COURSES_BY_CATEGORY } from '../../data/courses.js';
 
 function Signup() {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ function Signup() {
     const nextErrors = {};
 
     if (form.name.trim().length < 2) nextErrors.name = 'Enter your name.';
-    if (form.program.trim().length < 3) nextErrors.program = 'Enter your program or department.';
+    if (!form.program) nextErrors.program = 'Select your course.';
     if (!form.email.includes('@')) nextErrors.email = 'Enter a valid email address.';
     if (form.password.length < 6) nextErrors.password = 'Password should be at least 6 characters.';
 
@@ -63,12 +64,21 @@ function Signup() {
               <FieldError>{errors.name}</FieldError>
             </label>
             <label className="space-y-2">
-              <span className="font-mono-label text-xs text-secondary">Program</span>
-              <Input
-                placeholder="BTech CSE"
+              <span className="font-mono-label text-xs text-secondary">Course</span>
+              <select
+                className="h-11 w-full rounded-lg border border-subtle bg-surface px-3.5 text-sm font-semibold text-primary outline-none transition focus:border-primary"
                 value={form.program}
                 onChange={(event) => updateField('program', event.target.value)}
-              />
+              >
+                <option value="">Select your course</option>
+                {COURSES_BY_CATEGORY.map((group) => (
+                  <optgroup key={group.category} label={group.category}>
+                    {group.courses.map((c) => (
+                      <option key={c.value} value={c.value}>{c.label}</option>
+                    ))}
+                  </optgroup>
+                ))}
+              </select>
               <FieldError>{errors.program}</FieldError>
             </label>
             <label className="space-y-2 sm:col-span-2">
