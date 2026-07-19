@@ -4,6 +4,7 @@ import ConversationListItem from '../../components/common/ConversationListItem.j
 import EmptyState from '../../components/common/EmptyState.jsx';
 import MessageBubble from '../../components/common/MessageBubble.jsx';
 import PageHeader from '../../components/common/PageHeader.jsx';
+import Skeleton, { SkeletonAvatar, SkeletonLine } from '../../components/ui/Skeleton.jsx';
 import Avatar from '../../components/ui/Avatar.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
@@ -21,15 +22,18 @@ function Messages() {
   const [showNewChat, setShowNewChat] = useState(false);
   const [connections, setConnections] = useState([]);
   const [connectionsLoading, setConnectionsLoading] = useState(false);
+  const [conversationsLoading, setConversationsLoading] = useState(true);
+  const [messagesLoading, setMessagesLoading] = useState(false);
   const [error, setError] = useState('');
   const bottomRef = useRef(null);
 
   const loadConversations = useCallback(() => {
+    setConversationsLoading(true);
     messageService.listConversations().then((data) => {
       const list = Array.isArray(data) ? data : (data?.items ?? []);
       setConversations(list);
       if (!activeId && list.length > 0) setActiveId(list[0].conversation_id);
-    }).catch((err) => setError(err.message));
+    }).catch((err) => setError(err.message)).finally(() => setConversationsLoading(false));
   }, [activeId]);
 
   useEffect(() => {
@@ -47,7 +51,8 @@ function Messages() {
   useEffect(() => {
     if (!activeId) return;
     setError('');
-    messageService.getMessages(activeId).then(setMessages).catch((err) => setError(err.message));
+    setMessagesLoading(true);
+    messageService.getMessages(activeId).then(setMessages).catch((err) => setError(err.message)).finally(() => setMessagesLoading(false));
   }, [activeId]);
 
   useEffect(() => {
@@ -196,7 +201,19 @@ function Messages() {
           )}
 
           <div className="flex-1 space-y-2 overflow-y-auto">
-            {conversations.length > 0 ? (
+            {conversationsLoading ? (
+              <div className="space-y-3 p-2">
+                {[1,2,3,4].map((i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <SkeletonAvatar size="sm" />
+                    <div className="flex-1 space-y-1.5">
+                      <SkeletonLine width="60%" />
+                      <SkeletonLine width="40%" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : conversations.length > 0 ? (
               conversations.map((conv) => (
                 <div key={conv.conversation_id} className="group relative">
                   <ConversationListItem
@@ -238,7 +255,16 @@ function Messages() {
             </div>
 
             <div className="flex-1 space-y-4 overflow-y-auto p-6">
-              {messages.map((msg) => (
+              {messagesLoading ? (
+                <div className="space-y-4">
+                  {[1,2,3].map((i) => (
+                    <div key={i} className={`flex items-start gap-3 ${i % 2 === 0 ? 'flex-row-reverse' : ''}`}>
+                      <SkeletonAvatar size="sm" />
+                      <Skeleton className={`h-16 ${i % 2 === 0 ? 'w-2/3' : 'w-1/2'}`} />
+                    </div>
+                  ))}
+                </div>
+              ) : messages.map((msg) => (
                 <div key={msg.id} className={`group relative ${msg._failed ? 'opacity-60' : ''}`}>
                   <MessageBubble
                     message={{
