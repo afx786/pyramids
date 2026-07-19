@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import LoadingState from '../../components/common/LoadingState.jsx';
 import ProjectCard from '../../components/common/ProjectCard.jsx';
 import PageHeader from '../../components/common/PageHeader.jsx';
+import Skeleton, { SkeletonAvatar, SkeletonBlock, SkeletonLine } from '../../components/ui/Skeleton.jsx';
 import Avatar from '../../components/ui/Avatar.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
@@ -80,7 +81,33 @@ function Profile() {
     messageService.startConversation(userId).catch(() => {});
   }
 
-  if (loading) return <LoadingState label="Loading profile..." />;
+  if (loading) {
+    return (
+      <div className="mx-auto max-w-6xl">
+        <PageHeader eyebrow="" title="" description="" />
+        <section className="mt-12 grid grid-cols-[280px_1fr_220px] gap-8">
+          <Card className="p-6 space-y-4">
+            <SkeletonLine width="50%" />
+            <SkeletonLine width="80%" />
+            <SkeletonLine width="60%" />
+          </Card>
+          <div className="space-y-6">
+            <Card className="p-6 space-y-4">
+              <SkeletonLine width="30%" />
+              <SkeletonBlock />
+            </Card>
+          </div>
+          <aside className="space-y-5">
+            <Card className="flex flex-col items-center p-6 space-y-3">
+              <SkeletonAvatar size="lg" />
+              <SkeletonLine width="60%" />
+              <SkeletonLine width="40%" />
+            </Card>
+          </aside>
+        </section>
+      </div>
+    );
+  }
 
   if (!isOwnProfile && !otherProfile) {
     return (

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PageHeader from '../../components/common/PageHeader.jsx';
+import Skeleton, { SkeletonAvatar, SkeletonLine } from '../../components/ui/Skeleton.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import Input from '../../components/ui/Input.jsx';
@@ -18,12 +19,14 @@ function Search() {
   const [type, setType] = useState('users');
   const [results, setResults] = useState([]);
   const [searched, setSearched] = useState(false);
+  const [searching, setSearching] = useState(false);
   const [error, setError] = useState('');
 
   async function handleSearch() {
     if (!query.trim()) return;
     setSearched(true);
     setError('');
+    setSearching(true);
     try {
       if (type === 'users') {
         const data = await searchService.searchUsersByName(query);
@@ -36,14 +39,16 @@ function Search() {
     } catch (err) {
       setError(err.message);
       setResults([]);
+    } finally {
+      setSearching(false);
     }
   }
 
-  async function handleSendRequest(userId) {
-    try {
-      await connectionService.sendRequest(userId);
-      setResults((prev) => prev.map((u) => (u.id === userId ? { ...u, _requestSent: true } : u)));
-    } catch (err) { setError(err.message); }
+  function handleSendRequest(userId) {
+    setResults((prev) => prev.map((u) => (u.id === userId ? { ...u, _requestSent: true } : u)));
+    connectionService.sendRequest(userId).catch(() => {
+      setResults((prev) => prev.map((u) => (u.id === userId ? { ...u, _requestSent: false } : u)));
+    });
   }
 
   return (
@@ -86,15 +91,26 @@ function Search() {
           </Card>
         )}
 
-        {searched && results.length === 0 && !error && (
+        {searching ? (
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {[1,2,3].map((i) => (
+              <Card key={i} className="p-5">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0 flex-1 space-y-2">
+                    <SkeletonLine width="50%" />
+                    <SkeletonLine width="70%" />
+                    <SkeletonLine width="30%" />
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        ) : searched && results.length === 0 && !error ? (
           <Card className="mt-6 p-8 text-center">
             <p className="text-sm text-secondary">No results found for "{query}".</p>
           </Card>
-        )}
-
-        {results.length > 0 && type === 'users' && (
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {results.map((u) => (
+        ) : results.length > 0 && type === 'users' ? (
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{results.map((u) => (
               <Card key={u.id} className="p-5">
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0">
@@ -120,23 +136,15 @@ function Search() {
                   </div>
                 </div>
               </Card>
-            ))}
-          </div>
-        )}
-
-        {results.length > 0 && type === 'projects' && (
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {results.map((p) => (
+            ))}</div>
+        ) : results.length > 0 && type === 'projects' ? (
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{results.map((p) => (
               <Card key={p.id} className="p-5">
                 <p className="text-sm font-bold text-primary">{p.title}</p>
                 {p.domain && <p className="mt-1 text-xs font-medium text-secondary">{p.domain}</p>}
                 {p.description && <p className="mt-2 text-xs text-secondary line-clamp-2">{p.description}</p>}
                 {p.skills && p.skills.length > 0 && (
-                  <div className="mt-3 flex flex-wrap gap-1">
-                    {p.skills.slice(0, 4).map((s) => (
-                      <SkillTag key={s}>{s}</SkillTag>
-                    ))}
-                  </div>
+                  <div className="mt-3 flex flex-wrap gap-1">{p.skills.slice(0, 4).map((s) => (<SkillTag key={s}>{s}</SkillTag>))}</div>
                 )}
                 <div className="mt-3">
                   <Link to={`/projects/${p.id}`}>
@@ -144,9 +152,8 @@ function Search() {
                   </Link>
                 </div>
               </Card>
-            ))}
-          </div>
-        )}
+            ))}</div>
+        ) : null}
       </section>
     </div>
   );

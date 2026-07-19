@@ -4,6 +4,7 @@ import { Trash2, X } from 'lucide-react';
 import ConnectionCard from '../../components/common/ConnectionCard.jsx';
 import EmptyState from '../../components/common/EmptyState.jsx';
 import PageHeader from '../../components/common/PageHeader.jsx';
+import Skeleton, { SkeletonAvatar, SkeletonLine } from '../../components/ui/Skeleton.jsx';
 import Button from '../../components/ui/Button.jsx';
 import { connectionService } from '../../services/connectionService.js';
 import { messageService } from '../../services/messageService.js';
@@ -20,12 +21,13 @@ function Connections() {
   const [connected, setConnected] = useState([]);
   const [pending, setPending] = useState([]);
   const [sent, setSent] = useState([]);
+  const [loadingTabs, setLoadingTabs] = useState({ connected: true, pending: true, sent: true });
   const [error, setError] = useState('');
 
   useEffect(() => {
-    connectionService.listConnections().then(setConnected).catch((err) => setError(err.message));
-    connectionService.listIncomingRequests().then(setPending).catch((err) => setError(err.message));
-    connectionService.listOutgoingRequests().then(setSent).catch((err) => setError(err.message));
+    connectionService.listConnections().then((data) => { setConnected(data); setLoadingTabs((p) => ({ ...p, connected: false })); }).catch((err) => { setError(err.message); setLoadingTabs((p) => ({ ...p, connected: false })); });
+    connectionService.listIncomingRequests().then((data) => { setPending(data); setLoadingTabs((p) => ({ ...p, pending: false })); }).catch((err) => { setError(err.message); setLoadingTabs((p) => ({ ...p, pending: false })); });
+    connectionService.listOutgoingRequests().then((data) => { setSent(data); setLoadingTabs((p) => ({ ...p, sent: false })); }).catch((err) => { setError(err.message); setLoadingTabs((p) => ({ ...p, sent: false })); });
   }, []);
 
   function mapConnected(conn) {
@@ -116,7 +118,19 @@ function Connections() {
       </div>
 
       <section className="mt-8 grid grid-cols-3 gap-5">
-        {people.length > 0 ? (
+        {loadingTabs[activeTab] ? (
+          [1,2,3].map((i) => (
+            <Card key={i} className="p-5">
+              <div className="flex items-center gap-4">
+                <SkeletonAvatar size="md" />
+                <div className="flex-1 space-y-2">
+                  <SkeletonLine width="60%" />
+                  <SkeletonLine width="40%" />
+                </div>
+              </div>
+            </Card>
+          ))
+        ) : people.length > 0 ? (
           people.map((person) => (
             <div key={person.id} className="relative">
               <ConnectionCard
