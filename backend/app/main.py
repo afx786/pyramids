@@ -100,6 +100,9 @@ from app.routes.connections import (
 from app.routes.dashboard import (
     router as dashboard_router
 )
+from app.routes.ws import (
+    router as ws_router
+)
 app = FastAPI(title="Pyramids API")
 
 
@@ -193,4 +196,7 @@ app.include_router(
 )
 app.include_router(
     dashboard_router
+)
+app.include_router(
+    ws_router
 )
