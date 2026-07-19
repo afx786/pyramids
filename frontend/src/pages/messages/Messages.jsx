@@ -1,14 +1,11 @@
-import { Send, Trash2, UserPlus } from 'lucide-react';
+import { Send, Trash2, UserPlus, MessageSquare } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ConversationListItem from '../../components/common/ConversationListItem.jsx';
 import EmptyState from '../../components/common/EmptyState.jsx';
-import InfiniteScroll from '../../components/ui/InfiniteScroll.jsx';
 import MessageBubble from '../../components/common/MessageBubble.jsx';
-import PageHeader from '../../components/common/PageHeader.jsx';
-import Skeleton, { SkeletonAvatar, SkeletonLine } from '../../components/ui/Skeleton.jsx';
+import Skeleton from '../../components/ui/Skeleton.jsx';
 import Avatar from '../../components/ui/Avatar.jsx';
 import Button from '../../components/ui/Button.jsx';
-import Card from '../../components/ui/Card.jsx';
 import Input from '../../components/ui/Input.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { connectionService } from '../../services/connectionService.js';
@@ -142,42 +139,63 @@ function Messages() {
     } catch (err) { setError(err.message); }
   }
 
-  function openNewChat() {
-    setShowNewChat(true);
-  }
+  function openNewChat() { setShowNewChat(true); }
 
   const activeConversation = conversations.find((c) => c.conversation_id === activeId);
 
   return (
-    <div className="mx-auto max-w-6xl animate-fade-in">
-      <PageHeader
-        eyebrow="Inbox"
-        title="Messages"
-        description="Keep collaboration conversations focused around projects, skills, and next steps."
-      />
+    <div className="p-xl max-w-6xl mx-auto">
+      <header className="mb-xl">
+        <h2 className="font-display-serif text-display-serif" style={{ color: 'rgb(var(--color-primary))' }}>Messages</h2>
+        <p className="font-body-lg text-body-lg mt-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+          Keep collaboration conversations focused around projects, skills, and next steps.
+        </p>
+      </header>
 
-      {error && (
-        <div className="mt-5 rounded-lg border px-5 py-3" style={{ borderColor: 'rgb(var(--color-danger) / 0.3)', background: 'rgb(var(--color-danger) / 0.08)' }}>
-          <p className="text-sm font-semibold" style={{ color: 'rgb(var(--color-danger))' }}>{error}</p>
+      {error ? (
+        <div
+          className="mb-xl rounded-lg px-lg py-sm font-body-sm font-semibold"
+          style={{ background: 'rgb(var(--color-error-container))', color: 'rgb(var(--color-on-error-container))' }}
+        >
+          {error}
         </div>
-      )}
+      ) : null}
 
-      <section className="mt-10 grid h-[620px] grid-cols-[320px_1fr] gap-6">
-        <Card className="flex flex-col overflow-hidden p-4">
-          <div className="flex items-center justify-between px-2 pb-4">
-            <h2 className="text-lg font-black gradient-text">Conversations</h2>
-            <button type="button" onClick={openNewChat} className="flex items-center gap-1 text-sm font-semibold btn-press" style={{ color: 'rgb(var(--color-accent))' }}>
-              <UserPlus className="h-4 w-4" />
+      <section className="grid h-[620px] grid-cols-1 lg:grid-cols-[320px_1fr] gap-lg">
+        <div
+          className="flex flex-col overflow-hidden rounded-xl p-md"
+          style={{
+            background: 'rgb(var(--color-surface-container-low))',
+            border: '1px solid rgb(var(--color-outline-variant))',
+          }}
+        >
+          <div className="flex items-center justify-between px-sm pb-md">
+            <h3 className="font-headline-md text-headline-md" style={{ color: 'rgb(var(--color-primary))' }}>Conversations</h3>
+            <button
+              type="button"
+              onClick={openNewChat}
+              className="flex items-center gap-1 font-body-sm font-semibold transition-colors hover:opacity-80"
+              style={{ color: 'rgb(var(--color-primary))' }}
+            >
+              <UserPlus size={16} />
               New
             </button>
           </div>
 
-          {showNewChat && (
-            <div className="mb-4 rounded-xl p-3" style={{ background: 'rgb(var(--color-glass))', border: '1px solid rgb(var(--color-glass-border))' }}>
-              <p className="mb-2 text-xs font-bold text-secondary">Select a connection</p>
+          {showNewChat ? (
+            <div
+              className="mb-md rounded-xl p-md"
+              style={{
+                background: 'rgb(var(--color-surface-container))',
+                border: '1px solid rgb(var(--color-outline-variant))',
+              }}
+            >
+              <p className="mb-sm font-body-sm font-bold" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                Select a connection
+              </p>
               <div className="max-h-32 space-y-1 overflow-y-auto">
                 {connectionsLoading ? (
-                  <p className="text-xs font-medium text-secondary">Loading connections...</p>
+                  <p className="font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Loading connections...</p>
                 ) : (
                   <>
                     {connections
@@ -187,29 +205,41 @@ function Messages() {
                           key={c.id}
                           type="button"
                           onClick={() => handleStartConversation(c.user.id)}
-                          className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm transition-all duration-200 hover:bg-[rgb(var(--color-glass-border))]"
+                          className="flex w-full items-center gap-2 rounded-md px-md py-sm text-left font-body-sm transition-all"
+                          style={{ color: 'rgb(var(--color-on-surface))' }}
+                          onMouseEnter={(e) => { e.currentTarget.style.background = 'rgb(var(--color-surface-container-high))'; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
                         >
                           <Avatar src={c.user.profile_picture} alt={c.user.name} size="sm" />
                           <span className="font-medium">{c.user.name}</span>
                         </button>
                       ))}
-                    {!connectionsLoading && connections.length === 0 && <p className="text-xs text-secondary">No connections yet.</p>}
+                    {!connectionsLoading && connections.length === 0 ? (
+                      <p className="font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>No connections yet.</p>
+                    ) : null}
                   </>
                 )}
               </div>
-              <button type="button" onClick={() => setShowNewChat(false)} className="mt-2 text-xs font-semibold text-secondary">Cancel</button>
+              <button
+                type="button"
+                onClick={() => setShowNewChat(false)}
+                className="mt-sm font-body-sm font-semibold"
+                style={{ color: 'rgb(var(--color-on-surface-variant))' }}
+              >
+                Cancel
+              </button>
             </div>
-          )}
+          ) : null}
 
-          <div className="flex-1 space-y-2 overflow-y-auto">
+          <div className="flex-1 space-y-sm overflow-y-auto">
             {conversationsLoading ? (
-              <div className="space-y-3 p-2">
-                {[1,2,3,4].map((i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <SkeletonAvatar size="sm" />
+              <div className="space-y-md p-sm">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="flex items-center gap-md">
+                    <Skeleton className="h-8 w-8 rounded-full" />
                     <div className="flex-1 space-y-1.5">
-                      <SkeletonLine width="60%" />
-                      <SkeletonLine width="40%" />
+                      <Skeleton className="h-4 w-3/5" />
+                      <Skeleton className="h-3 w-2/5" />
                     </div>
                   </div>
                 ))}
@@ -230,44 +260,58 @@ function Messages() {
                   <button
                     type="button"
                     onClick={() => handleDeleteConversation(conv.conversation_id)}
-                    className="absolute right-1 top-1 hidden p-1 hover:opacity-60 group-hover:block"
-                    style={{ color: 'rgb(var(--color-danger))' }}
+                    className="absolute right-sm top-1 hidden p-xs group-hover:block transition-opacity hover:opacity-60"
+                    style={{ color: 'rgb(var(--color-error))' }}
                     title="Delete conversation"
                   >
-                    <Trash2 className="h-3 w-3" />
+                    <Trash2 size={12} />
                   </button>
                 </div>
               ))
             ) : (
-              <EmptyState title="No messages" description="Start a conversation with a connection." />
+              <EmptyState
+                title="No messages"
+                description="Start a conversation with a connection."
+              />
             )}
           </div>
-        </Card>
+        </div>
 
         {activeConversation ? (
-          <Card className="flex min-h-0 flex-col overflow-hidden">
-            <div className="flex items-center justify-between p-5" style={{ borderBottom: '1px solid rgb(var(--color-border-subtle))' }}>
-              <div className="flex items-center gap-3">
+          <div
+            className="flex min-h-0 flex-col overflow-hidden rounded-xl"
+            style={{
+              background: 'rgb(var(--color-surface-container-low))',
+              border: '1px solid rgb(var(--color-outline-variant))',
+            }}
+          >
+            <div
+              className="flex items-center justify-between p-lg"
+              style={{ borderBottom: '1px solid rgb(var(--color-outline-variant))' }}
+            >
+              <div className="flex items-center gap-md">
                 <Avatar src={null} alt={activeConversation.other_user?.name || 'User'} size="sm" />
                 <div>
-                  <h2 className="font-black">{activeConversation.other_user?.name || 'User'}</h2>
-                  <p className="text-sm font-medium text-secondary">Project collaborator</p>
+                  <h3 className="font-body-sm font-bold" style={{ color: 'rgb(var(--color-primary))' }}>
+                    {activeConversation.other_user?.name || 'User'}
+                  </h3>
+                  <p className="font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Project collaborator</p>
                 </div>
               </div>
             </div>
 
-            <div className="flex-1 space-y-4 overflow-y-auto p-6">
+            <div className="flex-1 space-y-lg overflow-y-auto p-xl">
               {messagesLoading ? (
-                <div className="space-y-4">
-                  {[1,2,3].map((i) => (
-                    <div key={i} className={`flex items-start gap-3 ${i % 2 === 0 ? 'flex-row-reverse' : ''}`}>
-                      <SkeletonAvatar size="sm" />
-                      <Skeleton className={`h-16 ${i % 2 === 0 ? 'w-2/3' : 'w-1/2'}`} />
+                <div className="space-y-lg">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className={`flex items-start gap-md ${i % 2 === 0 ? 'flex-row-reverse' : ''}`}>
+                      <Skeleton className="h-8 w-8 rounded-full shrink-0" />
+                      <Skeleton className={`h-16 ${i % 2 === 0 ? 'w-2/3' : 'w-1/2'} rounded-xl`} />
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="stagger">
+                <>
                   {messages.map((msg) => (
                     <div key={msg.id} className={`group relative ${msg._failed ? 'opacity-60' : ''}`}>
                       <MessageBubble
@@ -277,47 +321,72 @@ function Messages() {
                           mine: msg.sender_id === user?.id,
                         }}
                       />
-                      <div className="flex items-center gap-2 mt-1">
-                        {msg._sending && <span className="text-xs" style={{ color: 'rgb(var(--color-text-secondary))' }}>Sending...</span>}
-                        {msg._failed && (
-                          <button type="button" onClick={() => retrySend(msg)} className="text-xs font-semibold hover:underline" style={{ color: 'rgb(var(--color-danger))' }}>Retry</button>
-                        )}
-                        {msg.sender_id === user?.id && !msg._sending && (
+                      <div className="flex items-center gap-sm mt-xs">
+                        {msg._sending ? (
+                          <span className="font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Sending...</span>
+                        ) : null}
+                        {msg._failed ? (
+                          <button
+                            type="button"
+                            onClick={() => retrySend(msg)}
+                            className="font-body-sm font-semibold hover:underline"
+                            style={{ color: 'rgb(var(--color-error))' }}
+                          >
+                            Retry
+                          </button>
+                        ) : null}
+                        {msg.sender_id === user?.id && !msg._sending ? (
                           <button
                             type="button"
                             onClick={() => handleDeleteMessage(msg.id)}
-                            className="text-xs opacity-0 hover:opacity-100 transition-opacity group-hover:opacity-100"
-                            style={{ color: 'rgb(var(--color-text-secondary))' }}
+                            className="font-body-sm opacity-0 hover:opacity-100 transition-opacity group-hover:opacity-100"
+                            style={{ color: 'rgb(var(--color-on-surface-variant))' }}
                             title="Delete message"
                           >
                             Delete
                           </button>
-                        )}
+                        ) : null}
                       </div>
                     </div>
                   ))}
-                </div>
+                </>
               )}
               <div ref={bottomRef} />
             </div>
 
-            <div className="flex items-center gap-3 p-5" style={{ borderTop: '1px solid rgb(var(--color-border-subtle))' }}>
-              <Input
-                placeholder="Write a message"
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                onKeyDown={handleKeyDown}
-              />
+            <div
+              className="flex items-center gap-md p-lg"
+              style={{ borderTop: '1px solid rgb(var(--color-outline-variant))' }}
+            >
+              <div className="flex-1">
+                <Input
+                  placeholder="Write a message"
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                />
+              </div>
               <Button className="shrink-0" onClick={handleSend}>
-                <Send className="h-4 w-4" />
+                <Send size={16} />
                 Send
               </Button>
             </div>
-          </Card>
+          </div>
         ) : (
-          <Card className="flex items-center justify-center">
-            <p className="text-sm text-secondary">Select a conversation to start messaging.</p>
-          </Card>
+          <div
+            className="flex items-center justify-center rounded-xl"
+            style={{
+              background: 'rgb(var(--color-surface-container-low))',
+              border: '1px solid rgb(var(--color-outline-variant))',
+            }}
+          >
+            <div className="text-center">
+              <MessageSquare size={48} style={{ color: 'rgb(var(--color-on-surface-variant) / 0.3)' }} className="mx-auto mb-md" />
+              <p className="font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                Select a conversation to start messaging.
+              </p>
+            </div>
+          </div>
         )}
       </section>
     </div>
