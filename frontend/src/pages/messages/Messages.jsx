@@ -157,23 +157,23 @@ function Messages() {
       />
 
       {error && (
-        <div className="mt-5 border border-red-200 bg-red-50 px-5 py-3 rounded-lg">
-          <p className="text-sm font-semibold text-red-700">{error}</p>
+        <div className="mt-5 rounded-lg border px-5 py-3" style={{ borderColor: 'rgb(var(--color-danger) / 0.3)', background: 'rgb(var(--color-danger) / 0.08)' }}>
+          <p className="text-sm font-semibold" style={{ color: 'rgb(var(--color-danger))' }}>{error}</p>
         </div>
       )}
 
       <section className="mt-10 grid h-[620px] grid-cols-[320px_1fr] gap-6">
         <Card className="flex flex-col overflow-hidden p-4">
           <div className="flex items-center justify-between px-2 pb-4">
-            <h2 className="text-lg font-black text-primary">Conversations</h2>
-            <button type="button" onClick={openNewChat} className="flex items-center gap-1 text-sm font-semibold text-primary">
+            <h2 className="text-lg font-black gradient-text">Conversations</h2>
+            <button type="button" onClick={openNewChat} className="flex items-center gap-1 text-sm font-semibold btn-press" style={{ color: 'rgb(var(--color-accent))' }}>
               <UserPlus className="h-4 w-4" />
               New
             </button>
           </div>
 
           {showNewChat && (
-            <div className="mb-4 rounded-lg border border-subtle p-3">
+            <div className="mb-4 rounded-xl p-3" style={{ background: 'rgb(var(--color-glass))', border: '1px solid rgb(var(--color-glass-border))' }}>
               <p className="mb-2 text-xs font-bold text-secondary">Select a connection</p>
               <div className="max-h-32 space-y-1 overflow-y-auto">
                 {connectionsLoading ? (
@@ -187,10 +187,10 @@ function Messages() {
                           key={c.id}
                           type="button"
                           onClick={() => handleStartConversation(c.user.id)}
-                          className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-accent-soft"
+                          className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm transition-all duration-200 hover:bg-[rgb(var(--color-glass-border))]"
                         >
                           <Avatar src={c.user.profile_picture} alt={c.user.name} size="sm" />
-                          <span className="font-medium text-primary">{c.user.name}</span>
+                          <span className="font-medium">{c.user.name}</span>
                         </button>
                       ))}
                     {!connectionsLoading && connections.length === 0 && <p className="text-xs text-secondary">No connections yet.</p>}
@@ -230,7 +230,8 @@ function Messages() {
                   <button
                     type="button"
                     onClick={() => handleDeleteConversation(conv.conversation_id)}
-                    className="absolute right-1 top-1 hidden p-1 text-secondary hover:text-red-500 group-hover:block"
+                    className="absolute right-1 top-1 hidden p-1 hover:opacity-60 group-hover:block"
+                    style={{ color: 'rgb(var(--color-danger))' }}
                     title="Delete conversation"
                   >
                     <Trash2 className="h-3 w-3" />
@@ -245,11 +246,11 @@ function Messages() {
 
         {activeConversation ? (
           <Card className="flex min-h-0 flex-col overflow-hidden">
-            <div className="flex items-center justify-between border-b border-subtle p-5">
+            <div className="flex items-center justify-between p-5" style={{ borderBottom: '1px solid rgb(var(--color-border-subtle))' }}>
               <div className="flex items-center gap-3">
                 <Avatar src={null} alt={activeConversation.other_user?.name || 'User'} size="sm" />
                 <div>
-                  <h2 className="font-black text-primary">{activeConversation.other_user?.name || 'User'}</h2>
+                  <h2 className="font-black">{activeConversation.other_user?.name || 'User'}</h2>
                   <p className="text-sm font-medium text-secondary">Project collaborator</p>
                 </div>
               </div>
@@ -265,35 +266,42 @@ function Messages() {
                     </div>
                   ))}
                 </div>
-              ) : messages.map((msg) => (
-                <div key={msg.id} className={`group relative ${msg._failed ? 'opacity-60' : ''}`}>
-                  <MessageBubble
-                    message={{
-                      id: msg.id,
-                      text: msg.content,
-                      mine: msg.sender_id === user?.id,
-                    }}
-                  />
-                  {msg._sending && <span className="ml-2 text-xs text-secondary">Sending...</span>}
-                  {msg._failed && (
-                    <button type="button" onClick={() => retrySend(msg)} className="ml-2 text-xs font-semibold text-red-500 hover:underline">Retry</button>
-                  )}
-                  {msg.sender_id === user?.id && !msg._sending && (
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteMessage(msg.id)}
-                      className="absolute -right-1 -top-1 hidden rounded-full bg-red-100 p-1 text-red-500 hover:bg-red-200 group-hover:block"
-                      title="Delete message"
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </button>
-                  )}
+              ) : (
+                <div className="stagger">
+                  {messages.map((msg) => (
+                    <div key={msg.id} className={`group relative ${msg._failed ? 'opacity-60' : ''}`}>
+                      <MessageBubble
+                        message={{
+                          id: msg.id,
+                          text: msg.content,
+                          mine: msg.sender_id === user?.id,
+                        }}
+                      />
+                      <div className="flex items-center gap-2 mt-1">
+                        {msg._sending && <span className="text-xs" style={{ color: 'rgb(var(--color-text-secondary))' }}>Sending...</span>}
+                        {msg._failed && (
+                          <button type="button" onClick={() => retrySend(msg)} className="text-xs font-semibold hover:underline" style={{ color: 'rgb(var(--color-danger))' }}>Retry</button>
+                        )}
+                        {msg.sender_id === user?.id && !msg._sending && (
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteMessage(msg.id)}
+                            className="text-xs opacity-0 hover:opacity-100 transition-opacity group-hover:opacity-100"
+                            style={{ color: 'rgb(var(--color-text-secondary))' }}
+                            title="Delete message"
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
               <div ref={bottomRef} />
             </div>
 
-            <div className="flex items-center gap-3 border-t border-subtle p-5">
+            <div className="flex items-center gap-3 p-5" style={{ borderTop: '1px solid rgb(var(--color-border-subtle))' }}>
               <Input
                 placeholder="Write a message"
                 value={text}
