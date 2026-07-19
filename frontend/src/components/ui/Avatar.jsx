@@ -9,7 +9,7 @@ function Avatar({ alt, src, size = 'md', className = '' }) {
     <img
       src={src}
       alt={alt}
-      className={`${sizes[size]} rounded-full object-cover ring-1 ring-subtle ${className}`}
+      className={`${sizes[size]} rounded-full object-cover ring-1 ring-subtle transition-all duration-200 hover:ring-2 hover:ring-accent/30 ${className}`}
     />
   );
 }
