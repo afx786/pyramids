@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Trash2, X } from 'lucide-react';
 import ConnectionCard from '../../components/common/ConnectionCard.jsx';
 import EmptyState from '../../components/common/EmptyState.jsx';
+import InfiniteScroll from '../../components/ui/InfiniteScroll.jsx';
 import PageHeader from '../../components/common/PageHeader.jsx';
 import Skeleton, { SkeletonAvatar, SkeletonLine } from '../../components/ui/Skeleton.jsx';
 import Button from '../../components/ui/Button.jsx';
@@ -130,7 +131,9 @@ function Connections() {
               </div>
             </Card>
           ))
-        ) : people.length > 0 ? (
+        ) : (
+          <InfiniteScroll onLoadMore={() => {}} hasMore={false} loading={false}>
+          {people.length > 0 ? (
           people.map((person) => (
             <div key={person.id} className="relative">
               <ConnectionCard
@@ -154,6 +157,8 @@ function Connections() {
           <div className="col-span-3">
             <EmptyState title={`No ${activeTab} connections yet`} description={`${activeTab === 'connected' ? 'Connect with builders to grow your network.' : activeTab === 'pending' ? 'Incoming requests will appear here.' : 'Sent requests will appear here.'}`} />
           </div>
+        )}
+          </InfiniteScroll>
         )}
       </section>
     </div>
