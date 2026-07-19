@@ -148,7 +148,7 @@ function Messages() {
   const activeConversation = conversations.find((c) => c.conversation_id === activeId);
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="mx-auto max-w-6xl animate-fade-in">
       <PageHeader
         eyebrow="Inbox"
         title="Messages"

@@ -89,7 +89,7 @@ function Connections() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="mx-auto max-w-6xl animate-fade-in">
       <PageHeader
         eyebrow="Network"
         title="Connections"

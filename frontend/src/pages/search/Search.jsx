@@ -52,7 +52,7 @@ function Search() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="mx-auto max-w-6xl animate-fade-in">
       <PageHeader
         eyebrow="Discover"
         title="Search"

@@ -83,7 +83,7 @@ function Profile() {
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-6xl animate-fade-in">
         <PageHeader eyebrow="" title="" description="" />
         <section className="mt-12 grid grid-cols-[280px_1fr_220px] gap-8">
           <Card className="p-6 space-y-4">
@@ -124,7 +124,7 @@ function Profile() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="mx-auto max-w-6xl animate-fade-in">
       {!isOwnProfile && (
         <Link to="/search" className="mb-6 flex items-center gap-2 text-sm font-semibold text-secondary hover:text-primary transition">
           <ArrowLeft className="h-4 w-4" />
