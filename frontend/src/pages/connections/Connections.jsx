@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trash2, X } from 'lucide-react';
 import ConnectionCard from '../../components/common/ConnectionCard.jsx';
 import EmptyState from '../../components/common/EmptyState.jsx';
 import InfiniteScroll from '../../components/ui/InfiniteScroll.jsx';
 import PageHeader from '../../components/common/PageHeader.jsx';
-import Skeleton, { SkeletonAvatar, SkeletonLine } from '../../components/ui/Skeleton.jsx';
-import Button from '../../components/ui/Button.jsx';
+import { SkeletonAvatar, SkeletonLine } from '../../components/ui/Skeleton.jsx';
+import Card from '../../components/ui/Card.jsx';
 import { connectionService } from '../../services/connectionService.js';
 import { messageService } from '../../services/messageService.js';
 
@@ -98,8 +97,8 @@ function Connections() {
       />
 
       {error && (
-        <div className="mt-5 border border-red-200 bg-red-50 px-5 py-3 rounded-lg">
-          <p className="text-sm font-semibold text-red-700">{error}</p>
+        <div className="mt-5 rounded-lg border px-5 py-3" style={{ borderColor: 'rgb(var(--color-danger) / 0.3)', background: 'rgb(var(--color-danger) / 0.08)' }}>
+          <p className="text-sm font-semibold" style={{ color: 'rgb(var(--color-danger))' }}>{error}</p>
         </div>
       )}
 
@@ -107,20 +106,31 @@ function Connections() {
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            className={`rounded-lg px-5 py-3 text-sm font-black transition ${
-              activeTab === tab.id ? 'bg-primary text-app' : 'bg-surface text-primary border border-subtle'
-            }`}
+            className="rounded-xl px-5 py-3 text-sm font-black transition-all duration-200 btn-press"
             type="button"
             onClick={() => setActiveTab(tab.id)}
+            style={
+              activeTab === tab.id
+                ? {
+                    background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgb(80 60 255))',
+                    color: 'white',
+                    border: 'none',
+                  }
+                : {
+                    background: 'rgb(var(--color-glass))',
+                    color: 'rgb(var(--color-text-primary))',
+                    border: '1px solid rgb(var(--color-glass-border))',
+                  }
+            }
           >
             {tab.label}
           </button>
         ))}
       </div>
 
-      <section className="mt-8 grid grid-cols-3 gap-5">
+      <section className="stagger mt-8 grid grid-cols-3 gap-5">
         {loadingTabs[activeTab] ? (
-          [1,2,3].map((i) => (
+          [1,2,3,4,5,6].map((i) => (
             <Card key={i} className="p-5">
               <div className="flex items-center gap-4">
                 <SkeletonAvatar size="md" />

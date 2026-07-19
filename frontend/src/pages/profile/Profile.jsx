@@ -18,9 +18,12 @@ import { userService } from '../../services/userService.js';
 function SkillMeter({ skill, width }) {
   return (
     <div className="grid grid-cols-[88px_1fr] items-center gap-4">
-      <span className="font-black text-primary">{skill}</span>
-      <div className="h-4 overflow-hidden rounded-full bg-accent-soft">
-        <div className="h-full rounded-full bg-accent" style={{ width: `${width}%` }} />
+      <span className="font-black">{skill}</span>
+      <div className="h-4 overflow-hidden rounded-full" style={{ background: 'rgb(var(--color-accent-soft))' }}>
+        <div
+          className="h-full rounded-full"
+          style={{ width: `${width}%`, background: 'linear-gradient(90deg, rgb(var(--color-accent)), rgb(80 60 255))' }}
+        />
       </div>
     </div>
   );
@@ -98,7 +101,7 @@ function Profile() {
             </Card>
           </div>
           <aside className="space-y-5">
-            <Card className="flex flex-col items-center p-6 space-y-3">
+            <Card className="flex flex-col items-center p-6 space-y-3 gradient-border">
               <SkeletonAvatar size="lg" />
               <SkeletonLine width="60%" />
               <SkeletonLine width="40%" />
@@ -164,14 +167,14 @@ function Profile() {
       />
 
       {actionError && (
-        <div className="mt-5 border border-red-200 bg-red-50 px-5 py-3 rounded-lg">
-          <p className="text-sm font-semibold text-red-700">{actionError}</p>
+        <div className="mt-5 rounded-lg border px-5 py-3" style={{ borderColor: 'rgb(var(--color-danger) / 0.3)', background: 'rgb(var(--color-danger) / 0.08)' }}>
+          <p className="text-sm font-semibold" style={{ color: 'rgb(var(--color-danger))' }}>{actionError}</p>
         </div>
       )}
 
-      <section className="mt-12 grid grid-cols-[280px_1fr_220px] gap-8">
+      <section className="stagger mt-12 grid grid-cols-[280px_1fr_220px] gap-8">
         <Card className="p-6">
-          <h2 className="mb-6 text-lg font-black text-primary">Skills</h2>
+          <h2 className="mb-6 text-lg font-black gradient-text">Skills</h2>
           {displaySkills.length > 0 ? (
             <div className="space-y-5">
               {displaySkills.slice(0, 6).map((skill, i) => (
@@ -186,15 +189,15 @@ function Profile() {
         <div className="space-y-6">
           <Card className="p-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-black text-primary">About</h2>
+              <h2 className="text-2xl font-black gradient-text">About</h2>
             </div>
             {displayUser?.program && (
-              <p className="mt-4 rounded-lg bg-accent px-4 py-3 text-sm font-black text-app">
+              <p className="mt-4 rounded-xl px-4 py-3 text-sm font-black" style={{ background: 'linear-gradient(135deg, rgb(var(--color-accent) / 0.15), transparent)', border: '1px solid rgb(var(--color-accent) / 0.15)' }}>
                 {displayUser.program}
               </p>
             )}
             {displayUser?.bio ? (
-              <p className="mt-4 rounded-lg bg-accent px-5 py-5 text-base font-bold leading-7 text-app">
+              <p className="mt-4 rounded-xl px-5 py-5 text-base font-bold leading-7" style={{ background: 'linear-gradient(135deg, rgb(var(--color-accent) / 0.1), transparent)', border: '1px solid rgb(var(--color-accent) / 0.1)' }}>
                 {displayUser.bio}
               </p>
             ) : (
@@ -204,7 +207,7 @@ function Profile() {
 
           {displaySkills.length > 0 && (
             <Card className="p-6">
-              <h2 className="text-xl font-black text-primary">All Skills</h2>
+              <h2 className="text-xl font-black gradient-text">All Skills</h2>
               <div className="mt-4 flex flex-wrap gap-2">
                 {displaySkills.map((skill) => (
                   <SkillTag key={skill}>{skill}</SkillTag>
@@ -215,9 +218,9 @@ function Profile() {
         </div>
 
         <aside className="space-y-5">
-          <Card className="flex flex-col items-center p-6 text-center">
-            <Avatar src={displayUser?.profile_picture} alt={displayUser?.name} size="lg" className="h-28 w-28" />
-            <h2 className="mt-4 text-xl font-black text-primary">{displayUser?.name ?? '—'}</h2>
+          <Card className="flex flex-col items-center p-6 text-center gradient-border">
+            <Avatar src={displayUser?.profile_picture} alt={displayUser?.name} size="lg" className="h-28 w-28 ring-2 ring-accent/30" />
+            <h2 className="mt-4 text-xl font-black">{displayUser?.name ?? '—'}</h2>
             <p className="mt-1 text-sm font-bold text-secondary">{displayUser?.headline || 'Builder'}</p>
           </Card>
 
@@ -226,15 +229,15 @@ function Profile() {
             <div className="mt-5 space-y-4">
               <div className="flex justify-between text-sm">
                 <span className="font-bold text-secondary">Projects</span>
-                <strong>{displayStats.total_projects ?? displayRank?.projects_count ?? '—'}</strong>
+                <strong className="gradient-text">{displayStats.total_projects ?? displayRank?.projects_count ?? '—'}</strong>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="font-bold text-secondary">Skills</span>
-                <strong>{displayRank?.skills_count ?? displaySkills.length}</strong>
+                <strong className="gradient-text">{displayRank?.skills_count ?? displaySkills.length}</strong>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="font-bold text-secondary">Rank points</span>
-                <strong>{displayRank?.points ?? '—'}</strong>
+                <strong className="gradient-text">{displayRank?.points ?? '—'}</strong>
               </div>
             </div>
           </Card>
@@ -242,8 +245,8 @@ function Profile() {
       </section>
 
       {displayProjects.length > 0 && (
-        <section className="mt-10">
-          <h2 className="mb-5 text-xl font-black text-primary">Projects</h2>
+        <section className="stagger mt-10">
+          <h2 className="mb-5 text-xl font-black gradient-text">Projects</h2>
           <div className="space-y-4">
             {displayProjects.slice(0, 3).map((project) => (
               <ProjectCard
