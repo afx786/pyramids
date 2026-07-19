@@ -1,11 +1,15 @@
 import Button from '../ui/Button.jsx';
 
-function EmptyState({ title, description, actionLabel, onAction, icon: Icon }) {
+function EmptyState({ title, description, actionLabel, onAction, icon }) {
   return (
     <div className="rounded-xl p-10 text-center animate-scale-in" style={{ border: '1px dashed rgb(var(--color-border-subtle))', background: 'rgb(var(--color-glass))' }}>
-      {Icon ? (
+      {icon ? (
         <div className="mx-auto mb-6 flex h-14 w-14 animate-float items-center justify-center rounded-2xl" style={{ background: 'rgb(var(--color-accent) / 0.08)', border: '1px solid rgb(var(--color-accent) / 0.15)' }}>
-          <Icon className="h-6 w-6" strokeWidth={1.5} style={{ color: 'rgb(var(--color-accent))' }} />
+          {typeof icon === 'function' ? (
+            <icon className="h-6 w-6" strokeWidth={1.5} style={{ color: 'rgb(var(--color-accent))' }} />
+          ) : (
+            icon
+          )}
         </div>
       ) : null}
       <h2 className="text-xl font-black gradient-text">{title}</h2>

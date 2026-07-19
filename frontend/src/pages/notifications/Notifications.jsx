@@ -52,7 +52,7 @@ function Notifications() {
           <EmptyState
             title="No notifications yet"
             description="Notifications about project invitations, connection requests, and updates will appear here."
-            icon={<Inbox className="h-6 w-6" />}
+            icon={Inbox}
           />
         )}
       </section>
