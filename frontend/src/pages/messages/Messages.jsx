@@ -54,14 +54,29 @@ function Messages() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  async function handleSend() {
+  let _tempId = 0;
+  function nextTempId() { return --_tempId; }
+
+  function handleSend() {
     if (!text.trim() || !activeId) return;
     setError('');
-    try {
-      const msg = await messageService.sendMessage(activeId, text.trim());
-      setMessages((prev) => [...prev, msg]);
-      setText('');
-    } catch (err) { setError(err.message); }
+    const tempId = nextTempId();
+    const content = text.trim();
+    setText('');
+    const optimistic = {
+      id: tempId,
+      conversation_id: activeId,
+      sender_id: user?.id,
+      content,
+      created_at: new Date().toISOString(),
+      _sending: true,
+    };
+    setMessages((prev) => [...prev, optimistic]);
+    messageService.sendMessage(activeId, content).then((msg) => {
+      setMessages((prev) => prev.map((m) => (m.id === tempId ? { ...msg, _sending: false } : m)));
+    }).catch(() => {
+      setMessages((prev) => prev.map((m) => (m.id === tempId ? { ...m, _sending: false, _failed: true } : m)));
+    });
   }
 
   function handleKeyDown(e) {
@@ -72,24 +87,32 @@ function Messages() {
   }
 
   async function handleDeleteMessage(msgId) {
+    setMessages((prev) => prev.filter((m) => m.id !== msgId));
+    if (msgId < 0) return;
     try {
       await messageService.deleteMessage(msgId);
-      setMessages((prev) => prev.filter((m) => m.id !== msgId));
-    } catch (err) { setError(err.message); }
+    } catch {}
   }
 
-  async function handleDeleteConversation(convId) {
-    try {
-      await messageService.deleteConversation(convId);
-      setConversations((prev) => {
-        const next = prev.filter((c) => c.conversation_id !== convId);
-        if (activeId === convId) {
-          setActiveId(next.length > 0 ? next[0].conversation_id : null);
-          setMessages([]);
-        }
-        return next;
-      });
-    } catch (err) { setError(err.message); }
+  function retrySend(msg) {
+    setMessages((prev) => prev.map((m) => (m.id === msg.id ? { ...m, _sending: true, _failed: false } : m)));
+    messageService.sendMessage(msg.conversation_id, msg.content).then((real) => {
+      setMessages((prev) => prev.map((m) => (m.id === msg.id ? { ...real, _sending: false } : m)));
+    }).catch(() => {
+      setMessages((prev) => prev.map((m) => (m.id === msg.id ? { ...m, _sending: false, _failed: true } : m)));
+    });
+  }
+
+  function handleDeleteConversation(convId) {
+    setConversations((prev) => {
+      const next = prev.filter((c) => c.conversation_id !== convId);
+      if (activeId === convId) {
+        setActiveId(next.length > 0 ? next[0].conversation_id : null);
+        setMessages([]);
+      }
+      return next;
+    });
+    messageService.deleteConversation(convId).catch(() => {});
   }
 
   async function handleStartConversation(userId) {
@@ -216,7 +239,7 @@ function Messages() {
 
             <div className="flex-1 space-y-4 overflow-y-auto p-6">
               {messages.map((msg) => (
-                <div key={msg.id} className="group relative">
+                <div key={msg.id} className={`group relative ${msg._failed ? 'opacity-60' : ''}`}>
                   <MessageBubble
                     message={{
                       id: msg.id,
@@ -224,7 +247,11 @@ function Messages() {
                       mine: msg.sender_id === user?.id,
                     }}
                   />
-                  {msg.sender_id === user?.id && (
+                  {msg._sending && <span className="ml-2 text-xs text-secondary">Sending...</span>}
+                  {msg._failed && (
+                    <button type="button" onClick={() => retrySend(msg)} className="ml-2 text-xs font-semibold text-red-500 hover:underline">Retry</button>
+                  )}
+                  {msg.sender_id === user?.id && !msg._sending && (
                     <button
                       type="button"
                       onClick={() => handleDeleteMessage(msg.id)}
