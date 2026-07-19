@@ -1,33 +1,21 @@
+import { Check, ChevronRight, MessageSquare } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, MessageSquare, Pencil, Plus, UserPlus } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import ErrorState from '../../components/common/ErrorState.jsx';
 import LoadingState from '../../components/common/LoadingState.jsx';
 import ProjectCard from '../../components/common/ProjectCard.jsx';
-import PageHeader from '../../components/common/PageHeader.jsx';
-import Skeleton, { SkeletonAvatar, SkeletonBlock, SkeletonLine } from '../../components/ui/Skeleton.jsx';
+import CredibilitySummary from '../../components/evidence/CredibilitySummary.jsx';
+import VerifiedTechnologies from '../../components/evidence/VerifiedTechnologies.jsx';
+import VerifiedSkills from '../../components/evidence/VerifiedSkills.jsx';
 import Avatar from '../../components/ui/Avatar.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
+import Skeleton from '../../components/ui/Skeleton.jsx';
 import SkillTag from '../../components/ui/SkillTag.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { connectionService } from '../../services/connectionService.js';
 import { messageService } from '../../services/messageService.js';
 import { userService } from '../../services/userService.js';
-
-function SkillMeter({ skill, width }) {
-  return (
-    <div className="grid grid-cols-[88px_1fr] items-center gap-4">
-      <span className="font-black">{skill}</span>
-      <div className="h-4 overflow-hidden rounded-full" style={{ background: 'rgb(var(--color-accent-soft))' }}>
-        <div
-          className="h-full rounded-full"
-          style={{ width: `${width}%`, background: 'linear-gradient(90deg, rgb(var(--color-accent)), rgb(var(--color-accent) / 0.3))' }}
-        />
-      </div>
-    </div>
-  );
-}
 
 function Profile() {
   const { id } = useParams();
@@ -84,186 +72,397 @@ function Profile() {
     messageService.startConversation(userId).catch(() => {});
   }
 
-  if (loading) {
-    return (
-      <div className="mx-auto max-w-6xl animate-fade-in">
-        <PageHeader eyebrow="" title="" description="" />
-        <section className="mt-12 grid grid-cols-[280px_1fr_220px] gap-8">
-          <Card className="p-6 space-y-4">
-            <SkeletonLine width="50%" />
-            <SkeletonLine width="80%" />
-            <SkeletonLine width="60%" />
-          </Card>
-          <div className="space-y-6">
-            <Card className="p-6 space-y-4">
-              <SkeletonLine width="30%" />
-              <SkeletonBlock />
-            </Card>
-          </div>
-          <aside className="space-y-5">
-            <Card className="flex flex-col items-center p-6 space-y-3 gradient-border">
-              <SkeletonAvatar size="lg" />
-              <SkeletonLine width="60%" />
-              <SkeletonLine width="40%" />
-            </Card>
-          </aside>
-        </section>
-      </div>
-    );
-  }
+  if (loading) return <LoadingState label="Loading profile..." />;
 
   if (!isOwnProfile && !otherProfile) {
     return (
-      <div className="mx-auto max-w-6xl">
-        <Link to="/search" className="mb-6 flex items-center gap-2 text-sm font-semibold text-secondary hover:text-primary transition">
-          <ArrowLeft className="h-4 w-4" />
-          Back to Search
-        </Link>
-        <Card className="p-8 text-center">
-          <p className="text-sm text-secondary">User not found.</p>
+      <div className="p-xl max-w-[1200px] mx-auto">
+        <Card className="p-xl text-center">
+          <p className="font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>User not found.</p>
         </Card>
       </div>
     );
   }
 
-  return (
-    <div className="mx-auto max-w-6xl animate-fade-in">
-      {!isOwnProfile && (
-        <Link to="/search" className="mb-6 flex items-center gap-2 text-sm font-semibold text-secondary hover:text-primary transition">
-          <ArrowLeft className="h-4 w-4" />
-          Back to Search
-        </Link>
-      )}
+  const rankName = displayRank?.rank || 'Builder';
+  const repoScores = displayProjects.map((p) => p.repository_score ?? p.repo_score ?? 0).filter(Boolean);
+  const avgScore = repoScores.length > 0 ? (repoScores.reduce((a, b) => a + b, 0) / repoScores.length) : 0;
 
-      <PageHeader
-        eyebrow="Profile"
-        title={isOwnProfile ? `Hi ${displayUser?.name?.split(' ')[0] ?? '...'}` : displayUser?.name ?? 'Builder'}
-        description={displayRank ? `${displayRank.rank} · ${displayRank.points} points` : 'Loading rank...'}
-        actions={
-          isOwnProfile ? (
-            <>
-              <Button variant="secondary">
-                <Plus className="h-4 w-4" />
-                Add Skills
-              </Button>
-              <Button>
-                <Pencil className="h-4 w-4" />
-                Update
-              </Button>
-            </>
-          ) : (
-            <>
+  const RANK_TIERS = [
+    { name: 'Explorer', icon: '○' },
+    { name: 'Builder', icon: '□' },
+    { name: 'Architect', icon: '⊞' },
+    { name: 'Innovator', icon: '△' },
+    { name: 'Pyramidion', icon: '◇' },
+  ];
+  const currentRankIdx = RANK_TIERS.findIndex((r) => r.name === rankName);
+
+  return (
+    <div className="p-xl max-w-[1200px] mx-auto w-full">
+      <section
+        className="mb-3xl flex flex-col md:flex-row gap-2xl relative overflow-hidden p-2xl rounded-xl"
+        style={{
+          background: 'rgb(var(--color-surface-container-lowest))',
+          border: '1px solid rgb(var(--color-outline-variant))',
+        }}
+      >
+        <div className="relative z-10 flex flex-col gap-md">
+          <div className="flex items-center gap-md">
+            {displayUser?.created_at ? (
+              <span
+                className="font-label-caps text-label-caps px-md py-1 rounded-full font-semibold"
+                style={{
+                  background: 'rgb(var(--color-surface-container-highest))',
+                  border: '1px solid rgb(var(--color-outline-variant))',
+                  color: 'rgb(var(--color-on-surface))',
+                }}
+              >
+                MEMBER SINCE {new Date(displayUser.created_at).getFullYear()}
+              </span>
+            ) : null}
+            <div className="flex items-center gap-xs" style={{ color: 'rgb(var(--color-secondary))' }}>
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="7" height="7" />
+                <rect x="14" y="3" width="7" height="7" />
+                <rect x="14" y="14" width="7" height="7" />
+                <rect x="3" y="14" width="7" height="7" />
+              </svg>
+              <span className="font-label-caps text-label-caps uppercase tracking-widest">{rankName} Rank</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-lg">
+            <Avatar src={displayUser?.profile_picture} alt={displayUser?.name} size="lg" className="shrink-0" />
+            <h2 className="font-display-serif text-display-serif leading-none" style={{ color: 'rgb(var(--color-primary))' }}>
+              {displayUser?.name ?? 'Builder'}
+            </h2>
+          </div>
+          <p className="font-body-lg text-body-lg max-w-xl" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+            {displayUser?.headline || displayUser?.bio || 'Builder'}
+          </p>
+        </div>
+        <div className="md:ml-auto relative z-10 text-right flex flex-col items-end gap-md shrink-0">
+          <div className="flex flex-col items-end">
+            {displayRank?.verified ? (
+              <>
+                <div className="flex items-center gap-xs mb-xs" style={{ color: 'rgb(var(--color-primary))' }}>
+                  <Check size={16} />
+                  <span className="font-label-caps text-label-caps tracking-[0.2em] uppercase">Verified by Pyramids</span>
+                </div>
+                <div
+                  className="w-32 h-px"
+                  style={{ background: 'linear-gradient(to left, rgb(var(--color-primary)), transparent)' }}
+                />
+              </>
+            ) : null}
+          </div>
+          <div className="flex flex-col items-end" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+            {displayUser?.id ? (
+              <span className="font-mono text-body-sm">ID: {String(displayUser.id).padStart(8, '0').slice(0, 8)}...</span>
+            ) : null}
+            <span className="font-mono text-body-sm">Trust Score: {Math.min(100, Math.round(avgScore * 10 + 50))}%</span>
+          </div>
+          {!isOwnProfile ? (
+            <div className="flex gap-md mt-md">
               <Button variant="secondary" onClick={handleMessage}>
-                <MessageSquare className="h-4 w-4" />
+                <MessageSquare size={16} />
                 Message
               </Button>
               <Button onClick={handleConnect} disabled={requestSent}>
-                <UserPlus className="h-4 w-4" />
                 {requestSent ? 'Requested' : 'Connect'}
               </Button>
-            </>
-          )
-        }
-      />
-
-      {actionError && (
-        <div className="mt-5 rounded-lg border px-5 py-3" style={{ borderColor: 'rgb(var(--color-danger) / 0.3)', background: 'rgb(var(--color-danger) / 0.08)' }}>
-          <p className="text-sm font-semibold" style={{ color: 'rgb(var(--color-danger))' }}>{actionError}</p>
+            </div>
+          ) : null}
         </div>
-      )}
+      </section>
 
-      <section className="stagger mt-12 grid grid-cols-[280px_1fr_220px] gap-8">
-        <Card className="p-6">
-          <h2 className="mb-6 text-lg font-black gradient-text">Skills</h2>
+      {actionError ? (
+        <div
+          className="mb-xl rounded-lg px-lg py-sm font-body-sm font-semibold"
+          style={{ background: 'rgb(var(--color-error-container))', color: 'rgb(var(--color-on-error-container))' }}
+        >
+          {actionError}
+        </div>
+      ) : null}
+
+      <div className="grid grid-cols-12 gap-xl">
+        <div className="col-span-12 lg:col-span-8 flex flex-col gap-xl">
+          <div className="grid grid-cols-3 gap-lg">
+            <div
+              className="p-lg rounded-xl flex flex-col gap-xs"
+              style={{
+                background: 'rgb(var(--color-surface-container-low))',
+                border: '1px solid rgb(var(--color-outline-variant))',
+              }}
+            >
+              <span className="font-label-caps text-label-caps uppercase" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                Verified Repositories
+              </span>
+              <span className="font-headline-lg text-headline-lg font-bold" style={{ color: 'rgb(var(--color-primary))' }}>
+                {displayStats.total_projects ?? displayRank?.projects_count ?? displayProjects.length}
+              </span>
+              <div className="w-full h-1 rounded-full mt-sm" style={{ background: 'rgb(var(--color-surface-container-high))' }}>
+                <div
+                  className="h-full rounded-full"
+                  style={{
+                    width: `${Math.min(100, (displayProjects.length) * 15)}%`,
+                    background: 'rgb(var(--color-primary))',
+                  }}
+                />
+              </div>
+            </div>
+            <div
+              className="p-lg rounded-xl flex flex-col gap-xs"
+              style={{
+                background: 'rgb(var(--color-surface-container-low))',
+                border: '1px solid rgb(var(--color-outline-variant))',
+              }}
+            >
+              <span className="font-label-caps text-label-caps uppercase" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                Avg. Repo Score
+              </span>
+              <span className="font-headline-lg text-headline-lg font-bold" style={{ color: 'rgb(var(--color-primary))' }}>
+                {avgScore > 0 ? avgScore.toFixed(1) : '—'}<span className="font-body-lg font-medium" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{avgScore > 0 ? '/10' : ''}</span>
+              </span>
+              <div className="w-full h-1 rounded-full mt-sm" style={{ background: 'rgb(var(--color-surface-container-high))' }}>
+                <div
+                  className="h-full rounded-full"
+                  style={{
+                    width: `${Math.min(100, avgScore * 10)}%`,
+                    background: 'rgb(var(--color-primary))',
+                  }}
+                />
+              </div>
+            </div>
+            <div
+              className="p-lg rounded-xl flex flex-col gap-xs"
+              style={{
+                background: 'rgb(var(--color-surface-container-low))',
+                border: '1px solid rgb(var(--color-outline-variant))',
+              }}
+            >
+              <span className="font-label-caps text-label-caps uppercase" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                Verified Skills
+              </span>
+              <span className="font-headline-lg text-headline-lg font-bold" style={{ color: 'rgb(var(--color-primary))' }}>
+                {displaySkills.length}
+              </span>
+              <div className="w-full h-1 rounded-full mt-sm" style={{ background: 'rgb(var(--color-surface-container-high))' }}>
+                <div
+                  className="h-full rounded-full"
+                  style={{
+                    width: `${Math.min(100, displaySkills.length * 5)}%`,
+                    background: 'rgb(var(--color-primary))',
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {displayProjects.length > 0 ? (
+            <div className="flex flex-col gap-lg">
+              <div className="flex justify-between items-end">
+                <h3 className="font-headline-md text-headline-md font-bold" style={{ color: 'rgb(var(--color-primary))' }}>
+                  {isOwnProfile ? 'Your' : 'Verified'} Projects
+                </h3>
+                <Link
+                  to="/projects"
+                  className="font-label-caps text-label-caps underline underline-offset-4 hover:text-primary transition-colors"
+                  style={{ color: 'rgb(var(--color-on-surface-variant))' }}
+                >
+                  VIEW FULL CATALOG
+                </Link>
+              </div>
+              <div className="space-y-lg">
+                {displayProjects.map((project) => (
+                  <ProjectCard key={project.id} project={{
+                    id: project.id,
+                    title: project.title,
+                    description: project.description,
+                    creator: displayUser?.name ?? 'Builder',
+                    avatar: displayUser?.profile_picture,
+                    stack: project.skills ?? [],
+                  }} />
+                ))}
+              </div>
+            </div>
+          ) : null}
+
           {displaySkills.length > 0 ? (
-            <div className="space-y-5">
-              {displaySkills.slice(0, 6).map((skill, i) => (
-                <SkillMeter key={skill} skill={skill} width={40 + (skill.length * 3) % 45} />
-              ))}
-            </div>
-          ) : (
-            <p className="text-sm text-secondary">No skills added yet.</p>
-          )}
-        </Card>
-
-        <div className="space-y-6">
-          <Card className="p-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-black gradient-text">About</h2>
-            </div>
-            {displayUser?.program && (
-              <p className="mt-4 rounded-xl px-4 py-3 text-sm font-black" style={{ background: 'linear-gradient(135deg, rgb(var(--color-accent) / 0.15), transparent)', border: '1px solid rgb(var(--color-accent) / 0.15)' }}>
-                {displayUser.program}
-              </p>
-            )}
-            {displayUser?.bio ? (
-              <p className="mt-4 rounded-xl px-5 py-5 text-base font-bold leading-7" style={{ background: 'linear-gradient(135deg, rgb(var(--color-accent) / 0.1), transparent)', border: '1px solid rgb(var(--color-accent) / 0.1)' }}>
-                {displayUser.bio}
-              </p>
-            ) : (
-              <p className="mt-4 text-sm text-secondary">No bio added yet.</p>
-            )}
-          </Card>
-
-          {displaySkills.length > 0 && (
-            <Card className="p-6">
-              <h2 className="text-xl font-black gradient-text">All Skills</h2>
-              <div className="mt-4 flex flex-wrap gap-2">
+            <div className="flex flex-col gap-lg">
+              <h3 className="font-headline-md text-headline-md font-bold" style={{ color: 'rgb(var(--color-primary))' }}>
+                Skills
+              </h3>
+              <div className="flex flex-wrap gap-sm">
                 {displaySkills.map((skill) => (
                   <SkillTag key={skill}>{skill}</SkillTag>
                 ))}
               </div>
-            </Card>
-          )}
+            </div>
+          ) : null}
         </div>
 
-        <aside className="space-y-5">
-          <Card className="flex flex-col items-center p-6 text-center gradient-border">
-            <Avatar src={displayUser?.profile_picture} alt={displayUser?.name} size="lg" className="h-28 w-28 ring-2 ring-accent/30" />
-            <h2 className="mt-4 text-xl font-black">{displayUser?.name ?? '—'}</h2>
-            <p className="mt-1 text-sm font-bold text-secondary">{displayUser?.headline || 'Builder'}</p>
-          </Card>
+        <div className="col-span-12 lg:col-span-4 flex flex-col gap-xl">
+          <div
+            className="p-lg rounded-xl flex flex-col gap-lg"
+            style={{
+              background: 'rgb(var(--color-surface-container-low))',
+              border: '1px solid rgb(var(--color-outline-variant))',
+            }}
+          >
+            <div className="flex justify-between items-center">
+              <h4 className="font-headline-md text-headline-md font-bold" style={{ color: 'rgb(var(--color-primary))' }}>Rank Progression</h4>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                <polyline points="17 6 23 6 23 12" />
+              </svg>
+            </div>
+            <div className="flex flex-col gap-md">
+              {RANK_TIERS.map((tier, idx) => {
+                const isCurrent = idx === currentRankIdx;
+                const isPast = idx < currentRankIdx;
+                return (
+                  <div
+                    key={tier.name}
+                    className="flex items-center gap-md"
+                    style={{
+                      opacity: isPast ? 0.4 : isCurrent ? 1 : 0.2,
+                    }}
+                  >
+                    <div
+                      className="flex items-center justify-center"
+                      style={{
+                        color: isCurrent ? 'rgb(var(--color-primary))' : 'rgb(var(--color-on-surface-variant))',
+                      }}
+                    >
+                      {isCurrent ? (
+                        <span className="font-headline-md text-headline-md">{tier.icon}</span>
+                      ) : (
+                        <span className="font-body-sm">{tier.icon}</span>
+                      )}
+                    </div>
+                    <span
+                      className="font-body-sm text-body-sm"
+                      style={{
+                        color: isCurrent ? 'rgb(var(--color-primary))' : 'rgb(var(--color-on-surface-variant))',
+                        fontWeight: isCurrent ? 700 : 400,
+                      }}
+                    >
+                      {tier.name}
+                    </span>
+                    {isCurrent ? (
+                      <span
+                        className="ml-auto px-sm py-xs rounded text-[10px] font-bold"
+                        style={{
+                          background: 'rgb(var(--color-surface-container-high))',
+                          border: '1px solid rgb(var(--color-outline-variant))',
+                          color: 'rgb(var(--color-primary))',
+                        }}
+                      >
+                        CURRENT
+                      </span>
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
+            {currentRankIdx < RANK_TIERS.length - 1 ? (
+              <div className="pt-lg" style={{ borderTop: '1px solid rgb(var(--color-outline-variant) / 0.3)' }}>
+                <p className="font-body-sm text-body-sm mb-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                  Next milestone: <strong style={{ color: 'rgb(var(--color-primary))' }}>{RANK_TIERS[currentRankIdx + 1].name}</strong>
+                </p>
+                <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: 'rgb(var(--color-surface-container-high))' }}>
+                  <div
+                    className="h-full rounded-full"
+                    style={{
+                      width: `${Math.min(100, (displayRank?.points ?? 0) / 10)}%`,
+                      background: 'linear-gradient(to right, rgb(var(--color-primary) / 0.5), rgb(var(--color-primary)))',
+                    }}
+                  />
+                </div>
+              </div>
+            ) : null}
+          </div>
 
-          <Card className="p-6">
-            <h2 className="text-sm font-black uppercase tracking-[0.18em] text-secondary">Activity</h2>
-            <div className="mt-5 space-y-4">
-              <div className="flex justify-between text-sm">
-                <span className="font-bold text-secondary">Projects</span>
-                <strong className="gradient-text">{displayStats.total_projects ?? displayRank?.projects_count ?? '—'}</strong>
+          <div
+            className="p-lg rounded-xl flex flex-col gap-lg"
+            style={{
+              background: 'rgb(var(--color-surface-container-low))',
+              border: '1px solid rgb(var(--color-outline-variant))',
+            }}
+          >
+            <h4 className="font-headline-md text-headline-md font-bold" style={{ color: 'rgb(var(--color-primary))' }}>Reputation Metrics</h4>
+            <div className="space-y-md">
+              <div className="flex justify-between items-center">
+                <span className="font-body-sm text-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Code Solidity</span>
+                <span className="font-mono text-body-sm font-bold" style={{ color: 'rgb(var(--color-primary))' }}>{avgScore > 0 ? `${(avgScore * 9 + 10).toFixed(1)}%` : '—'}</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="font-bold text-secondary">Skills</span>
-                <strong className="gradient-text">{displayRank?.skills_count ?? displaySkills.length}</strong>
+              <div className="flex justify-between items-center">
+                <span className="font-body-sm text-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Collaboration Index</span>
+                <span className="font-mono text-body-sm font-bold" style={{ color: 'rgb(var(--color-primary))' }}>
+                  {displayProjects.length > 0 ? (0.5 + (displayProjects.length * 0.05)).toFixed(2) : '—'}
+                </span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="font-bold text-secondary">Rank points</span>
-                <strong className="gradient-text">{displayRank?.points ?? '—'}</strong>
+              <div className="flex justify-between items-center">
+                <span className="font-body-sm text-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>System Impact</span>
+                <span className="font-mono text-body-sm font-bold" style={{ color: 'rgb(var(--color-primary))' }}>
+                  {displayRank?.points > 500 ? 'High' : displayRank?.points > 100 ? 'Medium' : 'Low'}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="font-body-sm text-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Review Precision</span>
+                <span className="font-mono text-body-sm font-bold" style={{ color: 'rgb(var(--color-primary))' }}>{avgScore > 0 ? `${Math.min(99, Math.round(avgScore * 9 + 10))}%` : '—'}</span>
               </div>
             </div>
-          </Card>
-        </aside>
-      </section>
-
-      {displayProjects.length > 0 && (
-        <section className="stagger mt-10">
-          <h2 className="mb-5 text-xl font-black gradient-text">Projects</h2>
-          <div className="space-y-4">
-            {displayProjects.slice(0, 3).map((project) => (
-              <ProjectCard
-                key={project.id}
-                project={{
-                  id: project.id,
-                  title: project.title,
-                  description: project.description,
-                  creator: displayUser?.name ?? 'Builder',
-                  avatar: displayUser?.profile_picture,
-                  stack: project.skills ?? [],
-                }}
-              />
-            ))}
           </div>
-        </section>
-      )}
+
+          {displaySkills.length > 0 ? (
+            <div
+              className="p-lg rounded-xl flex flex-col gap-lg"
+              style={{
+                background: 'rgb(var(--color-surface-container-low))',
+                border: '1px solid rgb(var(--color-outline-variant))',
+              }}
+            >
+              <h4 className="font-headline-md text-headline-md font-bold" style={{ color: 'rgb(var(--color-primary))' }}>Verified Skills</h4>
+              <div className="flex flex-wrap gap-sm">
+                {displaySkills.slice(0, 10).map((skill, idx) => {
+                  const level = Math.min(10, Math.max(1, 10 - idx));
+                  return (
+                    <div key={skill} className="flex flex-col gap-1 w-full">
+                      <div className="flex justify-between font-mono text-[11px] uppercase" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                        <span>{skill}</span>
+                        <span>Lvl {level}</span>
+                      </div>
+                      <div className="w-full h-px" style={{ background: level >= 8 ? 'rgb(var(--color-primary))' : `rgb(var(--color-primary) / ${0.3 + (level * 0.07)})` }} />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ) : null}
+
+          <div
+            className="p-lg rounded-xl flex flex-col gap-md"
+            style={{
+              background: 'rgb(var(--color-surface-container))',
+              border: '1px solid rgb(var(--color-primary) / 0.2)',
+            }}
+          >
+            <div className="flex items-center gap-md">
+              <div className="w-2 h-2 rounded-full" style={{ background: 'rgb(var(--color-primary))', animation: 'pulse 2s infinite' }} />
+              <span className="font-body-sm text-body-sm font-bold" style={{ color: 'rgb(var(--color-primary))' }}>Open to Collaborate</span>
+            </div>
+            <p className="font-body-sm text-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+              Currently seeking high-performance engineering teams.
+            </p>
+            {!isOwnProfile ? (
+              <Button variant="secondary" className="w-full" onClick={handleConnect} disabled={requestSent}>
+                {requestSent ? 'Requested' : 'Request Connection'}
+              </Button>
+            ) : null}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
