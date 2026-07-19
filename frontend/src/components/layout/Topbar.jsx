@@ -1,46 +1,71 @@
-import { Bell, Search } from 'lucide-react';
+import { Bell, Search, Award } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import Avatar from '../ui/Avatar.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 
 function Topbar() {
   const navigate = useNavigate();
-  const { user, profile } = useAuth();
-  const avatar = profile?.user?.profile_picture ?? null;
-  const name = user?.name ?? '';
+  const { rankData } = useAuth();
 
   return (
     <header
-      className="sticky top-0 z-20 flex h-20 items-center justify-between px-4 sm:px-6 lg:px-10 xl:px-12"
+      className="sticky top-0 z-40 flex h-16 items-center justify-between px-lg py-sm border-b glass-nav"
       style={{
-        background: 'rgb(var(--color-app) / 0.85)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgb(var(--color-glass-border))',
+        background: 'rgb(var(--color-surface) / 0.8)',
+        borderColor: 'rgb(var(--color-outline-variant))',
       }}
     >
-      <div>
-        <p className="font-mono-label text-xs text-secondary">Pyramids</p>
-        <p className="mt-1 hidden text-sm font-semibold sm:block" style={{ color: 'rgb(var(--color-text-secondary))' }}>Builder network</p>
+      {/* Search */}
+      <div className="relative w-full max-w-md group">
+        <Search
+          className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 transition-colors"
+          style={{ color: 'rgb(var(--color-on-surface-variant) / 0.6)' }}
+          strokeWidth={1.5}
+        />
+        <input
+          className="w-full rounded-lg py-2 pl-10 pr-4 font-body-sm text-body-sm transition-all outline-none"
+          style={{
+            background: 'rgb(var(--color-surface-container-lowest))',
+            border: 'none',
+            boxShadow: '0 0 0 1px rgb(var(--color-outline-variant))',
+            color: 'rgb(var(--color-on-surface))',
+          }}
+          placeholder="Search workspace..."
+          type="text"
+          onFocus={(e) => { e.target.style.boxShadow = '0 0 0 1px rgb(var(--color-primary))'; }}
+          onBlur={(e) => { e.target.style.boxShadow = '0 0 0 1px rgb(var(--color-outline-variant))'; }}
+          onKeyDown={(e) => { if (e.key === 'Enter' && e.target.value.trim()) { navigate('/search?q=' + encodeURIComponent(e.target.value.trim())); } }}
+        />
       </div>
-      <div className="flex items-center gap-2 sm:gap-3">
-        <button
-          className="flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-200 btn-press"
-          style={{ color: 'rgb(var(--color-text-secondary))' }}
-          aria-label="Search"
-          onClick={() => navigate('/search')}
-        >
-          <Search className="h-5 w-5" strokeWidth={1.8} style={{ color: 'rgb(var(--color-accent))' }} />
-        </button>
-        <button
-          className="flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-200 btn-press"
-          style={{ color: 'rgb(var(--color-text-secondary))' }}
-          aria-label="Notifications"
-          onClick={() => navigate('/notifications')}
-        >
-          <Bell className="h-5 w-5" strokeWidth={1.8} />
-        </button>
-        <Avatar src={avatar} alt={name} />
+
+      {/* Right actions */}
+      <div className="flex items-center gap-lg">
+        <div className="flex items-center gap-md">
+          <button
+            className="relative transition-opacity hover:opacity-80"
+            style={{ color: 'rgb(var(--color-on-surface-variant))' }}
+            onClick={() => navigate('/notifications')}
+          >
+            <Bell className="h-5 w-5" strokeWidth={1.5} />
+            <span className="absolute top-0 right-0 w-1.5 h-1.5 rounded-full"
+              style={{ background: 'rgb(var(--color-error))' }}
+            />
+          </button>
+        </div>
+        <div className="flex items-center gap-sm pl-md" style={{ borderLeft: '1px solid rgb(var(--color-outline-variant))' }}>
+          <div className="text-right">
+            <p className="font-label-caps text-label-caps leading-none" style={{ color: 'rgb(var(--color-primary))' }}>
+              {rankData?.rank || 'Builder'}
+            </p>
+            <p className="font-mono text-[10px]" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+              LVL {rankData?.points || 0}
+            </p>
+          </div>
+          <div className="w-8 h-8 rounded-full border flex items-center justify-center overflow-hidden"
+            style={{ borderColor: 'rgb(var(--color-outline-variant))', background: 'rgb(var(--color-surface-container-high))' }}
+          >
+            <Award className="h-4 w-4" style={{ color: 'rgb(var(--color-primary))' }} strokeWidth={1.5} />
+          </div>
+        </div>
       </div>
     </header>
   );

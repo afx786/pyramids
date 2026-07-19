@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400&amp;family=Instrument+Serif&amp;family=Geist:wght@600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+        }
+        .verified-seal-glow {
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.05);
+        }
+        @keyframes subtle-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+        .animate-subtle { animation: subtle-float 4s ease-in-out infinite; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#696360",
+                        "background": "#131315",
+                        "secondary-container": "#45464e",
+                        "outline-variant": "#444748",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed": "#eae0dd",
+                        "on-secondary-fixed": "#1a1b22",
+                        "on-primary-fixed": "#1a1c1c",
+                        "secondary-fixed": "#e2e1eb",
+                        "on-background": "#e5e1e4",
+                        "surface-variant": "#353437",
+                        "on-secondary-fixed-variant": "#45464e",
+                        "on-secondary": "#2f3037",
+                        "on-tertiary-fixed": "#1f1b19",
+                        "inverse-on-surface": "#313032",
+                        "on-surface-variant": "#c4c7c8",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#4b4543",
+                        "surface-bright": "#39393b",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "on-error": "#690005",
+                        "surface-container-highest": "#353437",
+                        "primary-container": "#e2e2e2",
+                        "surface-dim": "#131315",
+                        "error": "#ffb4ab",
+                        "surface-container-lowest": "#0e0e10",
+                        "tertiary-fixed-dim": "#cec4c2",
+                        "inverse-primary": "#5d5f5f",
+                        "on-primary-container": "#636465",
+                        "outline": "#8e9192",
+                        "on-primary": "#2f3131",
+                        "primary": "#ffffff",
+                        "on-tertiary": "#342f2d",
+                        "surface-container-low": "#1c1b1d",
+                        "on-secondary-container": "#b4b4bd",
+                        "on-surface": "#e5e1e4",
+                        "surface-container": "#201f22",
+                        "tertiary": "#fffeff",
+                        "secondary": "#c6c6cf",
+                        "tertiary-container": "#eae0dd",
+                        "surface-tint": "#c6c6c6",
+                        "surface-container-high": "#2a2a2c",
+                        "primary-fixed": "#e2e2e2",
+                        "surface": "#131315",
+                        "secondary-fixed-dim": "#c6c6cf",
+                        "on-primary-fixed-variant": "#454747",
+                        "inverse-surface": "#e5e1e4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "gutter": "24px",
+                        "3xl": "64px",
+                        "unit": "8px",
+                        "container-max": "1280px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "2xl": "48px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "mono": ["JetBrains Mono"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Geist"],
+                        "headline-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "display-serif": ["Instrument Serif"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "500"}],
+                        "mono": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}],
+                        "display-serif": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-lg min-h-screen">
+<!-- SideNavBar (Shared Component) -->
+<nav class="w-[240px] h-screen fixed left-0 top-0 bg-surface-container-low dark:bg-surface-container-low backdrop-blur-md opacity-80 flex flex-col h-full py-lg px-md z-[60]">
+<div class="mb-2xl px-sm">
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">Pyramids</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant opacity-70">Builder Workspace</p>
+</div>
+<div class="flex-1 space-y-sm">
+<a class="flex items-center gap-md px-md py-sm rounded transition-colors hover:bg-surface-container-high text-on-surface-variant font-medium group" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="font-body-sm text-body-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded transition-colors text-primary font-bold border-l-2 border-primary bg-surface-container-highest group" href="#">
+<span class="material-symbols-outlined text-[20px]">account_tree</span>
+<span class="font-body-sm text-body-sm">Projects</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded transition-colors hover:bg-surface-container-high text-on-surface-variant font-medium group" href="#">
+<span class="material-symbols-outlined text-[20px]">groups</span>
+<span class="font-body-sm text-body-sm">Teams</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded transition-colors hover:bg-surface-container-high text-on-surface-variant font-medium group" href="#">
+<span class="material-symbols-outlined text-[20px]">military_tech</span>
+<span class="font-body-sm text-body-sm">Rank</span>
+</a>
+</div>
+<div class="mt-auto px-sm pb-md">
+<button class="w-full bg-primary text-background px-md py-sm rounded font-label-caps text-label-caps hover:opacity-90 transition-opacity active:scale-[0.98]">
+                New Project
+            </button>
+</div>
+</nav>
+<!-- TopAppBar (Shared Component) -->
+<header class="flex justify-between items-center w-full px-lg py-sm h-16 ml-[240px] max-w-[calc(100%-240px)] sticky top-0 z-50 bg-surface-container-low/80 backdrop-blur-md border-b border-outline-variant">
+<div class="flex items-center gap-lg">
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+<input class="w-full bg-surface-container-high border-none rounded-full pl-xl pr-md py-xs font-body-sm text-body-sm focus:ring-1 focus:ring-outline transition-all" placeholder="Search workspace..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-sm">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors p-sm">workspace_premium</button>
+<div class="h-8 w-px bg-outline-variant mx-sm"></div>
+<div class="flex items-center gap-sm">
+<div class="text-right">
+<p class="font-body-sm text-body-sm font-bold text-on-surface">Alex Chen</p>
+<p class="font-mono text-[10px] text-on-surface-variant uppercase tracking-widest">Architect Rank</p>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a young male software architect in a dark studio setting. He is wearing a minimalist black turtleneck. The lighting is low-key with a subtle rim light defining his silhouette, matching a high-end minimalist dark mode workspace aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCw_MDgE7kzWJu1L7jZYWWVMHpOvbiY4_35p6C_uBwc5EpnRdpQxG3asMS1bG_unW9T0mGu5hDh4oMfpNkqq3AFGtQ3FlcgEueYyhBBqtl0srgHTH4B4h5L-wydsV_okjnC5tbWMn1X1qoOH0nQzdZhNjPNTy2LBRAwdXiOUTXNDOJWr3dd_l7UESBrS6IkwMl6ZkblnnKmR09CvNsDQTPV9q8M_b-qyjwazlKZFN5YjYcpQw-pCQO7"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-[240px] p-2xl max-w-5xl mx-auto">
+<!-- Success Header Section -->
+<div class="flex flex-col items-center text-center mb-3xl">
+<div class="relative mb-xl animate-subtle">
+<div class="absolute inset-0 bg-primary/10 blur-3xl rounded-full"></div>
+<div class="relative w-32 h-32 rounded-full border border-primary/20 bg-surface-container-low flex items-center justify-center verified-seal-glow">
+<div class="text-center">
+<span class="material-symbols-outlined text-primary text-[48px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<p class="font-label-caps text-[10px] tracking-[0.2em] text-primary mt-xs">VERIFIED BY PYRAMIDS</p>
+</div>
+</div>
+</div>
+<h2 class="font-display-serif text-display-serif text-on-surface mb-sm">Verification Successful</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-md">Your project now contains verifiable proof of work that other builders can trust.</p>
+</div>
+<!-- Bento Grid Results -->
+<div class="grid grid-cols-12 gap-lg mb-2xl">
+<!-- Repository Score Card -->
+<div class="col-span-12 lg:col-span-5 bg-surface-container-low border border-outline-variant rounded-xl p-xl flex flex-col justify-between">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-md uppercase">Repository Score</p>
+<div class="flex items-baseline gap-sm">
+<span class="font-display-serif text-[64px] leading-none text-primary">94</span>
+<span class="font-body-lg text-outline">/ 100</span>
+</div>
+</div>
+<div class="mt-xl">
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[94%] transition-all duration-1000 ease-out"></div>
+</div>
+<div class="flex justify-between mt-sm">
+<p class="font-mono text-[11px] text-on-surface-variant">Top 2% of contributors</p>
+<p class="font-mono text-[11px] text-primary">High Integrity</p>
+</div>
+</div>
+</div>
+<!-- Verified Skills Card -->
+<div class="col-span-12 lg:col-span-7 bg-surface-container-low border border-outline-variant rounded-xl p-xl">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-xl uppercase">Top Verified Skills</p>
+<div class="space-y-lg">
+<!-- Skill 1 -->
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded border border-outline-variant bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px] text-on-surface">architecture</span>
+</div>
+<div>
+<p class="font-headline-md text-headline-md leading-none mb-1">System Architecture</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Scalable microservices design</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-mono text-label-caps text-primary">Lvl 9</p>
+</div>
+</div>
+<!-- Skill 2 -->
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded border border-outline-variant bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px] text-on-surface">terminal</span>
+</div>
+<div>
+<p class="font-headline-md text-headline-md leading-none mb-1">Advanced Rust</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Memory safety &amp; concurrency</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-mono text-label-caps text-primary">Lvl 7</p>
+</div>
+</div>
+<!-- Skill 3 -->
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded border border-outline-variant bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px] text-on-surface">database</span>
+</div>
+<div>
+<p class="font-headline-md text-headline-md leading-none mb-1">Distributed DBs</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Consistency &amp; Partitioning</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-mono text-label-caps text-primary">Lvl 6</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Status Log Card -->
+</div>
+<!-- Footer Actions -->
+<div class="flex flex-col sm:flex-row items-center justify-center gap-md"><button class="w-full sm:w-auto px-2xl py-md bg-primary text-background font-label-caps text-label-caps rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-sm">Continue to Project<span class="material-symbols-outlined text-[18px]">arrow_forward</span></button><button class="w-full sm:w-auto px-2xl py-md bg-transparent border border-outline-variant text-on-surface font-label-caps text-label-caps rounded-lg hover:bg-surface-container-high transition-colors">View Verification Report</button><button class="w-full sm:w-auto px-2xl py-md bg-transparent text-on-surface-variant font-label-caps text-label-caps rounded-lg hover:text-primary transition-colors">Verify Another Repository</button></div>
+<!-- Atmospheric Background Element -->
+</main>
+<script>
+        // Subtle interaction for the skill items
+        document.querySelectorAll('.group').forEach(item => {
+            item.addEventListener('mousedown', () => {
+                item.style.transform = 'scale(0.99)';
+            });
+            item.addEventListener('mouseup', () => {
+                item.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>

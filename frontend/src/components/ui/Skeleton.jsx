@@ -1,8 +1,7 @@
 function Skeleton({ className = '', as: Tag = 'div', ...props }) {
   return (
     <Tag
-      className={`animate-shimmer rounded-xl ${className}`}
-      style={{ border: '1px solid rgb(var(--color-glass-border))' }}
+      className={`animate-shimmer rounded-lg ${className}`}
       {...props}
     />
   );

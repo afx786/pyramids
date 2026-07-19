@@ -1,10 +1,10 @@
 function SkillTag({ children }) {
   return (
     <span
-      className="rounded-md px-2.5 py-1 text-[11px] font-medium text-secondary"
+      className="font-mono text-[11px] px-2 py-0.5 rounded"
       style={{
-        background: 'rgb(var(--color-glass))',
-        border: '1px solid rgb(var(--color-glass-border))',
+        background: 'rgb(var(--color-surface-variant))',
+        color: 'rgb(var(--color-on-surface))',
       }}
     >
       {children}

@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pyramids - Create Project</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Instrument+Serif&amp;family=Geist:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 20;
+            font-size: 20px;
+        }
+        .step-transition {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-panel {
+            background: rgba(28, 27, 29, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid #27272a;
+        }
+        /* Custom scrollbar for terminal-like views */
+        .terminal-scroll::-webkit-scrollbar { width: 4px; }
+        .terminal-scroll::-webkit-scrollbar-track { background: transparent; }
+        .terminal-scroll::-webkit-scrollbar-thumb { background: #353437; border-radius: 2px; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#e5e1e4",
+                        "on-primary-fixed": "#1a1c1c",
+                        "primary-container": "#e2e2e2",
+                        "on-primary-fixed-variant": "#454747",
+                        "surface-container": "#201f22",
+                        "outline": "#8e9192",
+                        "surface-variant": "#353437",
+                        "secondary": "#c6c6cf",
+                        "secondary-fixed-dim": "#c6c6cf",
+                        "on-error-container": "#ffdad6",
+                        "surface-tint": "#c6c6c6",
+                        "inverse-primary": "#5d5f5f",
+                        "inverse-on-surface": "#313032",
+                        "primary-fixed": "#e2e2e2",
+                        "primary": "#ffffff",
+                        "inverse-surface": "#e5e1e4",
+                        "background": "#131315",
+                        "on-secondary-fixed-variant": "#45464e",
+                        "surface-container-lowest": "#0e0e10",
+                        "surface-container-high": "#2a2a2c",
+                        "surface-bright": "#39393b",
+                        "outline-variant": "#444748",
+                        "secondary-container": "#45464e",
+                        "on-tertiary-fixed-variant": "#4b4543",
+                        "surface-container-low": "#1c1b1d",
+                        "on-primary": "#2f3131",
+                        "on-tertiary-fixed": "#1f1b19",
+                        "error-container": "#93000a",
+                        "surface-container-highest": "#353437",
+                        "surface-dim": "#131315",
+                        "on-tertiary": "#342f2d",
+                        "error": "#ffb4ab",
+                        "on-surface-variant": "#c4c7c8",
+                        "on-secondary": "#2f3037",
+                        "secondary-fixed": "#e2e1eb",
+                        "on-error": "#690005",
+                        "tertiary": "#fffeff",
+                        "on-background": "#e5e1e4",
+                        "tertiary-fixed-dim": "#cec4c2",
+                        "tertiary-fixed": "#eae0dd",
+                        "on-primary-container": "#636465",
+                        "on-tertiary-container": "#696360",
+                        "on-secondary-fixed": "#1a1b22",
+                        "tertiary-container": "#eae0dd",
+                        "surface": "#131315",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "on-secondary-container": "#b4b4bd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "xl": "32px",
+                        "3xl": "64px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "2xl": "48px",
+                        "md": "16px",
+                        "unit": "8px",
+                        "lg": "24px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Geist"],
+                        "mono": ["JetBrains Mono"],
+                        "headline-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-serif": ["Instrument Serif"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "mono": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "600"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-lg min-h-screen selection:bg-primary-container selection:text-on-primary-container">
+<!-- Header / Top Bar (Docked) -->
+<header class="sticky top-0 z-50 w-full h-16 flex justify-between items-center px-lg bg-surface/80 backdrop-blur-md border-b border-outline-variant">
+<div class="flex items-center gap-md">
+<span class="font-headline-md font-bold text-primary tracking-tight">Pyramids</span>
+<div class="h-4 w-[1px] bg-outline-variant"></div>
+<span class="font-body-sm text-on-surface-variant">Builder Workspace</span>
+</div>
+<div class="flex items-center gap-md">
+<button class="p-sm text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A clean, professional close-up portrait of a digital architect user with a monochromatic aesthetic, soft studio lighting, and a high-end minimalist feel. The background is a subtle charcoal grey, focusing on the persona of a skilled technical builder." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkZrluhoyxWleqirXGp_WLh46_bjLw0M4PvdjBjHMSeCTgT0hGj3BLmn8yJIRH9fO1endzviC_XLe8I86CnUx1XItMZXB3tortKVWzJOAlJ_j6PaE2kSgqyPpe16BGMfQOnRtldGN6664ufBEA5yI5i5qjSZx6aJoXRBAeaRXOoRrO1uSoah5Lj2-MmWqsbmpjPKennLn5lvDkc1FneQMFdBeB9QbbKCzmoezJbEd98U0Mxi-xOAFp"/>
+</div>
+</div>
+</header>
+<main class="flex flex-col items-center pt-2xl pb-3xl px-md">
+<!-- Workflow Container -->
+<div class="w-full max-w-3xl">
+<!-- Breadcrumbs / Steps Indicator -->
+<nav class="flex items-center justify-between mb-2xl px-sm">
+<div class="flex items-center gap-sm group cursor-pointer" data-step-target="1">
+<span class="w-8 h-8 rounded-full flex items-center justify-center font-mono text-label-caps bg-primary text-on-primary border border-primary">1</span>
+<span class="font-label-caps text-primary">Details</span>
+</div>
+<div class="flex-grow h-[1px] bg-outline-variant mx-md"></div>
+<div class="flex items-center gap-sm text-on-surface-variant opacity-50 transition-opacity" data-step-target="2">
+<span class="w-8 h-8 rounded-full flex items-center justify-center font-mono text-label-caps border border-outline-variant">2</span>
+<span class="font-label-caps">Repository</span>
+</div>
+<div class="flex-grow h-[1px] bg-outline-variant mx-md"></div>
+<div class="flex items-center gap-sm text-on-surface-variant opacity-50" data-step-target="3">
+<span class="w-8 h-8 rounded-full flex items-center justify-center font-mono text-label-caps border border-outline-variant">3</span>
+<span class="font-label-caps">Verify</span>
+</div>
+<div class="flex-grow h-[1px] bg-outline-variant mx-md"></div>
+<div class="flex items-center gap-sm text-on-surface-variant opacity-50" data-step-target="4">
+<span class="w-8 h-8 rounded-full flex items-center justify-center font-mono text-label-caps border border-outline-variant">4</span>
+<span class="font-label-caps">Team</span>
+</div>
+</nav>
+<!-- Active Form Section -->
+<section class="step-transition" id="step-content-1">
+<div class="mb-xl text-center">
+<h1 class="font-headline-lg text-primary mb-sm">Create Project - Step 1</h1>
+<p class="text-on-surface-variant font-body-lg">Define the core identity and visibility of your builder workspace.</p>
+</div>
+<div class="glass-panel p-xl rounded-xl space-y-lg">
+<!-- Project Name -->
+<div class="space-y-xs">
+<label class="font-label-caps text-on-surface-variant ml-xs">Project Name</label>
+<input class="w-full bg-surface-container-lowest border-outline-variant border rounded-lg px-md py-sm focus:border-primary focus:ring-0 transition-all text-primary font-body-lg" placeholder="e.g. Apollo Infrastructure" type="text"/>
+</div>
+<!-- Description -->
+<div class="space-y-xs">
+<label class="font-label-caps text-on-surface-variant ml-xs">Description</label>
+<textarea class="w-full bg-surface-container-lowest border-outline-variant border rounded-lg px-md py-sm focus:border-primary focus:ring-0 transition-all text-primary font-body-lg resize-none" placeholder="Describe the structural goals and technical scope..." rows="4"></textarea>
+</div>
+<!-- Visibility Grid -->
+<div class="space-y-xs">
+<label class="font-label-caps text-on-surface-variant ml-xs">Workspace Visibility</label>
+<div class="grid grid-cols-2 gap-md">
+<button class="p-md text-left glass-panel rounded-lg border-primary border-2 flex gap-md items-start active:scale-[0.98] duration-150">
+<span class="material-symbols-outlined text-primary mt-1">public</span>
+<div>
+<p class="font-headline-md text-primary text-sm">Public</p>
+<p class="text-body-sm text-on-surface-variant mt-1 leading-tight">Visible to all builders in the network. Earn Rank points for contributions.</p>
+</div>
+</button>
+<button class="p-md text-left glass-panel rounded-lg border-outline-variant hover:border-surface-variant flex gap-md items-start active:scale-[0.98] duration-150">
+<span class="material-symbols-outlined text-on-surface-variant mt-1">lock</span>
+<div>
+<p class="font-headline-md text-on-surface text-sm">Private</p>
+<p class="text-body-sm text-on-surface-variant mt-1 leading-tight">Only invited Architect-level members can view and join.</p>
+</div>
+</button>
+</div>
+</div>
+</div>
+<!-- Footer Navigation -->
+<div class="mt-xl flex justify-between items-center">
+<button class="text-on-surface-variant font-label-caps hover:text-primary transition-colors">Cancel</button>
+<button class="bg-primary text-on-primary px-xl py-sm font-label-caps rounded-lg hover:opacity-90 active:scale-[0.98] transition-all" onclick="nextStep(2)">Next: Connect Repository</button>
+</div>
+</section>
+<!-- Step 2: Repository Connection (Hidden initially) -->
+<section class="step-transition hidden" id="step-content-2">
+<div class="mb-xl text-center">
+<h1 class="font-headline-lg text-primary mb-sm">Connect Repository</h1>
+<p class="text-on-surface-variant font-body-lg">Sync your codebase to trigger the Pyramids verification engine.</p>
+</div>
+<div class="glass-panel p-xl rounded-xl">
+<div class="flex flex-col gap-lg">
+<button class="w-full h-16 bg-[#18181B] border border-outline-variant flex items-center justify-center gap-md rounded-lg hover:border-primary transition-all active:scale-[0.99]">
+<svg class="w-6 h-6 fill-white" viewbox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
+<span class="font-label-caps text-white">Continue with GitHub</span>
+</button>
+<div class="flex items-center gap-md">
+<div class="flex-grow h-[1px] bg-outline-variant"></div>
+<span class="font-label-caps text-on-surface-variant">or</span>
+<div class="flex-grow h-[1px] bg-outline-variant"></div>
+</div>
+<div class="space-y-xs">
+<label class="font-label-caps text-on-surface-variant ml-xs">Repository URL</label>
+<input class="w-full bg-surface-container-lowest border-outline-variant border rounded-lg px-md py-sm focus:border-primary focus:ring-0 transition-all text-primary font-mono text-sm" placeholder="https://github.com/org/repo" type="text"/>
+<p class="text-body-sm text-on-surface-variant mt-sm flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">info</span>
+                                Ensure the repo is accessible to Pyramids-Bot for inspection.
+                            </p>
+</div>
+</div>
+</div>
+<div class="mt-xl flex justify-between items-center">
+<button class="text-on-surface-variant font-label-caps hover:text-primary transition-colors" onclick="nextStep(1)">Back</button>
+<button class="bg-primary text-on-primary px-xl py-sm font-label-caps rounded-lg hover:opacity-90 active:scale-[0.98] transition-all" onclick="nextStep(3)">Connect &amp; Verify</button>
+</div>
+</section>
+<!-- Step 3: Verification (Inspection Console) -->
+<section class="step-transition hidden" id="step-content-3">
+<div class="mb-xl text-center">
+<h1 class="font-headline-lg text-primary mb-sm">Inspecting Structure</h1>
+<p class="text-on-surface-variant font-body-lg">The Pyramids engine is verifying architecture and quality patterns.</p>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-2xl">
+<div class="bg-surface-container px-md py-xs border-b border-outline-variant flex items-center justify-between">
+<div class="flex gap-xs">
+<div class="w-3 h-3 rounded-full bg-error/40"></div>
+<div class="w-3 h-3 rounded-full bg-outline/40"></div>
+<div class="w-3 h-3 rounded-full bg-on-surface-variant/40"></div>
+</div>
+<span class="font-mono text-[11px] text-on-surface-variant uppercase tracking-widest">Inspection Console v4.2.1</span>
+</div>
+<div class="p-lg font-mono text-body-sm text-on-surface h-[300px] terminal-scroll overflow-y-auto space-y-sm">
+<p class="text-primary-fixed opacity-60">Initializing core analysis engine...</p>
+<p class="flex items-center gap-sm">
+<span class="text-primary">[OK]</span>
+<span>Cloning repository py-core-01...</span>
+</p>
+<p class="flex items-center gap-sm">
+<span class="text-primary">[OK]</span>
+<span>Scanning file-tree for anti-patterns...</span>
+</p>
+<div class="pl-md border-l-2 border-surface-variant py-xs">
+<p class="text-on-surface-variant text-[12px]">Found 42 components, 12 modules, 4 schemas</p>
+<p class="text-on-surface-variant text-[12px]">Architecture: Modular Monolith detected</p>
+</div>
+<p class="flex items-center gap-sm animate-pulse">
+<span class="text-on-primary-container">RUNNING</span>
+<span class="text-on-surface">Validating Skill-Set requirements...</span>
+</p>
+<div class="flex items-center gap-md mt-lg p-md bg-surface-container-high rounded-lg border border-primary/20">
+<div class="w-2 h-2 bg-primary rounded-full animate-ping"></div>
+<p class="text-primary font-bold">Verification Successful: Rank 4 Structure Detected</p>
+</div>
+</div>
+</div>
+<div class="mt-xl flex justify-between items-center">
+<button class="text-on-surface-variant font-label-caps hover:text-primary transition-colors" onclick="nextStep(2)">Abort</button>
+<button class="bg-primary text-on-primary px-xl py-sm font-label-caps rounded-lg hover:opacity-90 active:scale-[0.98] transition-all" onclick="nextStep(4)">Proceed to Team Selection</button>
+</div>
+</section>
+<!-- Step 4: Team (Invite Builders) -->
+<section class="step-transition hidden" id="step-content-4">
+<div class="mb-xl text-center">
+<h1 class="font-headline-lg text-primary mb-sm">Assemble the Team</h1>
+<p class="text-on-surface-variant font-body-lg">Invite verified builders based on their structural expertise and Rank.</p>
+</div>
+<div class="space-y-md">
+<!-- Recommended Builders Section -->
+<div class="glass-panel p-xl rounded-xl">
+<div class="flex justify-between items-center mb-lg">
+<h3 class="font-label-caps text-on-surface-variant">Recommended for your project scale</h3>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+<span class="font-body-sm">Filter by Skill</span>
+</div>
+</div>
+<div class="grid grid-cols-1 gap-sm">
+<!-- Builder Card 1 -->
+<div class="flex items-center justify-between p-md bg-surface-container-low border border-outline-variant rounded-lg hover:border-on-surface-variant transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full border border-primary/20 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A portrait of a software architect with sharp features and a look of deep focus. Minimalist lighting, monochromatic color scheme of slate grey and pure white. Professional profile photo for a technical builder network." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDc3_CSZntpgTf7SDABDJ0CtmflprC_sTdkwWY_fSqgiK4M_ifrG_iIAJeB9xZ-6J-GnnfYUmHXxZSJsmA346ILCpE4_1-_JRudcUsJt5S7gg5N1rrF_jp5u8CPvZ6bbTC45_Hr6wL4n-vmJfu5D77y6U9nA8OOfdf2jXFcsiRAgrXYTOMv22ZYbyOP_Nu3cp44Qs7s8n5oibnSj127WzQY8QU1W9I3pUHxdjetu8niPXfJ3lV0gwxH"/>
+</div>
+<div>
+<p class="text-primary font-headline-md text-[16px]">Kaelen Vance</p>
+<div class="flex items-center gap-xs mt-1">
+<span class="px-xs py-[2px] bg-surface-variant text-[10px] font-mono rounded text-on-surface-variant uppercase">Architect</span>
+<span class="text-on-surface-variant text-[12px] opacity-60">• Systems Design, Go, Rust</span>
+</div>
+</div>
+</div>
+<button class="px-md py-sm border border-outline-variant text-label-caps hover:bg-on-surface hover:text-surface transition-all rounded-lg">Invite</button>
+</div>
+<!-- Builder Card 2 -->
+<div class="flex items-center justify-between p-md bg-surface-container-low border border-outline-variant rounded-lg hover:border-on-surface-variant transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full border border-primary/20 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close up of a creative technologist with short hair, wearing premium eyewear, focused expression, cinematic portrait style, high contrast, minimalist studio background in dark obsidian tones. Authentic and professional feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPH_4Lt6HUcy4JeYjj1Qx_aebC9CHBA9e_DKOB-bSC7kfpPNNWtgziTNG8BWAjDE5x54KOjgH-Pz_AKngycc6JdCdIguJhH54sHg6dIY3rU-wfEYEvKETlMGrXPJi5mQed0vGN_bvFlXOeDJDHesfWENObZYKzyduuvanRzExOXf3pEtueGU16KKZou3WYKRfK2q7r1YU1KgCAqDf-6h0JVdux28wZ3BiNObaQCZzCg623DgWyAvjc"/>
+</div>
+<div>
+<p class="text-primary font-headline-md text-[16px]">Sora Nakano</p>
+<div class="flex items-center gap-xs mt-1">
+<span class="px-xs py-[2px] bg-surface-variant text-[10px] font-mono rounded text-on-surface-variant uppercase">Innovator</span>
+<span class="text-on-surface-variant text-[12px] opacity-60">• UX, Three.js, WebGL</span>
+</div>
+</div>
+</div>
+<button class="px-md py-sm border border-outline-variant text-label-caps hover:bg-on-surface hover:text-surface transition-all rounded-lg">Invite</button>
+</div>
+</div>
+</div>
+<!-- Search / Custom Invite -->
+<div class="glass-panel p-lg rounded-xl">
+<div class="flex gap-md">
+<input class="flex-grow bg-surface-container-lowest border-outline-variant border rounded-lg px-md py-sm focus:border-primary focus:ring-0 transition-all text-primary font-body-sm" placeholder="Search by builder handle or skill..." type="text"/>
+<button class="px-xl py-sm bg-surface-container-high border border-outline-variant text-label-caps rounded-lg hover:border-primary transition-all">Search</button>
+</div>
+</div>
+</div>
+<div class="mt-xl flex justify-between items-center">
+<button class="text-on-surface-variant font-label-caps hover:text-primary transition-colors" onclick="nextStep(3)">Back</button>
+<button class="bg-primary text-on-primary px-xl py-sm font-label-caps rounded-lg hover:opacity-90 active:scale-[0.98] transition-all" onclick="nextStep(5)">Review Project</button>
+</div>
+</section>
+<!-- Step 5: Review & Publish -->
+<section class="step-transition hidden" id="step-content-5">
+<div class="mb-xl text-center">
+<h1 class="font-headline-lg text-primary mb-sm">Review &amp; Publish</h1>
+<p class="text-on-surface-variant font-body-lg">Ensure all structural configurations are final before committing to the network.</p>
+</div>
+<div class="glass-panel rounded-xl overflow-hidden">
+<div class="p-xl space-y-lg">
+<div class="grid grid-cols-3 gap-xl border-b border-outline-variant pb-lg">
+<div class="col-span-2">
+<label class="font-label-caps text-on-surface-variant block mb-sm">Project</label>
+<h2 class="font-headline-lg text-primary" id="final-name">Apollo Infrastructure</h2>
+<p class="text-on-surface-variant mt-md" id="final-desc">A foundational workspace for distributed builder resources and autonomous verification layers.</p>
+</div>
+<div class="text-right">
+<label class="font-label-caps text-on-surface-variant block mb-sm">Status</label>
+<span class="px-md py-sm bg-primary/10 text-primary border border-primary/20 rounded-full font-mono text-[10px] uppercase tracking-widest">Ready to Commit</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-lg">
+<div class="space-y-md">
+<div>
+<label class="font-label-caps text-on-surface-variant block mb-sm">Repository</label>
+<div class="flex items-center gap-sm text-primary font-mono text-sm">
+<span class="material-symbols-outlined text-[18px]">account_tree</span>
+                                        pyramids/apollo-core-v4
+                                    </div>
+</div>
+<div>
+<label class="font-label-caps text-on-surface-variant block mb-sm">Visibility</label>
+<div class="flex items-center gap-sm text-on-surface">
+<span class="material-symbols-outlined text-[18px]">public</span>
+                                        Network Public
+                                    </div>
+</div>
+</div>
+<div class="space-y-md">
+<div>
+<label class="font-label-caps text-on-surface-variant block mb-sm">Team Members</label>
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-surface-container bg-surface-variant"></div>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container bg-surface-variant"></div>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container flex items-center justify-center bg-surface-container-high text-[10px] font-mono">+2</div>
+</div>
+</div>
+<div>
+<label class="font-label-caps text-on-surface-variant block mb-sm">Network Fee</label>
+<div class="text-primary font-mono text-sm">0.02 PYRA (Initial Verification)</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low p-md flex items-center gap-md border-t border-outline-variant">
+<span class="material-symbols-outlined text-on-surface-variant">verified_user</span>
+<p class="text-body-sm text-on-surface-variant">By publishing, you agree to the Builder Manifesto and Structural Integrity standards.</p>
+</div>
+</div>
+<div class="mt-xl flex justify-between items-center">
+<button class="text-on-surface-variant font-label-caps hover:text-primary transition-colors" onclick="nextStep(4)">Edit Team</button>
+<button class="bg-primary text-on-primary px-3xl py-md font-label-caps rounded-lg hover:opacity-90 active:scale-[0.98] transition-all flex items-center gap-md">
+                        Commit to Network
+                        <span class="material-symbols-outlined">rocket_launch</span>
+</button>
+</div>
+</section>
+</div>
+</main>
+<!-- Global Subtle Background Animation -->
+<div class="fixed inset-0 -z-10 opacity-30 pointer-events-none overflow-hidden">
+<div class="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] bg-primary/5 blur-[120px] rounded-full animate-pulse"></div>
+<div class="absolute bottom-[0%] right-[0%] w-[40%] h-[40%] bg-on-surface-variant/5 blur-[120px] rounded-full"></div>
+</div>
+<script>
+        function nextStep(stepNum) {
+            // Update UI contents
+            document.querySelectorAll('section[id^="step-content-"]').forEach(section => {
+                section.classList.add('hidden');
+                section.classList.remove('opacity-0', 'translate-y-4');
+            });
+            const activeSection = document.getElementById(`step-content-${stepNum}`);
+            activeSection.classList.remove('hidden');
+            
+            // Re-trigger animation
+            requestAnimationFrame(() => {
+                activeSection.classList.add('opacity-100', 'translate-y-0');
+            });
+
+            // Update Breadcrumbs
+            document.querySelectorAll('[data-step-target]').forEach(crumb => {
+                const targetNum = parseInt(crumb.getAttribute('data-step-target'));
+                const icon = crumb.querySelector('span:first-child');
+                const text = crumb.querySelector('span:last-child');
+                
+                if (targetNum === stepNum) {
+                    crumb.classList.remove('opacity-50');
+                    crumb.classList.add('text-primary');
+                    icon.classList.add('bg-primary', 'text-on-primary', 'border-primary');
+                    icon.classList.remove('border-outline-variant');
+                } else if (targetNum < stepNum) {
+                    crumb.classList.remove('opacity-50', 'text-primary');
+                    crumb.classList.add('text-on-surface');
+                    icon.classList.remove('bg-primary', 'text-on-primary');
+                    icon.classList.add('bg-surface-container-highest', 'text-primary', 'border-primary');
+                    icon.innerHTML = '<span class="material-symbols-outlined text-sm">check</span>';
+                } else {
+                    crumb.classList.add('opacity-50');
+                    crumb.classList.remove('text-primary', 'text-on-surface');
+                    icon.classList.remove('bg-primary', 'text-on-primary', 'border-primary', 'bg-surface-container-highest');
+                    icon.classList.add('border-outline-variant');
+                    icon.innerHTML = targetNum;
+                }
+            });
+
+            // Auto-scroll to top of container
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Simple mock interaction for the visibility buttons
+        document.querySelectorAll('section#step-content-1 .grid button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('section#step-content-1 .grid button').forEach(b => {
+                    b.classList.remove('border-primary', 'border-2');
+                    b.classList.add('border-outline-variant');
+                });
+                btn.classList.add('border-primary', 'border-2');
+                btn.classList.remove('border-outline-variant');
+            });
+        });
+    </script>
+</body></html>

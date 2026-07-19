@@ -1,12 +1,14 @@
 function Input({ className = '', ...props }) {
   return (
     <input
-      className={`h-11 w-full rounded-xl px-3.5 text-sm font-medium outline-none transition-all duration-200 placeholder:text-secondary focus:ring-2 focus:ring-accent/30 ${className}`}
+      className={`w-full rounded-lg py-2 px-md font-body-sm text-body-sm outline-none transition-all ${className}`}
       style={{
-        background: 'rgb(var(--color-glass))',
-        border: '1px solid rgb(var(--color-glass-border))',
-        color: 'rgb(var(--color-text-primary))',
+        background: 'rgb(var(--color-surface-container-lowest))',
+        boxShadow: '0 0 0 1px rgb(var(--color-outline-variant))',
+        color: 'rgb(var(--color-on-surface))',
       }}
+      onFocus={(e) => { e.target.style.boxShadow = '0 0 0 1px rgb(var(--color-primary))'; }}
+      onBlur={(e) => { e.target.style.boxShadow = '0 0 0 1px rgb(var(--color-outline-variant))'; }}
       {...props}
     />
   );

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pyramids Builder Workspace</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono&amp;family=Instrument+Serif&amp;family=Geist:wght@600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #131315;
+            color: #e5e1e4;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+            font-size: 20px;
+        }
+        .glass-header {
+            backdrop-filter: blur(12px);
+        }
+        .sidebar-border {
+            border-right: 1px solid #27272A;
+        }
+        .card-border {
+            border: 1px solid #27272A;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#201f22",
+                    "on-primary-container": "#636465",
+                    "background": "#131315",
+                    "on-secondary-fixed": "#1a1b22",
+                    "outline": "#8e9192",
+                    "surface-container-low": "#1c1b1d",
+                    "primary": "#ffffff",
+                    "on-error": "#690005",
+                    "on-tertiary-fixed": "#1f1b19",
+                    "tertiary-fixed": "#eae0dd",
+                    "on-background": "#e5e1e4",
+                    "primary-container": "#e2e2e2",
+                    "on-secondary-container": "#b4b4bd",
+                    "tertiary-fixed-dim": "#cec4c2",
+                    "outline-variant": "#444748",
+                    "inverse-primary": "#5d5f5f",
+                    "inverse-surface": "#e5e1e4",
+                    "on-primary": "#2f3131",
+                    "on-surface-variant": "#c4c7c8",
+                    "surface": "#131315",
+                    "surface-tint": "#c6c6c6",
+                    "secondary-fixed": "#e2e1eb",
+                    "on-tertiary-container": "#696360",
+                    "on-surface": "#e5e1e4",
+                    "on-tertiary-fixed-variant": "#4b4543",
+                    "primary-fixed": "#e2e2e2",
+                    "surface-container-highest": "#353437",
+                    "secondary-container": "#45464e",
+                    "on-secondary": "#2f3037",
+                    "surface-container-high": "#2a2a2c",
+                    "on-error-container": "#ffdad6",
+                    "surface-container-lowest": "#0e0e10",
+                    "on-secondary-fixed-variant": "#45464e",
+                    "on-tertiary": "#342f2d",
+                    "error-container": "#93000a",
+                    "secondary-fixed-dim": "#c6c6cf",
+                    "inverse-on-surface": "#313032",
+                    "surface-bright": "#39393b",
+                    "on-primary-fixed": "#1a1c1c",
+                    "tertiary": "#fffeff",
+                    "surface-dim": "#131315",
+                    "surface-variant": "#353437",
+                    "on-primary-fixed-variant": "#454747",
+                    "secondary": "#c6c6cf",
+                    "error": "#ffb4ab",
+                    "primary-fixed-dim": "#c6c6c6",
+                    "tertiary-container": "#eae0dd"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "unit": "8px",
+                    "lg": "24px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "2xl": "48px",
+                    "container-max": "1280px",
+                    "sm": "8px",
+                    "gutter": "24px",
+                    "3xl": "64px",
+                    "xs": "4px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-caps": ["Geist"],
+                    "headline-md": ["Inter"],
+                    "mono": ["JetBrains Mono"],
+                    "display-serif": ["Instrument Serif"],
+                    "headline-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.025em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "500"}],
+                    "mono": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-serif": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<!-- SideNavBar (Predicted Anchor) -->
+<aside class="w-[240px] h-screen fixed left-0 top-0 bg-surface-container-low dark:bg-surface-container-low backdrop-blur-md opacity-80 flex flex-col h-full py-lg px-md sidebar-border z-50">
+<div class="mb-xl px-sm">
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">Pyramids</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Builder Workspace</p>
+</div>
+<nav class="flex-1 space-y-xs">
+<a class="flex items-center gap-md px-md py-sm text-primary font-bold border-l-2 border-primary bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-sm text-body-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant font-medium hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+<span class="font-body-sm text-body-sm">Projects</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant font-medium hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-body-sm text-body-sm">Teams</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant font-medium hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="military_tech">military_tech</span>
+<span class="font-body-sm text-body-sm">Rank</span>
+</a>
+</nav>
+<div class="mt-auto px-sm pt-lg border-t border-outline-variant">
+<button class="w-full flex items-center justify-center gap-sm bg-primary text-on-primary font-medium py-sm px-md rounded-lg active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+<span class="font-body-sm text-body-sm">New Project</span>
+</button>
+<div class="mt-lg flex items-center gap-md px-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A minimalist professional profile portrait of a software architect in a dark, tech-focused environment. High-key lighting, soft monochromatic tones of deep charcoal and silver, conveying stability and professional authority. The aesthetic is clean, sophisticated, and modern." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgPKvN7BVWqUAYRSOM6Yoma3DGvJ3pLcYpLvQLqsDQAnjGZdmwb3NIC1ad0gWFHicrxXnavmTeCtRYIGj5lS1J5prDgJ0CC4kJWjp1r8PT-86CFsUZRD9BzRo8ENYLrOKXbTS6IDNWjSGoHiQ2f90lFPle4S_b1ZOT5p7qtoy-ARUHuNnZdH9a7aTSRMnNN6F11tBSHXnbCbGGWk6xj69PNmL-96DFMKTiem7YnqAYdDBfL_IDJR__"/>
+</div>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">Alex Chen</span>
+<span class="text-[10px] font-label-caps text-on-surface-variant uppercase tracking-wider">Builder</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-[240px] min-h-screen">
+<!-- TopAppBar (Predicted Anchor) -->
+<header class="flex justify-between items-center w-full px-lg py-sm h-16 sticky top-0 z-40 bg-surface/80 dark:bg-surface/80 backdrop-blur-md border-b border-outline-variant">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg pl-10 pr-4 py-1.5 text-body-sm font-body-sm focus:outline-none focus:border-primary transition-colors" placeholder="Search workspace..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:text-primary transition-opacity">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-opacity">
+<span class="material-symbols-outlined" data-icon="workspace_premium">workspace_premium</span>
+</button>
+</div>
+<div class="h-6 w-[1px] bg-outline-variant mx-sm"></div>
+<div class="flex items-center gap-sm">
+<div class="w-6 h-6 rounded bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container text-[14px]" data-icon="military_tech">military_tech</span>
+</div>
+<span class="font-mono text-[12px] text-on-surface-variant">Lvl 14</span>
+</div>
+</div>
+</header>
+<!-- Workspace Canvas -->
+<div class="px-2xl py-xl max-w-7xl mx-auto">
+<!-- Header Section -->
+<section class="mb-2xl">
+<h2 class="font-display-serif text-display-serif text-on-surface mb-xs">Builder Workspace</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+                    Welcome back, Alex. Your last verification was 4 hours ago. 3 skills are ready for architectural extraction.
+                </p>
+</section>
+<!-- Grid Layout -->
+<div class="grid grid-cols-12 gap-lg">
+<!-- Primary Stats (Proof) -->
+<div class="col-span-12 grid grid-cols-1 md:grid-cols-3 gap-lg mb-lg">
+<div class="card-border bg-surface-container-low p-xl rounded-lg flex flex-col gap-sm">
+<span class="font-label-caps text-on-surface-variant uppercase tracking-widest">Verified Repos</span>
+<div class="flex items-baseline gap-sm">
+<span class="font-headline-lg text-headline-lg font-bold text-primary">24</span>
+<span class="text-on-primary-container font-mono text-body-sm">+2 this week</span>
+</div>
+</div>
+<div class="card-border bg-surface-container-low p-xl rounded-lg flex flex-col gap-sm">
+<span class="font-label-caps text-on-surface-variant uppercase tracking-widest">Skills Extracted</span>
+<div class="flex items-baseline gap-sm">
+<span class="font-headline-lg text-headline-lg font-bold text-primary">142</span>
+<span class="text-on-primary-container font-mono text-body-sm">Top 5% Rank</span>
+</div>
+</div>
+<div class="card-border bg-surface-container-low p-xl rounded-lg flex flex-col gap-sm">
+<span class="font-label-caps text-on-surface-variant uppercase tracking-widest">Reputation Points</span>
+<div class="flex items-baseline gap-sm">
+<span class="font-headline-lg text-headline-lg font-bold text-primary">8.4k</span>
+<span class="text-on-primary-container font-mono text-body-sm">Architect Track</span>
+</div>
+</div>
+</div>
+<!-- Active Projects (Bento Style) -->
+<div class="col-span-12 lg:col-span-8">
+<div class="flex items-center justify-between mb-lg">
+<h3 class="font-headline-md text-headline-md font-semibold text-on-surface">Active Projects</h3>
+<button class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors">View All</button>
+</div>
+<div class="grid grid-cols-1 gap-md">
+<!-- Project Card 1 -->
+<div class="card-border bg-surface-container-low p-lg rounded-lg hover:bg-surface-container-high transition-colors group">
+<div class="flex items-start justify-between mb-lg">
+<div class="flex gap-md">
+<div class="w-12 h-12 rounded bg-surface-container-highest flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary" data-icon="terminal">terminal</span>
+</div>
+<div>
+<h4 class="font-headline-md text-body-lg font-bold text-on-surface">Lighthouse Engine</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Real-time rendering kernel optimization</p>
+</div>
+</div>
+<div class="flex items-center gap-sm">
+<span class="flex h-2 w-2 rounded-full bg-[#10b981]"></span>
+<span class="font-mono text-[12px] text-on-surface-variant">Live Sync</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-xl">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-surface-container-low overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A minimalist tech portrait of a developer with short dark hair, wearing a high-neck dark sweater. Soft side lighting on a charcoal background, high-end editorial tech aesthetic with neutral tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7Nw4ywCp8ma7yTCxuQuKuKnQhOMnGxkSoobh0ZmgCEFm3h-5_-LIS76qzw8f74J7IqJGWpMIypFUL4NdgJNUGQacsZMi1ahLmsT6S1TIA2__IrfhjoqtaaXfOh1lSz1eUh-tdw2c8AhWUbUayOXm5OhMsfhp6NBIJQd5fnUuluVAB7l3Mh0ivgPItrravEj2ldSuQmvrXGqVuO_xw0iTFfcyFFAC4_z7wm7g73qZb6TEMan-ueIGJ"/>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container-low overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a software engineer with glasses, looking directly at the camera. Clean, minimalist composition with muted gray and white tones, focusing on a sense of technical expertise." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDH_UqZ8X2ZJbIp6-xtUjxHSJ1qv1Cv7e9xyZWUl6xWUQDbsGDedveBsrBFpmbdHRFo6IxcJWV30LkXpOXIEsWk9H9UZXOIiZ0uBO-3LawdOZ8P_-xTtQEVDtiQ93Ii-5YXf7TB6w7X7VDqEhE1tTnmJY8KuuFhAFKnLW8okQWxynedhOzWUyP0WTZ_tDADpiEBqUMJNGIVn-KAMF1P2iL1rG_TtNvrvdRyRFDROY7HLLQMQBDRC9V0"/>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container-low bg-surface-container-highest flex items-center justify-center text-[10px] font-bold">+3</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-label-caps text-on-surface-variant uppercase">GitHub Sync</span>
+<span class="font-mono text-body-sm text-primary">main/fe4a21</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- Project Card 2 -->
+<div class="card-border bg-surface-container-low p-lg rounded-lg hover:bg-surface-container-high transition-colors group">
+<div class="flex items-start justify-between mb-lg">
+<div class="flex gap-md">
+<div class="w-12 h-12 rounded bg-surface-container-highest flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary" data-icon="database">database</span>
+</div>
+<div>
+<h4 class="font-headline-md text-body-lg font-bold text-on-surface">Vector Core API</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">High-performance retrieval abstraction layer</p>
+</div>
+</div>
+<div class="flex items-center gap-sm">
+<span class="flex h-2 w-2 rounded-full bg-outline-variant"></span>
+<span class="font-mono text-[12px] text-on-surface-variant">Drafting</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-xl">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-surface-container-low overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A clean, minimalist portrait of a female software architect in a professional studio setting. Soft neutral lighting, high-end minimalist aesthetic with a palette of deep blacks and soft whites." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXHAN5kioF7iYw4ghKXtyH4FYyuMZw4jGfbTx3SMZNrwgMk9dy_d5bVqlTyvb06KCtE_5Ajrl-uI0kWizjd3OyMUWOzExLdOpc-z9Ni2H1ij6BRUuxuWFWk1pOFQ6PmQsti6V_flKMS3PRkvCPNJwEQbWOsh4i_xaLM4flrFBHwHAgWap2XSkm-VbJm3dHYbW_bjWrkegExrj5Aw6W7ATfp9pUjTCtjDRXdRCbkc_vQft9HgWp0feS"/>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container-low bg-surface-container-highest flex items-center justify-center text-[10px] font-bold">+1</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-label-caps text-on-surface-variant uppercase">GitHub Sync</span>
+<span class="font-mono text-body-sm text-on-surface-variant">not linked</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Rank & Activity -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-lg">
+<!-- Reputation & Rank -->
+<div class="card-border bg-surface-container-low p-lg rounded-lg">
+<div class="flex items-center justify-between mb-lg">
+<h3 class="font-body-sm font-bold text-on-surface">Rank Progression</h3>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="info">info</span>
+</div>
+<div class="flex flex-col items-center py-lg">
+<div class="relative w-32 h-32 flex items-center justify-center mb-lg">
+<!-- Progress Ring SVG -->
+<svg class="absolute inset-0 w-full h-full -rotate-90">
+<circle class="text-surface-container-highest" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-width="2"></circle>
+<circle class="text-primary transition-all duration-1000" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-dasharray="364.4" stroke-dashoffset="100" stroke-width="2"></circle>
+</svg>
+<div class="flex flex-col items-center">
+<span class="material-symbols-outlined text-primary text-[32px]" data-icon="foundation">foundation</span>
+<span class="font-mono text-body-sm font-bold mt-sm">74%</span>
+</div>
+</div>
+<div class="text-center">
+<p class="font-body-sm text-body-sm text-on-surface font-semibold">Level: Builder</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">1,250 points to Architect</p>
+</div>
+</div>
+<div class="mt-lg pt-lg border-t border-outline-variant space-y-md">
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Consistency</span>
+<span class="font-mono text-[12px] text-primary">High (9.4)</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Complexity</span>
+<span class="font-mono text-[12px] text-primary">Architect-Ready</span>
+</div>
+</div>
+</div>
+<!-- Activity Feed -->
+<div class="card-border bg-surface-container-low p-lg rounded-lg flex-1">
+<div class="flex items-center justify-between mb-lg">
+<h3 class="font-body-sm font-bold text-on-surface">Building Feed</h3>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="history">history</span>
+</div>
+<div class="space-y-lg">
+<div class="flex gap-md">
+<div class="mt-1">
+<span class="material-symbols-outlined text-[16px] text-[#10b981]" data-icon="check_circle">check_circle</span>
+</div>
+<div class="flex flex-col">
+<p class="font-body-sm text-body-sm text-on-surface">Repository Verified</p>
+<span class="font-mono text-[11px] text-on-surface-variant uppercase">pyramids/engine-v2 • 2h ago</span>
+</div>
+</div>
+<div class="flex gap-md">
+<div class="mt-1">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="hub">hub</span>
+</div>
+<div class="flex flex-col">
+<p class="font-body-sm text-body-sm text-on-surface">Team Formed: Project Vector</p>
+<span class="font-mono text-[11px] text-on-surface-variant uppercase">3 Architects joined • 5h ago</span>
+</div>
+</div>
+<div class="flex gap-md">
+<div class="mt-1">
+<span class="material-symbols-outlined text-[16px] text-on-primary-container" data-icon="bolt">bolt</span>
+</div>
+<div class="flex flex-col">
+<p class="font-body-sm text-body-sm text-on-surface">Skill Extracted: Rust Memory Safety</p>
+<span class="font-mono text-[11px] text-on-surface-variant uppercase">Lighthouse Engine • 1d ago</span>
+</div>
+</div>
+<div class="flex gap-md opacity-60">
+<div class="mt-1">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant" data-icon="commit">commit</span>
+</div>
+<div class="flex flex-col">
+<p class="font-body-sm text-body-sm text-on-surface">Commits Mirrored</p>
+<span class="font-mono text-[11px] text-on-surface-variant uppercase">14 commits linked • 2d ago</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Background Atmospheric Effect -->
+<div class="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+<div class="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px]"></div>
+<div class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-surface-container-highest/10 rounded-full blur-[100px]"></div>
+</div>
+<script>
+        // Simple Micro-interaction for cards
+        document.querySelectorAll('.card-border').forEach(card => {
+            card.addEventListener('mousedown', () => {
+                card.style.transform = 'scale(0.99)';
+                card.style.transition = 'transform 0.1s ease';
+            });
+            card.addEventListener('mouseup', () => {
+                card.style.transform = 'scale(1)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'scale(1)';
+            });
+        });
+
+        // Search Bar Focus Effect
+        const searchInput = document.querySelector('input[type="text"]');
+        const searchIcon = document.querySelector('.material-symbols-outlined[data-icon="search"]');
+        
+        searchInput.addEventListener('focus', () => {
+            searchIcon.classList.replace('text-on-surface-variant', 'text-primary');
+        });
+        
+        searchInput.addEventListener('blur', () => {
+            searchIcon.classList.replace('text-primary', 'text-on-surface-variant');
+        });
+    </script>
+</body></html>

@@ -2,20 +2,20 @@ import Button from '../ui/Button.jsx';
 
 function EmptyState({ title, description, actionLabel, onAction, icon }) {
   return (
-    <div className="rounded-xl p-10 text-center animate-scale-in" style={{ border: '1px dashed rgb(var(--color-border-subtle))', background: 'rgb(var(--color-glass))' }}>
+    <div className="rounded-xl p-2xl text-center" style={{ border: '1px dashed rgb(var(--color-outline-variant))', background: 'rgb(var(--color-surface-container-low))' }}>
       {icon ? (
-        <div className="mx-auto mb-6 flex h-14 w-14 animate-float items-center justify-center rounded-2xl" style={{ background: 'rgb(var(--color-accent) / 0.08)', border: '1px solid rgb(var(--color-accent) / 0.15)' }}>
+        <div className="mx-auto mb-lg flex h-14 w-14 animate-float items-center justify-center rounded-xl" style={{ background: 'rgb(var(--color-surface-container-high))', border: '1px solid rgb(var(--color-outline-variant))' }}>
           {typeof icon === 'function' ? (
-            <icon className="h-6 w-6" strokeWidth={1.5} style={{ color: 'rgb(var(--color-accent))' }} />
+            <icon className="h-6 w-6" strokeWidth={1.5} style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
           ) : (
             icon
           )}
         </div>
       ) : null}
-      <h2 className="text-xl font-black gradient-text">{title}</h2>
-      {description ? <p className="mx-auto mt-3 max-w-md text-sm font-medium leading-6 text-secondary">{description}</p> : null}
+      <h2 className="font-headline-md font-semibold" style={{ color: 'rgb(var(--color-on-surface))' }}>{title}</h2>
+      {description ? <p className="mx-auto mt-md max-w-md font-body-sm text-body-sm leading-6" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{description}</p> : null}
       {actionLabel ? (
-        <Button className="mt-6" onClick={onAction}>
+        <Button className="mt-lg" onClick={onAction}>
           {actionLabel}
         </Button>
       ) : null}

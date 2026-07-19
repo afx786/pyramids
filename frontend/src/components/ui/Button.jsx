@@ -1,9 +1,10 @@
 const variants = {
-  primary: 'gradient-border shadow-lg hover:shadow-xl active:shadow-md btn-press',
+  primary:
+    'font-bold py-sm px-xl rounded-lg active:scale-[0.98] transition-all duration-150 hover:opacity-90',
   secondary:
-    'border text-primary shadow-sm hover:shadow-lg active:shadow-md btn-press',
+    'border font-medium py-sm px-xl rounded-lg active:scale-[0.98] transition-all duration-150 hover:opacity-80',
   ghost:
-    'border border-transparent text-primary/80 hover:text-primary hover:bg-[rgb(var(--color-glass-border))] active:bg-[rgb(var(--color-glass))] btn-press',
+    'border border-transparent font-medium py-sm px-xl rounded-lg active:scale-[0.98] transition-all duration-150 hover:opacity-80',
 };
 
 function Button({
@@ -16,23 +17,24 @@ function Button({
   const baseStyle =
     variant === 'primary'
       ? {
-          background:
-            'linear-gradient(135deg, rgb(var(--color-accent)), rgb(var(--color-accent) / 0.7))',
-          color: 'rgb(var(--color-app))',
+          background: 'rgb(var(--color-primary))',
+          color: 'rgb(var(--color-on-primary))',
         }
       : variant === 'secondary'
       ? {
-          background: 'rgb(var(--color-glass))',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          borderColor: 'rgb(var(--color-glass-border))',
+          background: 'transparent',
+          color: 'rgb(var(--color-on-surface))',
+          borderColor: 'rgb(var(--color-outline-variant))',
         }
-      : {};
+      : {
+          background: 'transparent',
+          color: 'rgb(var(--color-on-surface-variant))',
+        };
 
   return (
     <button
       type={type}
-      className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold transition-all duration-200 ${variants[variant]} ${className}`}
+      className={`inline-flex min-h-10 items-center justify-center gap-2 text-body-sm font-semibold ${variants[variant]} ${className}`}
       style={baseStyle}
       {...props}
     >

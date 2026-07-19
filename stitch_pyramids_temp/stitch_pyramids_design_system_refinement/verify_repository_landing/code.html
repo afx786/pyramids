@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Verify Repository | Pyramids</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono&amp;family=Instrument+Serif&amp;family=Geist:wght@600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            font-size: 20px;
+        }
+        body {
+            background-color: #131315;
+            color: #e5e1e4;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-card {
+            background: rgba(28, 27, 29, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid #27272a;
+        }
+        .input-underline {
+            border: none;
+            border-bottom: 1px solid #444748;
+            background: transparent;
+            transition: border-color 0.2s ease;
+        }
+        .input-underline:focus {
+            outline: none;
+            border-bottom-color: #ffffff;
+            box-shadow: none;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#696360",
+                    "background": "#131315",
+                    "secondary-container": "#45464e",
+                    "outline-variant": "#444748",
+                    "on-error-container": "#ffdad6",
+                    "tertiary-fixed": "#eae0dd",
+                    "on-secondary-fixed": "#1a1b22",
+                    "on-primary-fixed": "#1a1c1c",
+                    "secondary-fixed": "#e2e1eb",
+                    "on-background": "#e5e1e4",
+                    "surface-variant": "#353437",
+                    "on-secondary-fixed-variant": "#45464e",
+                    "on-secondary": "#2f3037",
+                    "on-tertiary-fixed": "#1f1b19",
+                    "inverse-on-surface": "#313032",
+                    "on-surface-variant": "#c4c7c8",
+                    "error-container": "#93000a",
+                    "on-tertiary-fixed-variant": "#4b4543",
+                    "surface-bright": "#39393b",
+                    "primary-fixed-dim": "#c6c6c6",
+                    "on-error": "#690005",
+                    "surface-container-highest": "#353437",
+                    "primary-container": "#e2e2e2",
+                    "surface-dim": "#131315",
+                    "error": "#ffb4ab",
+                    "surface-container-lowest": "#0e0e10",
+                    "tertiary-fixed-dim": "#cec4c2",
+                    "inverse-primary": "#5d5f5f",
+                    "on-primary-container": "#636465",
+                    "outline": "#8e9192",
+                    "on-primary": "#2f3131",
+                    "primary": "#ffffff",
+                    "on-tertiary": "#342f2d",
+                    "surface-container-low": "#1c1b1d",
+                    "on-secondary-container": "#b4b4bd",
+                    "on-surface": "#e5e1e4",
+                    "surface-container": "#201f22",
+                    "tertiary": "#fffeff",
+                    "secondary": "#c6c6cf",
+                    "tertiary-container": "#eae0dd",
+                    "surface-tint": "#c6c6c6",
+                    "surface-container-high": "#2a2a2c",
+                    "primary-fixed": "#e2e2e2",
+                    "surface": "#131315",
+                    "secondary-fixed-dim": "#c6c6cf",
+                    "on-primary-fixed-variant": "#454747",
+                    "inverse-surface": "#e5e1e4"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "lg": "24px",
+                    "sm": "8px",
+                    "md": "16px",
+                    "gutter": "24px",
+                    "3xl": "64px",
+                    "unit": "8px",
+                    "container-max": "1280px",
+                    "xs": "4px",
+                    "xl": "32px",
+                    "2xl": "48px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Inter"],
+                    "mono": ["JetBrains Mono"],
+                    "body-lg": ["Inter"],
+                    "label-caps": ["Geist"],
+                    "headline-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "display-serif": ["Instrument Serif"]
+            },
+            "fontSize": {
+                    "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "500"}],
+                    "mono": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "display-serif": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar Anchor -->
+<aside class="w-[240px] h-screen fixed left-0 top-0 bg-surface-container-low dark:bg-surface-container-low backdrop-blur-md opacity-95 flex flex-col py-lg px-md z-[60]">
+<div class="mb-3xl">
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface">Pyramids</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant opacity-70">Builder Workspace</p>
+</div>
+<nav class="flex-1 space-y-sm">
+<a class="flex items-center gap-md px-md py-sm rounded transition-colors text-on-surface-variant font-medium hover:bg-surface-container-high" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-sm text-body-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded transition-colors text-primary font-bold border-l-2 border-primary bg-surface-container-highest" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+<span class="font-body-sm text-body-sm">Projects</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded transition-colors text-on-surface-variant font-medium hover:bg-surface-container-high" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-body-sm text-body-sm">Teams</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded transition-colors text-on-surface-variant font-medium hover:bg-surface-container-high" href="#">
+<span class="material-symbols-outlined" data-icon="military_tech">military_tech</span>
+<span class="font-body-sm text-body-sm">Rank</span>
+</a>
+</nav>
+<div class="mt-auto pt-lg border-t border-outline-variant/30">
+<button class="w-full bg-primary text-background font-bold py-sm px-md rounded-lg active:scale-[0.98] transition-all text-body-sm">
+                New Project
+            </button>
+</div>
+</aside>
+<!-- TopAppBar Anchor -->
+<header class="flex justify-between items-center w-full px-lg py-sm h-16 ml-[240px] max-w-[calc(100%-240px)] docked sticky top-0 z-50 bg-surface-container-low/80 backdrop-blur-md border-b border-outline-variant">
+<div class="flex items-center gap-md">
+<span class="font-headline-md text-headline-md font-bold text-on-surface">Verify Repository</span>
+</div>
+<div class="flex items-center gap-lg">
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="workspace_premium">workspace_premium</span>
+</button>
+</div>
+<div class="flex items-center gap-sm pl-md border-l border-outline-variant/30">
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A high-contrast profile portrait of a modern software engineer in a dimly lit studio. The lighting is dramatic, highlighting sharp facial features and professional demeanor. The background is a minimalist dark gray with subtle geometric patterns. The overall aesthetic is professional, clean, and architecturally inspired, using monochrome tones consistent with a premium developer workspace." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOwFqcc3Je8lxBUvgM2DPDld7yHS5kfodHKQzUnZQFxMVBThHbImGkrsEah4aIAh-DO_PdyFTjy3Efrons3PYYIctmKcVu33NZPaWuWOf05xfZFewgMvQ28_S7NJFfQGJOnD4sD9-C7rSIT5Xc3lncbPnijGjG8qvIQb3huJ93ONR7pJ0oVr1RIAjevs6aDtIdMPFKyKlZ0lwLzoLprguXNieC2GnqqgqMUss3OR9A0Kd8MQ4pq1yp"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-[240px] p-2xl min-h-[calc(100vh-64px)] relative overflow-hidden">
+<!-- Background Animation Layer -->
+
+<div class="max-w-4xl mx-auto space-y-3xl">
+<!-- Header Section -->
+<section class="space-y-md">
+<h2 class="font-display-serif text-display-serif text-primary">Verify Repository</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
+                    Verification analyzes repository metadata and public project info to build objective credibility for the builder. By linking your work, you establish a verifiable track record within the Pyramids ecosystem.
+                </p>
+</section>
+<!-- Verification Options Bento -->
+<div class="bento-grid">
+<!-- Github Connect Card -->
+<div class="col-span-12 md:col-span-5 glass-card p-xl flex flex-col justify-between group cursor-pointer hover:border-primary transition-all duration-300">
+<div class="space-y-md">
+<div class="w-12 h-12 flex items-center justify-center rounded bg-primary text-background">
+<span class="material-symbols-outlined scale-125" data-icon="terminal">terminal</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-primary mb-xs">Connect GitHub</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Import projects directly from your account for seamless, batch verification.</p>
+</div>
+</div>
+<button class="mt-lg flex items-center justify-center gap-sm bg-primary text-background font-bold py-md px-lg rounded-lg group-hover:scale-[1.02] transition-transform">
+<span class="material-symbols-outlined" data-icon="sync">sync</span>
+<span>Authorize GitHub</span>
+</button>
+</div>
+<!-- URL Input Card -->
+<div class="col-span-12 md:col-span-7 glass-card p-xl space-y-xl flex flex-col justify-center">
+<div class="space-y-xs">
+<h3 class="font-headline-md text-headline-md text-primary">Paste Repository URL</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Verify any public repository by its direct URL.</p>
+</div>
+<div class="relative flex items-end gap-md">
+<div class="flex-1">
+<label class="font-label-caps text-label-caps text-outline uppercase mb-sm block">Repository URL</label>
+<input class="w-full font-mono text-mono input-underline py-sm text-primary" placeholder="https://github.com/username/project" type="text"/>
+</div>
+<button class="bg-surface-container-highest text-primary border border-outline-variant px-xl py-sm hover:bg-white hover:text-black transition-colors font-bold rounded">
+                            Verify
+                        </button>
+</div>
+<div class="flex items-center gap-sm text-on-tertiary-container">
+<span class="material-symbols-outlined text-[16px]" data-icon="lock">lock</span>
+<p class="font-body-sm text-body-sm italic">Privacy Note: We only analyze metadata and public stats. Pyramids never requests access to private code or sensitive environment variables.</p>
+</div>
+</div>
+<!-- Info Cards -->
+<div class="col-span-12 md:col-span-4 glass-card p-lg border-l-4 border-l-primary/40">
+<h4 class="font-label-caps text-label-caps text-primary mb-sm">Structural Integrity</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Pyramids checks for commit consistency, contributor diversity, and codebase maturity metrics.</p>
+</div>
+<div class="col-span-12 md:col-span-4 glass-card p-lg border-l-4 border-l-primary/40">
+<h4 class="font-label-caps text-label-caps text-primary mb-sm">Objective Credibility</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Verified badges are cryptographically linked to your builder profile and rank progression.</p>
+</div>
+<div class="col-span-12 md:col-span-4 glass-card p-lg border-l-4 border-l-primary/40">
+<h4 class="font-label-caps text-label-caps text-primary mb-sm">Ecosystem Sync</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Verification data is used to match you with architecture-level projects and high-value teams.</p>
+</div>
+</div>
+<!-- Visual Decoration Card -->
+<div class="w-full h-64 glass-card overflow-hidden relative group">
+<div class="absolute inset-0 bg-gradient-to-tr from-background via-transparent to-transparent z-10"></div>
+<img class="w-full h-full object-cover grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-60 transition-all duration-700" data-alt="A sophisticated architectural visualization of a digital structure. The image shows a complex network of lines and nodes forming a semi-transparent pyramid in a dark, atmospheric void. Cool blue and sharp white light accents highlight the structural integrity of the design. The mood is technical, high-end, and perfectly aligned with a professional builder's workspace aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDznyJkW8O5BiIvyzXA4_hxFDxyrIv0H1_qaZISJc1AUBr-p6TtIw6yeUyPZbbA7p2GgeyNwkCb2PatMxotH13laE7J6w2bLqnoDUeqm5qEBeiJT8TycGQNteEAOEs2kv2uhR-K8rIocOBoyMZAv68_k2F2Frl3TXGcUUe3ZCLubHycr1Biq6MKtOa9KOulZGqWO-LTwW6zBh-Ku2GTAk8Q5SSqpWuUKGZJIlYd1WD8U6WzzhHGmWHb"/>
+<div class="absolute bottom-lg left-lg z-20">
+<div class="flex items-center gap-md">
+<div class="flex -space-x-md">
+<div class="w-8 h-8 rounded-full border border-background bg-surface-container-high"></div>
+<div class="w-8 h-8 rounded-full border border-background bg-surface-container-high"></div>
+<div class="w-8 h-8 rounded-full border border-background bg-surface-container-high"></div>
+</div>
+<p class="font-body-sm text-body-sm text-primary font-bold">12,402 repositories verified this month</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Simple interaction for the URL input
+        const verifyInput = document.querySelector('input');
+        const verifyBtn = document.querySelector('button.bg-surface-container-highest');
+
+        verifyBtn.addEventListener('click', () => {
+            if(verifyInput.value) {
+                verifyBtn.innerHTML = '<span class="material-symbols-outlined animate-spin" style="font-variation-settings: \'FILL\' 0, \'wght\' 300;">sync</span>';
+                setTimeout(() => {
+                    verifyBtn.innerHTML = 'Verifying...';
+                    setTimeout(() => {
+                        alert('Verification sequence initiated for ' + verifyInput.value);
+                        verifyBtn.innerHTML = 'Verify';
+                    }, 1500);
+                }, 500);
+            } else {
+                verifyInput.classList.add('border-b-error');
+                setTimeout(() => verifyInput.classList.remove('border-b-error'), 2000);
+            }
+        });
+    </script>
+</body></html>

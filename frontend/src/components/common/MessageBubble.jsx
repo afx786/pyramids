@@ -2,22 +2,19 @@ function MessageBubble({ message }) {
   return (
     <div className={`flex ${message.mine ? 'justify-end' : 'justify-start'} animate-fade-in`}>
       <div
-        className="max-w-[70%] rounded-2xl px-4 py-3 text-sm font-semibold leading-6 shadow-lg"
+        className="max-w-[70%] rounded-lg px-md py-sm text-body-sm font-medium leading-6"
         style={
           message.mine
             ? {
-                background: 'rgb(var(--color-elevated))',
-                border: '1px solid rgb(var(--color-border-subtle))',
-                color: 'rgb(var(--color-text-primary))',
-                borderBottomRightRadius: '4px',
+                background: 'rgb(var(--color-primary))',
+                color: 'rgb(var(--color-on-primary))',
+                borderBottomRightRadius: '2px',
               }
             : {
-                background: 'rgb(var(--color-glass))',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                border: '1px solid rgb(var(--color-glass-border))',
-                color: 'rgb(var(--color-text-primary))',
-                borderBottomLeftRadius: '4px',
+                background: 'rgb(var(--color-surface-container-low))',
+                border: '1px solid rgb(var(--color-outline-variant))',
+                color: 'rgb(var(--color-on-surface))',
+                borderBottomLeftRadius: '2px',
               }
         }
       >
