@@ -2,10 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ConnectionCard from '../../components/common/ConnectionCard.jsx';
 import EmptyState from '../../components/common/EmptyState.jsx';
-import InfiniteScroll from '../../components/ui/InfiniteScroll.jsx';
-import PageHeader from '../../components/common/PageHeader.jsx';
-import { SkeletonAvatar, SkeletonLine } from '../../components/ui/Skeleton.jsx';
-import Card from '../../components/ui/Card.jsx';
+import Skeleton from '../../components/ui/Skeleton.jsx';
 import { connectionService } from '../../services/connectionService.js';
 import { messageService } from '../../services/messageService.js';
 
@@ -89,64 +86,64 @@ function Connections() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl animate-fade-in">
-      <PageHeader
-        eyebrow="Network"
-        title="Connections"
-        description="Manage builders you are connected with, incoming requests, and invites you have sent."
-      />
+    <div className="p-xl max-w-6xl mx-auto">
+      <header className="mb-xl">
+        <h2 className="font-display-serif text-display-serif" style={{ color: 'rgb(var(--color-primary))' }}>Connections</h2>
+        <p className="font-body-lg text-body-lg mt-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+          Manage builders you are connected with, incoming requests, and invites you have sent.
+        </p>
+      </header>
 
-      {error && (
-        <div className="mt-5 rounded-lg border px-5 py-3" style={{ borderColor: 'rgb(var(--color-danger) / 0.3)', background: 'rgb(var(--color-danger) / 0.08)' }}>
-          <p className="text-sm font-semibold" style={{ color: 'rgb(var(--color-danger))' }}>{error}</p>
+      {error ? (
+        <div
+          className="mb-xl rounded-lg px-lg py-sm font-body-sm font-semibold"
+          style={{ background: 'rgb(var(--color-error-container))', color: 'rgb(var(--color-on-error-container))' }}
+        >
+          {error}
         </div>
-      )}
+      ) : null}
 
-      <div className="mt-10 flex gap-3">
+      <div className="flex gap-md mb-xl">
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            className="rounded-xl px-5 py-3 text-sm font-black transition-all duration-200 btn-press"
             type="button"
             onClick={() => setActiveTab(tab.id)}
-            style={
-              activeTab === tab.id
-                ? {
-                    background: 'rgb(var(--color-elevated))',
-                    color: 'rgb(var(--color-text-primary))',
-                    border: '1px solid rgb(var(--color-border-subtle))',
-                    border: 'none',
-                  }
-                : {
-                    background: 'rgb(var(--color-glass))',
-                    color: 'rgb(var(--color-text-primary))',
-                    border: '1px solid rgb(var(--color-glass-border))',
-                  }
-            }
+            className="px-lg py-sm rounded-lg font-bold transition-all"
+            style={{
+              background: activeTab === tab.id ? 'rgb(var(--color-primary))' : 'rgb(var(--color-surface-container))',
+              color: activeTab === tab.id ? 'rgb(var(--color-on-primary))' : 'rgb(var(--color-on-surface))',
+              border: activeTab === tab.id ? 'none' : '1px solid rgb(var(--color-outline-variant))',
+            }}
           >
             {tab.label}
           </button>
         ))}
       </div>
 
-      <section className="stagger mt-8 grid grid-cols-3 gap-5">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-lg">
         {loadingTabs[activeTab] ? (
-          [1,2,3,4,5,6].map((i) => (
-            <Card key={i} className="p-5">
-              <div className="flex items-center gap-4">
-                <SkeletonAvatar size="md" />
+          [1, 2, 3, 4, 5, 6].map((i) => (
+            <div
+              key={i}
+              className="p-lg rounded-xl space-y-md"
+              style={{
+                background: 'rgb(var(--color-surface-container-low))',
+                border: '1px solid rgb(var(--color-outline-variant))',
+              }}
+            >
+              <div className="flex items-center gap-md">
+                <Skeleton className="h-12 w-12 rounded-full" />
                 <div className="flex-1 space-y-2">
-                  <SkeletonLine width="60%" />
-                  <SkeletonLine width="40%" />
+                  <Skeleton className="h-4 w-3/5" />
+                  <Skeleton className="h-3 w-2/5" />
                 </div>
               </div>
-            </Card>
+            </div>
           ))
-        ) : (
-          <InfiniteScroll onLoadMore={() => {}} hasMore={false} loading={false}>
-          {people.length > 0 ? (
+        ) : people.length > 0 ? (
           people.map((person) => (
-            <div key={person.id} className="relative">
+            <div key={person.id}>
               <ConnectionCard
                 person={person}
                 primaryAction={
@@ -165,11 +162,12 @@ function Connections() {
             </div>
           ))
         ) : (
-          <div className="col-span-3">
-            <EmptyState title={`No ${activeTab} connections yet`} description={`${activeTab === 'connected' ? 'Connect with builders to grow your network.' : activeTab === 'pending' ? 'Incoming requests will appear here.' : 'Sent requests will appear here.'}`} />
+          <div className="col-span-full">
+            <EmptyState
+              title={`No ${activeTab} connections yet`}
+              description={`${activeTab === 'connected' ? 'Connect with builders to grow your network.' : activeTab === 'pending' ? 'Incoming requests will appear here.' : 'Sent requests will appear here.'}`}
+            />
           </div>
-        )}
-          </InfiniteScroll>
         )}
       </section>
     </div>

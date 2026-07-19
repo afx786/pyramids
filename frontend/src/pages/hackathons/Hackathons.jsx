@@ -1,15 +1,19 @@
-import { useEffect, useState } from 'react';
 import { CalendarDays, MapPin } from 'lucide-react';
-import PageHeader from '../../components/common/PageHeader.jsx';
+import { useEffect, useState } from 'react';
 import Card from '../../components/ui/Card.jsx';
-import SkillTag from '../../components/ui/SkillTag.jsx';
+import EmptyState from '../../components/common/EmptyState.jsx';
+import LoadingState from '../../components/common/LoadingState.jsx';
 import { discoveryService } from '../../services/discoveryService.js';
 
 function Hackathons() {
   const [hackathons, setHackathons] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    discoveryService.listHackathons().then(setHackathons).catch(() => {});
+    setLoading(true);
+    discoveryService.listHackathons().then((data) => {
+      setHackathons(Array.isArray(data) ? data : []);
+    }).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
   function formatDate(dateStr) {
@@ -17,39 +21,58 @@ function Hackathons() {
     return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   }
 
-  return (
-    <div className="mx-auto max-w-6xl">
-      <PageHeader
-        eyebrow="Events"
-        title="Hackathons"
-        description="Upcoming hackathons, build challenges, and coding events."
-      />
+  if (loading) return <LoadingState label="Loading hackathons..." />;
 
-      <section className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+  return (
+    <div className="p-xl max-w-6xl mx-auto">
+      <header className="mb-xl">
+        <h2 className="font-display-serif text-display-serif" style={{ color: 'rgb(var(--color-primary))' }}>Hackathons</h2>
+        <p className="font-body-lg text-body-lg mt-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+          Upcoming hackathons, build challenges, and coding events.
+        </p>
+      </header>
+
+      <section className="grid gap-lg sm:grid-cols-2 xl:grid-cols-3">
         {hackathons.length > 0 ? (
           hackathons.map((h) => (
-            <Card key={h.id} className="p-6">
-              <SkillTag>{h.mode || 'Online'}</SkillTag>
-              <h2 className="mt-4 text-xl font-black text-primary">{h.title}</h2>
-              <p className="mt-2 text-sm font-medium leading-6 text-secondary line-clamp-3">{h.description}</p>
-
-              <div className="mt-5 space-y-2 border-t border-subtle pt-4">
-                <div className="flex items-center gap-2 text-sm text-secondary">
-                  <CalendarDays className="h-4 w-4 shrink-0" />
+            <div
+              key={h.id}
+              className="p-lg rounded-xl transition-all duration-200 hover:-translate-y-0.5"
+              style={{
+                background: 'rgb(var(--color-surface-container-low))',
+                border: '1px solid rgb(var(--color-outline-variant))',
+              }}
+            >
+              <span
+                className="inline-block px-sm py-xs font-mono text-[11px] rounded"
+                style={{
+                  background: 'rgb(var(--color-surface-variant))',
+                  color: 'rgb(var(--color-on-surface))',
+                }}
+              >
+                {h.mode || 'Online'}
+              </span>
+              <h3 className="font-headline-md text-headline-md font-bold mt-md" style={{ color: 'rgb(var(--color-primary))' }}>
+                {h.title}
+              </h3>
+              <p className="font-body-sm mt-sm leading-6 line-clamp-3" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                {h.description}
+              </p>
+              <div className="mt-lg space-y-sm pt-md" style={{ borderTop: '1px solid rgb(var(--color-outline-variant))' }}>
+                <div className="flex items-center gap-sm font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                  <CalendarDays size={16} className="shrink-0" />
                   <span>{formatDate(h.start_date)} – {formatDate(h.end_date)}</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-secondary">
-                  <MapPin className="h-4 w-4 shrink-0" />
+                <div className="flex items-center gap-sm font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                  <MapPin size={16} className="shrink-0" />
                   <span>{h.organizer || 'TBA'}</span>
                 </div>
               </div>
-            </Card>
+            </div>
           ))
         ) : (
           <div className="col-span-full">
-            <Card className="p-8 text-center">
-              <p className="text-sm text-secondary">No hackathons right now.</p>
-            </Card>
+            <EmptyState title="No hackathons right now" description="Check back later for upcoming events." />
           </div>
         )}
       </section>

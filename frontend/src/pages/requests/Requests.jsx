@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import ConnectionCard from '../../components/common/ConnectionCard.jsx';
 import EmptyState from '../../components/common/EmptyState.jsx';
-import PageHeader from '../../components/common/PageHeader.jsx';
+import Card from '../../components/ui/Card.jsx';
 import { connectionService } from '../../services/connectionService.js';
 
 function Requests() {
@@ -35,20 +35,24 @@ function Requests() {
   }));
 
   return (
-    <div className="mx-auto max-w-6xl">
-      <PageHeader
-        eyebrow="Invites"
-        title="Requests"
-        description="Review connection requests from other builders."
-      />
+    <div className="p-xl max-w-6xl mx-auto">
+      <header className="mb-xl">
+        <h2 className="font-display-serif text-display-serif" style={{ color: 'rgb(var(--color-primary))' }}>Requests</h2>
+        <p className="font-body-lg text-body-lg mt-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+          Review connection requests from other builders.
+        </p>
+      </header>
 
-      {error && (
-        <div className="mb-5 border border-red-200 bg-red-50 px-5 py-3 rounded-lg">
-          <p className="text-sm font-semibold text-red-700">{error}</p>
+      {error ? (
+        <div
+          className="mb-xl rounded-lg px-lg py-sm font-body-sm font-semibold"
+          style={{ background: 'rgb(var(--color-error-container))', color: 'rgb(var(--color-on-error-container))' }}
+        >
+          {error}
         </div>
-      )}
+      ) : null}
 
-      <section className="mt-10 grid grid-cols-2 gap-5">
+      <section className="grid grid-cols-1 sm:grid-cols-2 gap-lg">
         {people.length > 0 ? (
           people.map((person) => (
             <ConnectionCard
@@ -61,7 +65,7 @@ function Requests() {
             />
           ))
         ) : (
-          <div className="col-span-2">
+          <div className="col-span-full">
             <EmptyState title="No requests yet" description="Incoming connection requests will appear here." />
           </div>
         )}

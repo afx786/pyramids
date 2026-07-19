@@ -1,9 +1,8 @@
+import { Check, Inbox, Bell } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Check, Inbox } from 'lucide-react';
 import EmptyState from '../../components/common/EmptyState.jsx';
-import PageHeader from '../../components/common/PageHeader.jsx';
-import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
+import Button from '../../components/ui/Button.jsx';
 import { notificationService } from '../../services/notificationService.js';
 
 function Notifications() {
@@ -20,39 +19,67 @@ function Notifications() {
     } catch {}
   }
 
-  return (
-    <div className="mx-auto max-w-4xl">
-      <PageHeader
-        eyebrow="Inbox"
-        title="Notifications"
-        description="Updates on projects, invitations, and activity."
-      />
+  const unreadCount = notifications.filter((n) => !n.is_read).length;
 
-      <section className="mt-10 space-y-3">
+  return (
+    <div className="p-xl max-w-4xl mx-auto">
+      <header className="mb-xl">
+        <div className="flex items-center gap-md">
+          <h2 className="font-display-serif text-display-serif" style={{ color: 'rgb(var(--color-primary))' }}>Notifications</h2>
+          {unreadCount > 0 ? (
+            <span
+              className="px-md py-xs rounded-full font-label-caps text-label-caps"
+              style={{ background: 'rgb(var(--color-primary))', color: 'rgb(var(--color-on-primary))' }}
+            >
+              {unreadCount} new
+            </span>
+          ) : null}
+        </div>
+        <p className="font-body-lg text-body-lg mt-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+          Updates on projects, invitations, and activity.
+        </p>
+      </header>
+
+      <section className="space-y-md">
         {notifications.length > 0 ? (
           notifications.map((n) => (
-            <Card key={n.id} className={`p-5 ${!n.is_read ? 'border-primary/20 bg-accent-soft' : ''}`}>
-              <div className="flex items-start justify-between gap-4">
-                <div className="min-w-0">
-                  <p className="text-sm font-bold text-primary">{n.title}</p>
-                  <p className="mt-1 text-sm font-medium leading-6 text-secondary">{n.message}</p>
-                  <p className="mt-2 text-xs font-medium text-secondary">
-                    {new Date(n.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                  </p>
+            <div
+              key={n.id}
+              className="p-lg rounded-xl flex items-start justify-between gap-lg transition-all"
+              style={{
+                background: n.is_read ? 'rgb(var(--color-surface-container-low))' : 'rgb(var(--color-surface-container))',
+                border: n.is_read
+                  ? '1px solid rgb(var(--color-outline-variant))'
+                  : '1px solid rgb(var(--color-primary) / 0.2)',
+              }}
+            >
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-sm mb-xs">
+                  {!n.is_read ? (
+                    <span
+                      className="w-2 h-2 rounded-full shrink-0"
+                      style={{ background: 'rgb(var(--color-primary))' }}
+                    />
+                  ) : null}
+                  <p className="font-body-sm font-bold" style={{ color: 'rgb(var(--color-primary))' }}>{n.title}</p>
                 </div>
-                {!n.is_read && (
-                  <Button variant="ghost" onClick={() => handleMarkRead(n.id)} className="shrink-0">
-                    <Check className="h-4 w-4" />
-                  </Button>
-                )}
+                <p className="font-body-sm leading-6" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{n.message}</p>
+                <p className="mt-sm font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                  {new Date(n.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                </p>
               </div>
-            </Card>
+              {!n.is_read ? (
+                <Button variant="ghost" onClick={() => handleMarkRead(n.id)} className="shrink-0">
+                  <Check size={16} />
+                </Button>
+              ) : null}
+            </div>
           ))
         ) : (
           <EmptyState
             title="No notifications yet"
             description="Notifications about project invitations, connection requests, and updates will appear here."
-            icon={Inbox}
+            icon={Bell}
           />
         )}
       </section>

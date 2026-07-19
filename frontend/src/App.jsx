@@ -16,6 +16,7 @@ import ProjectsExplorer from './pages/projects/ProjectsExplorer.jsx';
 import ProjectCreate from './pages/projects/ProjectCreate.jsx';
 import ProjectDetail from './pages/projects/ProjectDetail.jsx';
 import VerifyRepository from './pages/projects/VerifyRepository.jsx';
+import Settings from './pages/settings/Settings.jsx';
 import Pyramidion from './pages/pyramidion/Pyramidion.jsx';
 import Requests from './pages/requests/Requests.jsx';
 import Search from './pages/search/Search.jsx';
@@ -67,6 +68,7 @@ function App() {
           <Route path="projects/new" element={<ProjectCreate />} />
           <Route path="projects/:id" element={<ProjectDetail />} />
           <Route path="verify/:id" element={<VerifyRepository />} />
+          <Route path="settings" element={<Settings />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Route>
       </Route>
