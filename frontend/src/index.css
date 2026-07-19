@@ -6,18 +6,18 @@
 
 :root {
   color-scheme: dark;
-  --color-app: 10 10 12;
-  --color-sidebar: 8 8 10;
-  --color-surface: 18 18 22;
-  --color-elevated: 24 24 30;
+  --color-app: 5 5 5;
+  --color-sidebar: 5 5 5;
+  --color-surface: 23 24 27;
+  --color-elevated: 23 24 27;
   --color-glass: 255 255 255 / 0.04;
   --color-glass-border: 255 255 255 / 0.08;
-  --color-text-primary: 245 245 247;
-  --color-text-secondary: 140 140 145;
-  --color-border-subtle: 40 40 45;
-  --color-accent: 100 120 255;
-  --color-accent-soft: 30 30 40;
-  --color-accent-glow: 100 120 255 / 0.15;
+  --color-text-primary: 247 247 245;
+  --color-text-secondary: 138 138 138;
+  --color-border-subtle: 41 41 41;
+  --color-accent: 247 247 245;
+  --color-accent-soft: 41 41 41;
+  --color-accent-glow: 247 247 245 / 0.08;
   --color-success: 50 220 140;
   --color-warning: 255 200 60;
   --color-danger: 255 80 80;
@@ -76,7 +76,7 @@ button, input, textarea, select {
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, rgb(var(--color-text-primary)), rgb(var(--color-accent)));
+  background: linear-gradient(135deg, rgb(var(--color-text-primary)), rgb(var(--color-text-primary) / 0.6));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -91,7 +91,7 @@ button, input, textarea, select {
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, rgb(var(--color-accent) / 0.3), transparent 60%);
+  background: linear-gradient(135deg, rgb(var(--color-text-primary) / 0.15), transparent 60%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;

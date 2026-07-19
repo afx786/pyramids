@@ -81,10 +81,10 @@ function Sidebar() {
         <div
           className="flex h-9 w-9 items-center justify-center rounded-lg"
           style={{
-            background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgb(80 60 255))',
+            background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgb(var(--color-accent) / 0.5))',
           }}
         >
-          <Triangle className="h-5 w-5 text-white" strokeWidth={1.7} />
+          <Triangle className="h-5 w-5" strokeWidth={1.7} style={{ color: 'rgb(var(--color-app))' }} />
         </div>
         <div>
           <p className="text-sm font-semibold tracking-normal text-white">Pyramids</p>
@@ -109,7 +109,7 @@ function Sidebar() {
             }
             style={({ isActive }) => ({
               background: isActive
-                ? 'linear-gradient(135deg, rgb(var(--color-accent) / 0.15), rgb(80 60 255 / 0.08))'
+                ? 'linear-gradient(135deg, rgb(var(--color-accent) / 0.12), rgb(var(--color-accent) / 0.04))'
                 : 'transparent',
               borderColor: isActive ? 'rgb(var(--color-accent) / 0.25)' : 'transparent',
               boxShadow: isActive ? '0 0 20px rgb(var(--color-accent) / 0.08)' : 'none',

@@ -1,5 +1,5 @@
 const variants = {
-  primary: 'gradient-border text-white shadow-lg hover:shadow-xl active:shadow-md btn-press',
+  primary: 'gradient-border shadow-lg hover:shadow-xl active:shadow-md btn-press',
   secondary:
     'border text-primary shadow-sm hover:shadow-lg active:shadow-md btn-press',
   ghost:
@@ -17,7 +17,8 @@ function Button({
     variant === 'primary'
       ? {
           background:
-            'linear-gradient(135deg, rgb(var(--color-accent)), rgb(80 60 255))',
+            'linear-gradient(135deg, rgb(var(--color-accent)), rgb(var(--color-accent) / 0.7))',
+          color: 'rgb(var(--color-app))',
         }
       : variant === 'secondary'
       ? {

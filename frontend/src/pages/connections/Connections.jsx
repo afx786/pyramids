@@ -112,8 +112,9 @@ function Connections() {
             style={
               activeTab === tab.id
                 ? {
-                    background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgb(80 60 255))',
-                    color: 'white',
+                    background: 'rgb(var(--color-elevated))',
+                    color: 'rgb(var(--color-text-primary))',
+                    border: '1px solid rgb(var(--color-border-subtle))',
                     border: 'none',
                   }
                 : {

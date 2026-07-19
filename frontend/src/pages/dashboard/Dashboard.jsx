@@ -123,7 +123,7 @@ function Dashboard() {
             <div className="mt-6 h-2 overflow-hidden rounded" style={{ background: 'rgb(var(--color-accent-soft))' }}>
               <div
                 className="h-full rounded"
-                style={{ width: `${progress}%`, background: 'linear-gradient(90deg, rgb(var(--color-accent)), rgb(80 60 255))' }}
+                style={{ width: `${progress}%`, background: 'linear-gradient(90deg, rgb(var(--color-accent)), rgb(var(--color-text-primary) / 0.5))' }}
               />
             </div>
             <div className="mt-4 flex items-center justify-between text-xs font-semibold" style={{ color: 'rgb(var(--color-text-secondary))' }}>

@@ -22,7 +22,7 @@ function SkillMeter({ skill, width }) {
       <div className="h-4 overflow-hidden rounded-full" style={{ background: 'rgb(var(--color-accent-soft))' }}>
         <div
           className="h-full rounded-full"
-          style={{ width: `${width}%`, background: 'linear-gradient(90deg, rgb(var(--color-accent)), rgb(80 60 255))' }}
+          style={{ width: `${width}%`, background: 'linear-gradient(90deg, rgb(var(--color-accent)), rgb(var(--color-accent) / 0.3))' }}
         />
       </div>
     </div>

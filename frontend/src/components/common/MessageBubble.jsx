@@ -6,8 +6,9 @@ function MessageBubble({ message }) {
         style={
           message.mine
             ? {
-                background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgb(80 60 255))',
-                color: 'white',
+                background: 'rgb(var(--color-elevated))',
+                border: '1px solid rgb(var(--color-border-subtle))',
+                color: 'rgb(var(--color-text-primary))',
                 borderBottomRightRadius: '4px',
               }
             : {
