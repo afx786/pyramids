@@ -21,6 +21,7 @@ import { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { notificationService } from '../../services/notificationService.js';
+import { prefetchService } from '../../services/prefetchService.js';
 
 const navigation = [
   { label: 'Dashboard', to: '/dashboard', icon: LayoutDashboard },
@@ -83,6 +84,7 @@ function Sidebar() {
           <NavLink
             key={item.label}
             to={item.to}
+            onMouseEnter={() => prefetchService[item.label.toLowerCase()]?.()}
             className={({ isActive }) =>
               `flex h-11 min-w-11 items-center justify-center gap-3 rounded-lg border px-2 text-xs font-medium transition duration-200 lg:h-9 lg:min-w-0 lg:justify-start lg:px-3 lg:text-sm ${
                 isActive
