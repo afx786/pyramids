@@ -1,7 +1,8 @@
 function Skeleton({ className = '', as: Tag = 'div', ...props }) {
   return (
     <Tag
-      className={`animate-pulse rounded-md bg-accent-soft ${className}`}
+      className={`animate-shimmer rounded-xl ${className}`}
+      style={{ border: '1px solid rgb(var(--color-glass-border))' }}
       {...props}
     />
   );
@@ -13,6 +14,10 @@ export function SkeletonLine({ width = '100%', className = '' }) {
 
 export function SkeletonBlock({ className = '' }) {
   return <Skeleton className={`h-24 w-full ${className}`} />;
+}
+
+export function SkeletonCard({ className = '' }) {
+  return <Skeleton className={`h-40 w-full ${className}`} />;
 }
 
 export function SkeletonAvatar({ size = 'sm', className = '' }) {
