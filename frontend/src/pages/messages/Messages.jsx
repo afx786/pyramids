@@ -2,6 +2,7 @@ import { Send, Trash2, UserPlus } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ConversationListItem from '../../components/common/ConversationListItem.jsx';
 import EmptyState from '../../components/common/EmptyState.jsx';
+import InfiniteScroll from '../../components/ui/InfiniteScroll.jsx';
 import MessageBubble from '../../components/common/MessageBubble.jsx';
 import PageHeader from '../../components/common/PageHeader.jsx';
 import Skeleton, { SkeletonAvatar, SkeletonLine } from '../../components/ui/Skeleton.jsx';

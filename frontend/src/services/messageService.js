@@ -1,8 +1,9 @@
 import { api } from './api.js';
 
 export const messageService = {
-  listConversations() {
-    return api.get('/messages/conversations');
+  listConversations(params) {
+    const qs = params?.toString ? `?${params.toString()}` : '';
+    return api.get(`/messages/conversations${qs}`);
   },
 
   getMessages(conversationId) {
