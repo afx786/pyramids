@@ -61,39 +61,29 @@ function Connections() {
 
   const people = dataMap[activeTab];
 
-  async function handleAccept(person) {
-    try {
-      await connectionService.acceptRequest(person._requestId);
-      setPending((prev) => prev.filter((r) => r.id !== person._requestId));
-    } catch (err) { setError(err.message); }
+  function handleAccept(person) {
+    setPending((prev) => prev.filter((r) => r.id !== person._requestId));
+    connectionService.acceptRequest(person._requestId).catch((err) => setError(err.message));
   }
 
-  async function handleReject(person) {
-    try {
-      await connectionService.rejectRequest(person._requestId);
-      setPending((prev) => prev.filter((r) => r.id !== person._requestId));
-    } catch (err) { setError(err.message); }
+  function handleReject(person) {
+    setPending((prev) => prev.filter((r) => r.id !== person._requestId));
+    connectionService.rejectRequest(person._requestId).catch((err) => setError(err.message));
   }
 
-  async function handleCancel(person) {
-    try {
-      await connectionService.cancelRequest(person._requestId);
-      setSent((prev) => prev.filter((r) => r.id !== person._requestId));
-    } catch (err) { setError(err.message); }
+  function handleCancel(person) {
+    setSent((prev) => prev.filter((r) => r.id !== person._requestId));
+    connectionService.cancelRequest(person._requestId).catch((err) => setError(err.message));
   }
 
-  async function handleRemove(person) {
-    try {
-      await connectionService.removeConnection(person._connectionId);
-      setConnected((prev) => prev.filter((c) => c.id !== person._connectionId));
-    } catch (err) { setError(err.message); }
+  function handleRemove(person) {
+    setConnected((prev) => prev.filter((c) => c.id !== person._connectionId));
+    connectionService.removeConnection(person._connectionId).catch((err) => setError(err.message));
   }
 
-  async function handleMessage(person) {
-    try {
-      await messageService.startConversation(person._userId || person.id);
-      navigate('/messages');
-    } catch (err) { setError(err.message); }
+  function handleMessage(person) {
+    navigate('/messages');
+    messageService.startConversation(person._userId || person.id).catch(() => {});
   }
 
   return (

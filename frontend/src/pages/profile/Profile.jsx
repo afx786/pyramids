@@ -33,6 +33,7 @@ function Profile() {
   const [otherRank, setOtherRank] = useState(null);
   const [loading, setLoading] = useState(false);
   const [actionError, setActionError] = useState('');
+  const [requestSent, setRequestSent] = useState(false);
 
   const isOwnProfile = !id || String(user?.id) === String(id);
   const userId = isOwnProfile ? user?.id : id;
@@ -69,18 +70,14 @@ function Profile() {
     ? (profile?.statistics ?? {})
     : (otherProfile?.statistics ?? {});
 
-  async function handleConnect() {
-    try {
-      await connectionService.sendRequest(userId);
-      setActionError('');
-    } catch (err) { setActionError(err.message); }
+  function handleConnect() {
+    setRequestSent(true);
+    connectionService.sendRequest(userId).catch((err) => { setActionError(err.message); setRequestSent(false); });
   }
 
-  async function handleMessage() {
-    try {
-      await messageService.startConversation(userId);
-      navigate('/messages');
-    } catch (err) { setActionError(err.message); }
+  function handleMessage() {
+    navigate('/messages');
+    messageService.startConversation(userId).catch(() => {});
   }
 
   if (loading) return <LoadingState label="Loading profile..." />;
@@ -130,9 +127,9 @@ function Profile() {
                 <MessageSquare className="h-4 w-4" />
                 Message
               </Button>
-              <Button onClick={handleConnect}>
+              <Button onClick={handleConnect} disabled={requestSent}>
                 <UserPlus className="h-4 w-4" />
-                Connect
+                {requestSent ? 'Requested' : 'Connect'}
               </Button>
             </>
           )
