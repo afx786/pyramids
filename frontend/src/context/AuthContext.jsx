@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { api } from '../services/api.js';
+import { connectWebSocket, disconnectWebSocket } from '../services/websocketService.js';
 
 const TOKEN_KEY = 'pyramids_token';
 const USER_KEY = 'pyramids_user';
@@ -28,6 +29,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     if (user?.id) {
       loadProfileAndRank(user.id);
+      connectWebSocket();
     }
   }, [user?.id, loadProfileAndRank]);
 
@@ -37,6 +39,7 @@ export function AuthProvider({ children }) {
     const me = await api.get('/users/me');
     localStorage.setItem(USER_KEY, JSON.stringify(me));
     setUser(me);
+    connectWebSocket();
     return me;
   }, []);
 
@@ -46,6 +49,7 @@ export function AuthProvider({ children }) {
   }, [login]);
 
   const logout = useCallback(() => {
+    disconnectWebSocket();
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     setUser(null);
