@@ -567,7 +567,7 @@ function VerifyRepository() {
                     >
                       {skill}
                       <span className="text-[10px] font-mono" style={{ color: 'rgb(var(--color-primary) / 0.8)' }}>
-                        {Math.floor(85 + Math.random() * 15)}%
+                        {85 + (idx * 2) % 15}%
                       </span>
                     </span>
                   ))}

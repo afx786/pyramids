@@ -20,7 +20,7 @@ export const prefetchService = {
   notifications() {
     if (prefetched.notifications) return;
     prefetched.notifications = true;
-    notificationService.list().catch(() => {});
+    notificationService.listNotifications().catch(() => {});
   },
   search() {
     /* prefetch is minimal for search */

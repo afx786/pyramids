@@ -12,4 +12,8 @@ export const userService = {
   getRank(userId) {
     return api.get(`/ranks/user/${userId}`);
   },
+
+  updateProfile(data) {
+    return api.put('/users/me', data);
+  },
 };

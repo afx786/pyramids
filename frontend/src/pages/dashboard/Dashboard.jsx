@@ -30,12 +30,10 @@ function getRankProgress(rankData) {
 function Dashboard() {
   const { user, rankData } = useAuth();
   const [projects, setProjects] = useState([]);
-  const [connections, setConnections] = useState([]);
   const [loadError, setLoadError] = useState('');
 
   useEffect(() => {
     projectService.listProjects().then(setProjects).catch((err) => setLoadError(err.message));
-    connectionService.listConnections().then(setConnections).catch((err) => setLoadError(err.message));
   }, []);
 
   const { progress, nextRank, remaining } = getRankProgress(rankData);

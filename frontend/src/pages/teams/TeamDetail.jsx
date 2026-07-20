@@ -35,7 +35,15 @@ function TeamDetail() {
   const isMember = team && user && team.members?.some((m) => m.id === user.id);
 
   async function handleJoin() {
-    try { await teamService.joinTeam(id); window.location.reload(); } catch {}
+    try {
+      await teamService.joinTeam(id);
+      const [teamData, requestsData] = await Promise.all([
+        teamService.getTeam(id),
+        teamService.listRequests(id).catch(() => []),
+      ]);
+      setTeam(teamData);
+      setRequests(requestsData);
+    } catch {}
   }
 
   async function handleLeave() {
@@ -59,7 +67,8 @@ function TeamDetail() {
   }
 
   if (loading) return <LoadingState label="Loading team..." />;
-  if (error) return <ErrorState title={error} onRetry={() => window.location.reload()} />;
+  function handleRetry() { window.location.reload(); }
+  if (error) return <ErrorState title={error} onRetry={handleRetry} />;
   if (!team) return <ErrorState title="Team not found" />;
 
   return (

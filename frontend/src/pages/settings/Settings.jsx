@@ -1,8 +1,33 @@
 import { Bell, ShieldCheck, User } from 'lucide-react';
+import { useState } from 'react';
 import Card from '../../components/ui/Card.jsx';
 import Button from '../../components/ui/Button.jsx';
+import { useAuth } from '../../context/AuthContext.jsx';
+import { userService } from '../../services/userService.js';
 
 function Settings() {
+  const { user } = useAuth();
+  const [name, setName] = useState(user?.name || 'Builder');
+  const [bio, setBio] = useState(user?.bio || 'Builder in the Pyramids ecosystem.');
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState('');
+  const [saveSuccess, setSaveSuccess] = useState(false);
+
+  async function handleSave() {
+    setSaving(true);
+    setSaveError('');
+    setSaveSuccess(false);
+    try {
+      await userService.updateProfile({ name, bio });
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 2000);
+    } catch (err) {
+      setSaveError(err.message || 'Failed to save');
+    } finally {
+      setSaving(false);
+    }
+  }
+
   return (
     <div className="p-xl max-w-3xl mx-auto">
       <header className="mb-xl">
@@ -25,6 +50,12 @@ function Settings() {
             <h3 className="font-headline-md text-headline-md" style={{ color: 'rgb(var(--color-primary))' }}>Profile</h3>
           </div>
           <div className="space-y-lg">
+            {saveError ? (
+              <p className="rounded-lg px-lg py-sm font-body-sm" style={{ background: 'rgb(var(--color-error-container))', color: 'rgb(var(--color-on-error-container))' }}>{saveError}</p>
+            ) : null}
+            {saveSuccess ? (
+              <p className="rounded-lg px-lg py-sm font-body-sm" style={{ background: 'rgb(var(--color-success) / 0.15)', color: 'rgb(var(--color-success))' }}>Profile saved successfully.</p>
+            ) : null}
             <div>
               <label className="font-label-caps text-label-caps block mb-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Display Name</label>
               <input
@@ -34,7 +65,8 @@ function Settings() {
                   border: '1px solid rgb(var(--color-outline-variant))',
                   color: 'rgb(var(--color-on-surface))',
                 }}
-                defaultValue="Builder"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 onFocus={(e) => { e.target.style.borderColor = 'rgb(var(--color-primary))'; }}
                 onBlur={(e) => { e.target.style.borderColor = 'rgb(var(--color-outline-variant))'; }}
               />
@@ -49,13 +81,14 @@ function Settings() {
                   border: '1px solid rgb(var(--color-outline-variant))',
                   color: 'rgb(var(--color-on-surface))',
                 }}
-                defaultValue="Builder in the Pyramids ecosystem."
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
                 onFocus={(e) => { e.target.style.borderColor = 'rgb(var(--color-primary))'; }}
                 onBlur={(e) => { e.target.style.borderColor = 'rgb(var(--color-outline-variant))'; }}
               />
             </div>
             <div className="flex justify-end">
-              <Button variant="primary">Save Profile</Button>
+              <Button variant="primary" onClick={handleSave} disabled={saving}>{saving ? 'Saving...' : 'Save Profile'}</Button>
             </div>
           </div>
         </div>

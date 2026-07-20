@@ -30,9 +30,8 @@ function Messages() {
     messageService.listConversations().then((data) => {
       const list = Array.isArray(data) ? data : (data?.items ?? []);
       setConversations(list);
-      if (!activeId && list.length > 0) setActiveId(list[0].conversation_id);
     }).catch((err) => setError(err.message)).finally(() => setConversationsLoading(false));
-  }, [activeId]);
+  }, []);
 
   useEffect(() => {
     loadConversations();
@@ -57,13 +56,12 @@ function Messages() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  let _tempId = 0;
-  function nextTempId() { return --_tempId; }
+  const tempIdRef = useRef(0);
 
   function handleSend() {
     if (!text.trim() || !activeId) return;
     setError('');
-    const tempId = nextTempId();
+    const tempId = --tempIdRef.current;
     const content = text.trim();
     setText('');
     const optimistic = {

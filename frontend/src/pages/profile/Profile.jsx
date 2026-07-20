@@ -4,8 +4,6 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import ErrorState from '../../components/common/ErrorState.jsx';
 import LoadingState from '../../components/common/LoadingState.jsx';
 import ProjectCard from '../../components/common/ProjectCard.jsx';
-import CredibilitySummary from '../../components/evidence/CredibilitySummary.jsx';
-import VerifiedTechnologies from '../../components/evidence/VerifiedTechnologies.jsx';
 import VerifiedSkills from '../../components/evidence/VerifiedSkills.jsx';
 import Avatar from '../../components/ui/Avatar.jsx';
 import Button from '../../components/ui/Button.jsx';

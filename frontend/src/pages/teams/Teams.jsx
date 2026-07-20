@@ -146,7 +146,7 @@ function Teams() {
                                     color: 'rgb(var(--color-on-surface-variant))',
                                   }}
                                 >
-                                  {Math.floor(85 + Math.random() * 15)}% IMPACT
+                                  {85 + (member.id ? Number(member.id) % 15 : 10)}% IMPACT
                                 </span>
                               </div>
                             </div>

@@ -4,7 +4,6 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import ErrorState from '../../components/common/ErrorState.jsx';
 import FieldError from '../../components/common/FieldError.jsx';
 import LoadingState from '../../components/common/LoadingState.jsx';
-import VerificationSeal from '../../components/evidence/VerificationSeal.jsx';
 import VerifiedSkills from '../../components/evidence/VerifiedSkills.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';

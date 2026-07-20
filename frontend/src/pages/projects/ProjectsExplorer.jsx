@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight, Grid3X3, List, Plus, Search, SlidersHorizontal, AlertCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import EmptyState from '../../components/common/EmptyState.jsx';
 import ErrorState from '../../components/common/ErrorState.jsx';
 import ProjectExplorerCard from '../../components/common/ProjectExplorerCard.jsx';
@@ -20,6 +20,7 @@ const TECHNOLOGIES = [
 ];
 
 function ProjectsExplorer() {
+  const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -349,7 +350,7 @@ function ProjectsExplorer() {
             : 'Be the first to create a verified project.'
           }
           actionLabel={hasFilters ? undefined : 'Create Project'}
-          onAction={hasFilters ? undefined : () => { window.location.href = '/projects/new'; }}
+          onAction={hasFilters ? undefined : () => { navigate('/projects/new'); }}
         />
       ) : (
         <>

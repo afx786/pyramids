@@ -1,78 +1,100 @@
+import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import ErrorBoundary from './components/ui/ErrorBoundary.jsx';
 import MainLayout from './layouts/MainLayout.jsx';
 import Login from './pages/auth/Login.jsx';
 import Signup from './pages/auth/Signup.jsx';
-import Bookmarks from './pages/bookmarks/Bookmarks.jsx';
-import Connections from './pages/connections/Connections.jsx';
-import Dashboard from './pages/dashboard/Dashboard.jsx';
-import Domains from './pages/domains/Domains.jsx';
-import Hackathons from './pages/hackathons/Hackathons.jsx';
-import Leaderboard from './pages/leaderboard/Leaderboard.jsx';
-import Messages from './pages/messages/Messages.jsx';
-import Notifications from './pages/notifications/Notifications.jsx';
-import Opportunities from './pages/opportunities/Opportunities.jsx';
-import Profile from './pages/profile/Profile.jsx';
-import ProjectsExplorer from './pages/projects/ProjectsExplorer.jsx';
-import ProjectCreate from './pages/projects/ProjectCreate.jsx';
-import ProjectDetail from './pages/projects/ProjectDetail.jsx';
-import VerifyRepository from './pages/projects/VerifyRepository.jsx';
-import Settings from './pages/settings/Settings.jsx';
-import Pyramidion from './pages/pyramidion/Pyramidion.jsx';
-import Requests from './pages/requests/Requests.jsx';
-import Search from './pages/search/Search.jsx';
-import SkillAnalytics from './pages/skill_analytics/SkillAnalytics.jsx';
-import Stats from './pages/stats/Stats.jsx';
-import TeamCreate from './pages/teams/TeamCreate.jsx';
-import TeamDetail from './pages/teams/TeamDetail.jsx';
-import Teams from './pages/teams/Teams.jsx';
-import Technologies from './pages/technologies/Technologies.jsx';
-import Updates from './pages/updates/Updates.jsx';
-import Research from './pages/research/Research.jsx';
-import ResearchDetail from './pages/research/ResearchDetail.jsx';
-import Admin from './pages/admin/Admin.jsx';
 import ProtectedRoute from './routes/ProtectedRoute.jsx';
+
+const Bookmarks = lazy(() => import('./pages/bookmarks/Bookmarks.jsx'));
+const Connections = lazy(() => import('./pages/connections/Connections.jsx'));
+const Dashboard = lazy(() => import('./pages/dashboard/Dashboard.jsx'));
+const Domains = lazy(() => import('./pages/domains/Domains.jsx'));
+const Hackathons = lazy(() => import('./pages/hackathons/Hackathons.jsx'));
+const Leaderboard = lazy(() => import('./pages/leaderboard/Leaderboard.jsx'));
+const Messages = lazy(() => import('./pages/messages/Messages.jsx'));
+const Notifications = lazy(() => import('./pages/notifications/Notifications.jsx'));
+const Opportunities = lazy(() => import('./pages/opportunities/Opportunities.jsx'));
+const Profile = lazy(() => import('./pages/profile/Profile.jsx'));
+const ProjectsExplorer = lazy(() => import('./pages/projects/ProjectsExplorer.jsx'));
+const ProjectCreate = lazy(() => import('./pages/projects/ProjectCreate.jsx'));
+const ProjectDetail = lazy(() => import('./pages/projects/ProjectDetail.jsx'));
+const VerifyRepository = lazy(() => import('./pages/projects/VerifyRepository.jsx'));
+const Settings = lazy(() => import('./pages/settings/Settings.jsx'));
+const Pyramidion = lazy(() => import('./pages/pyramidion/Pyramidion.jsx'));
+const Requests = lazy(() => import('./pages/requests/Requests.jsx'));
+const Search = lazy(() => import('./pages/search/Search.jsx'));
+const SkillAnalytics = lazy(() => import('./pages/skill_analytics/SkillAnalytics.jsx'));
+const Stats = lazy(() => import('./pages/stats/Stats.jsx'));
+const TeamCreate = lazy(() => import('./pages/teams/TeamCreate.jsx'));
+const TeamDetail = lazy(() => import('./pages/teams/TeamDetail.jsx'));
+const Teams = lazy(() => import('./pages/teams/Teams.jsx'));
+const Technologies = lazy(() => import('./pages/technologies/Technologies.jsx'));
+const Updates = lazy(() => import('./pages/updates/Updates.jsx'));
+const Research = lazy(() => import('./pages/research/Research.jsx'));
+const ResearchDetail = lazy(() => import('./pages/research/ResearchDetail.jsx'));
+const Admin = lazy(() => import('./pages/admin/Admin.jsx'));
+
+function PageLoading() {
+  return (
+    <div className="flex items-center justify-center min-h-[60vh] p-xl">
+      <div className="flex flex-col items-center gap-md">
+        <div
+          className="w-8 h-8 rounded-full animate-spin"
+          style={{
+            border: '2px solid rgb(var(--color-surface-variant))',
+            borderTopColor: 'rgb(var(--color-primary))',
+          }}
+        />
+        <span className="font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Loading...</span>
+      </div>
+    </div>
+  );
+}
 
 function App() {
   return (
-    <Routes>
-      <Route path="login" element={<Login />} />
-      <Route path="signup" element={<Signup />} />
-      <Route element={<ProtectedRoute />}>
-        <Route element={<MainLayout />}>
-          <Route index element={<Navigate to="/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="domains" element={<Domains />} />
-          <Route path="teams" element={<Teams />} />
-          <Route path="teams/new" element={<TeamCreate />} />
-          <Route path="teams/:id" element={<TeamDetail />} />
-          <Route path="hackathons" element={<Hackathons />} />
-          <Route path="messages" element={<Messages />} />
-          <Route path="connections" element={<Connections />} />
-          <Route path="requests" element={<Requests />} />
-          <Route path="notifications" element={<Notifications />} />
-          <Route path="bookmarks" element={<Bookmarks />} />
-          <Route path="search" element={<Search />} />
-          <Route path="leaderboard" element={<Leaderboard />} />
-          <Route path="opportunities" element={<Opportunities />} />
-          <Route path="technologies" element={<Technologies />} />
-          <Route path="research" element={<Research />} />
-          <Route path="research/:id" element={<ResearchDetail />} />
-          <Route path="skills/top" element={<SkillAnalytics />} />
-          <Route path="stats" element={<Stats />} />
-          <Route path="updates" element={<Updates />} />
-          <Route path="admin" element={<Admin />} />
-          <Route path="pyramidion" element={<Pyramidion />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="profile/:id" element={<Profile />} />
-          <Route path="projects" element={<ProjectsExplorer />} />
-          <Route path="projects/new" element={<ProjectCreate />} />
-          <Route path="projects/:id" element={<ProjectDetail />} />
-          <Route path="verify/:id" element={<VerifyRepository />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+    <ErrorBoundary>
+      <Routes>
+        <Route path="login" element={<Login />} />
+        <Route path="signup" element={<Signup />} />
+        <Route element={<ProtectedRoute />}>
+          <Route element={<MainLayout />}>
+            <Route index element={<Navigate to="/dashboard" replace />} />
+            <Route path="dashboard" element={<Suspense fallback={<PageLoading />}><Dashboard /></Suspense>} />
+            <Route path="domains" element={<Suspense fallback={<PageLoading />}><Domains /></Suspense>} />
+            <Route path="teams" element={<Suspense fallback={<PageLoading />}><Teams /></Suspense>} />
+            <Route path="teams/new" element={<Suspense fallback={<PageLoading />}><TeamCreate /></Suspense>} />
+            <Route path="teams/:id" element={<Suspense fallback={<PageLoading />}><TeamDetail /></Suspense>} />
+            <Route path="hackathons" element={<Suspense fallback={<PageLoading />}><Hackathons /></Suspense>} />
+            <Route path="messages" element={<Suspense fallback={<PageLoading />}><Messages /></Suspense>} />
+            <Route path="connections" element={<Suspense fallback={<PageLoading />}><Connections /></Suspense>} />
+            <Route path="requests" element={<Suspense fallback={<PageLoading />}><Requests /></Suspense>} />
+            <Route path="notifications" element={<Suspense fallback={<PageLoading />}><Notifications /></Suspense>} />
+            <Route path="bookmarks" element={<Suspense fallback={<PageLoading />}><Bookmarks /></Suspense>} />
+            <Route path="search" element={<Suspense fallback={<PageLoading />}><Search /></Suspense>} />
+            <Route path="leaderboard" element={<Suspense fallback={<PageLoading />}><Leaderboard /></Suspense>} />
+            <Route path="opportunities" element={<Suspense fallback={<PageLoading />}><Opportunities /></Suspense>} />
+            <Route path="technologies" element={<Suspense fallback={<PageLoading />}><Technologies /></Suspense>} />
+            <Route path="research" element={<Suspense fallback={<PageLoading />}><Research /></Suspense>} />
+            <Route path="research/:id" element={<Suspense fallback={<PageLoading />}><ResearchDetail /></Suspense>} />
+            <Route path="skills/top" element={<Suspense fallback={<PageLoading />}><SkillAnalytics /></Suspense>} />
+            <Route path="stats" element={<Suspense fallback={<PageLoading />}><Stats /></Suspense>} />
+            <Route path="updates" element={<Suspense fallback={<PageLoading />}><Updates /></Suspense>} />
+            <Route path="admin" element={<Suspense fallback={<PageLoading />}><Admin /></Suspense>} />
+            <Route path="pyramidion" element={<Suspense fallback={<PageLoading />}><Pyramidion /></Suspense>} />
+            <Route path="profile" element={<Suspense fallback={<PageLoading />}><Profile /></Suspense>} />
+            <Route path="profile/:id" element={<Suspense fallback={<PageLoading />}><Profile /></Suspense>} />
+            <Route path="projects" element={<Suspense fallback={<PageLoading />}><ProjectsExplorer /></Suspense>} />
+            <Route path="projects/new" element={<Suspense fallback={<PageLoading />}><ProjectCreate /></Suspense>} />
+            <Route path="projects/:id" element={<Suspense fallback={<PageLoading />}><ProjectDetail /></Suspense>} />
+            <Route path="verify/:id" element={<Suspense fallback={<PageLoading />}><VerifyRepository /></Suspense>} />
+            <Route path="settings" element={<Suspense fallback={<PageLoading />}><Settings /></Suspense>} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Route>
         </Route>
-      </Route>
-    </Routes>
+      </Routes>
+    </ErrorBoundary>
   );
 }
 
