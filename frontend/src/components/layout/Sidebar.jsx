@@ -74,7 +74,7 @@ function Sidebar() {
       </div>
 
       {/* Nav — horizontal on mobile, vertical on desktop */}
-      <nav className="flex items-center gap-0.5 overflow-x-auto px-2 no-scrollbar lg:flex-col lg:items-stretch lg:flex-1 lg:gap-0.5 lg:px-md lg:overflow-visible">
+      <nav className="flex items-center gap-0.5 overflow-x-auto px-2 no-scrollbar lg:flex-col lg:items-stretch lg:flex-1 lg:gap-0.5 lg:px-md lg:overflow-y-auto">
         {navigation.map((item) => {
           const Icon = item.icon;
           return (
