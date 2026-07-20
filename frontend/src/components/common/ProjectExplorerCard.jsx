@@ -1,3 +1,4 @@
+import { Layers, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const ROLE_ABBREVIATIONS = {
@@ -46,11 +47,7 @@ function ProjectExplorerCard({ project, icon }) {
                 border: '1px solid rgb(var(--color-outline-variant))',
               }}
             >
-              {icon || (
-                <svg className="w-5 h-5" style={{ color: 'rgb(var(--color-primary))' }} fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                </svg>
-              )}
+              {icon || <Layers size={20} style={{ color: 'rgb(var(--color-primary))' }} />}
             </div>
             <div className="min-w-0">
               <h3
@@ -64,9 +61,7 @@ function ProjectExplorerCard({ project, icon }) {
                     style={{ color: 'rgb(var(--color-primary))' }}
                     title="Verified"
                   >
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
-                    </svg>
+                    <ShieldCheck size={16} />
                   </span>
                 ) : null}
               </h3>

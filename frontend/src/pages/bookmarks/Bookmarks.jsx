@@ -42,7 +42,7 @@ function Bookmarks() {
                   </p>
                 </div>
                 <Button variant="ghost" onClick={() => handleRemove(b.id)}>
-                  <Trash2 className="h-4 w-4 text-red-500" />
+                  <Trash2 className="h-4 w-4" style={{ color: 'rgb(var(--color-error))' }} />
                 </Button>
               </div>
             </Card>

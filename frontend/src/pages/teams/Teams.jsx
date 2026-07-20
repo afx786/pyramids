@@ -1,4 +1,4 @@
-import { ChevronRight, Plus, UsersRound, Workflow, PersonStanding, TrendingUp, ShieldCheck, Layers } from 'lucide-react';
+import { ChevronRight, Plus, Workflow, TrendingUp, ShieldCheck, Layers } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import EmptyState from '../../components/common/EmptyState.jsx';
@@ -6,9 +6,7 @@ import ErrorState from '../../components/common/ErrorState.jsx';
 import LoadingState from '../../components/common/LoadingState.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
-import Skeleton from '../../components/ui/Skeleton.jsx';
 import Avatar from '../../components/ui/Avatar.jsx';
-import SkillTag from '../../components/ui/SkillTag.jsx';
 import { teamService } from '../../services/teamService.js';
 
 function Teams() {

@@ -5,7 +5,6 @@ import ErrorState from '../../components/common/ErrorState.jsx';
 import LoadingState from '../../components/common/LoadingState.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
-import SkillTag from '../../components/ui/SkillTag.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { api } from '../../services/api.js';
 
@@ -88,7 +87,7 @@ function ResearchDetail() {
               <Button onClick={handleJoin}><UserPlus className="h-4 w-4" /> Join</Button>
             )}
             {actionError && (
-              <p className="text-xs font-semibold text-red-500">{actionError}</p>
+              <p className="text-xs font-semibold" style={{ color: 'rgb(var(--color-error))' }}>{actionError}</p>
             )}
           </div>
         </div>

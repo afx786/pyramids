@@ -5,10 +5,10 @@ import PageHeader from '../../components/common/PageHeader.jsx';
 import Card from '../../components/ui/Card.jsx';
 import { leaderboardService } from '../../services/leaderboardService.js';
 
-const rankColors = {
-  1: 'text-yellow-500',
-  2: 'text-gray-400',
-  3: 'text-amber-700',
+const rankStyles = {
+  1: { color: 'rgb(var(--color-warning))' },
+  2: { color: 'rgb(var(--color-on-surface-variant))' },
+  3: { color: 'rgb(var(--color-primary) / 0.6)' },
 };
 
 function Leaderboard() {
@@ -41,7 +41,7 @@ function Leaderboard() {
                 <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-black text-sm ${
                   rank <= 3 ? 'bg-primary text-app' : 'bg-accent-soft text-primary'
                 }`}>
-                  {rank <= 3 ? <Trophy className={`h-5 w-5 ${rankColors[rank] || ''}`} /> : rank}
+                  {rank <= 3 ? <Trophy className="h-5 w-5" style={rankStyles[rank] || {}} /> : rank}
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-bold text-primary">{u.name}</p>

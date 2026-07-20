@@ -123,7 +123,7 @@ function ProjectCreate() {
         ) : (
           <form className="grid grid-cols-2 gap-6" onSubmit={handleSubmit}>
             {apiError && (
-              <p className="col-span-2 rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-600">{apiError}</p>
+              <p className="col-span-2 rounded-lg px-4 py-3 text-sm font-medium" style={{ background: 'rgb(var(--color-error-container))', color: 'rgb(var(--color-on-error-container))' }}>{apiError}</p>
             )}
 
             <label className="space-y-2">
@@ -202,7 +202,7 @@ function ProjectCreate() {
                 value={form.github_url}
                 onChange={(event) => updateField('github_url', event.target.value)}
               />
-              <p className="rounded-lg bg-amber-50 px-4 py-3 text-sm font-medium leading-6 text-amber-800">
+              <p className="rounded-lg px-4 py-3 text-sm font-medium leading-6" style={{ background: 'rgb(var(--color-surface-container-high))', color: 'rgb(var(--color-on-surface-variant))' }}>
                 Adding a public GitHub repo lets Pyramids analyze your code to verify skills automatically. 
                 Without it, your project won't contribute to skill verification or rank progression.
               </p>

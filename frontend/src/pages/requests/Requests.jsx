@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import ConnectionCard from '../../components/common/ConnectionCard.jsx';
 import EmptyState from '../../components/common/EmptyState.jsx';
-import Card from '../../components/ui/Card.jsx';
 import { connectionService } from '../../services/connectionService.js';
 
 function Requests() {

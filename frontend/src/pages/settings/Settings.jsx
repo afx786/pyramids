@@ -1,4 +1,4 @@
-import { Bell, Globe, Lock, Moon, ShieldCheck, User } from 'lucide-react';
+import { Bell, ShieldCheck, User } from 'lucide-react';
 import Card from '../../components/ui/Card.jsx';
 import Button from '../../components/ui/Button.jsx';
 

@@ -5,7 +5,6 @@ import ErrorState from '../../components/common/ErrorState.jsx';
 import LoadingState from '../../components/common/LoadingState.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
-import SkillTag from '../../components/ui/SkillTag.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { teamService } from '../../services/teamService.js';
 
@@ -81,7 +80,7 @@ function TeamDetail() {
 
           <div className="flex shrink-0 flex-col gap-2">
             {isOwner && (
-              <Button variant="ghost" onClick={handleDelete} className="text-red-500">
+              <Button variant="ghost" onClick={handleDelete} style={{ color: 'rgb(var(--color-error))' }}>
                 <Trash2 className="h-4 w-4" /> Delete
               </Button>
             )}
@@ -111,10 +110,10 @@ function TeamDetail() {
                       <p className="text-sm font-semibold text-primary">{m.name}</p>
                       <p className="text-xs font-medium text-secondary capitalize">{m.role}</p>
                     </div>
-                    {m.id === team.owner?.id && <Crown className="h-4 w-4 text-yellow-500" />}
+                    {m.id === team.owner?.id && <Crown className="h-4 w-4" style={{ color: 'rgb(var(--color-warning))' }} />}
                   </div>
                   {isOwner && m.id !== user.id && (
-                    <button type="button" onClick={() => handleRemoveMember(m.id)} className="text-secondary hover:text-red-500">
+                    <button type="button" onClick={() => handleRemoveMember(m.id)} className="text-secondary hover:text-error transition-colors">
                       <UserMinus className="h-4 w-4" />
                     </button>
                   )}
@@ -135,8 +134,8 @@ function TeamDetail() {
                   <div key={r.id} className="flex items-center justify-between border-t border-subtle pt-3 first:border-t-0 first:pt-0">
                     <p className="text-sm font-semibold text-primary">User #{r.user_id}</p>
                     <div className="flex gap-2">
-                      <button type="button" onClick={() => handleApprove(r.id)} className="text-xs font-bold text-green-600">Approve</button>
-                      <button type="button" onClick={() => handleReject(r.id)} className="text-xs font-bold text-red-500">Reject</button>
+                      <button type="button" onClick={() => handleApprove(r.id)} className="text-xs font-bold" style={{ color: 'rgb(var(--color-success))' }}>Approve</button>
+                      <button type="button" onClick={() => handleReject(r.id)} className="text-xs font-bold" style={{ color: 'rgb(var(--color-error))' }}>Reject</button>
                     </div>
                   </div>
                 ))

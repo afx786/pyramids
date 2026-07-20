@@ -12,7 +12,6 @@ import {
   Shapes,
   ShieldCheck,
   Star,
-  Triangle,
   Trophy,
   UserRound,
   UsersRound,

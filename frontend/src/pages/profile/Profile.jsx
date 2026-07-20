@@ -1,4 +1,4 @@
-import { Check, ChevronRight, MessageSquare } from 'lucide-react';
+import { Check, LayoutGrid, MessageSquare, TrendingUp } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import ErrorState from '../../components/common/ErrorState.jsx';
@@ -10,7 +10,6 @@ import VerifiedSkills from '../../components/evidence/VerifiedSkills.jsx';
 import Avatar from '../../components/ui/Avatar.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
-import Skeleton from '../../components/ui/Skeleton.jsx';
 import SkillTag from '../../components/ui/SkillTag.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { connectionService } from '../../services/connectionService.js';
@@ -121,12 +120,7 @@ function Profile() {
               </span>
             ) : null}
             <div className="flex items-center gap-xs" style={{ color: 'rgb(var(--color-secondary))' }}>
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                <rect x="3" y="3" width="7" height="7" />
-                <rect x="14" y="3" width="7" height="7" />
-                <rect x="14" y="14" width="7" height="7" />
-                <rect x="3" y="14" width="7" height="7" />
-              </svg>
+              <LayoutGrid size={16} />
               <span className="font-label-caps text-label-caps uppercase tracking-widest">{rankName} Rank</span>
             </div>
           </div>
@@ -311,10 +305,7 @@ function Profile() {
           >
             <div className="flex justify-between items-center">
               <h4 className="font-headline-md text-headline-md font-bold" style={{ color: 'rgb(var(--color-primary))' }}>Rank Progression</h4>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
-                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-                <polyline points="17 6 23 6 23 12" />
-              </svg>
+              <TrendingUp size={20} style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
             </div>
             <div className="flex flex-col gap-md">
               {RANK_TIERS.map((tier, idx) => {

@@ -48,8 +48,6 @@ function Dashboard() {
   const circumference = 2 * Math.PI * 58;
   const strokeDashoffset = circumference - (progress / 100) * circumference;
 
-  const rankIcons = { Explorer: 'explore', Builder: 'foundation', Architect: 'grid_view', Innovator: 'prism', Pyramidion: 'pyramid' };
-
   return (
     <div className="pb-16 lg:pb-0">
       {/* Header */}

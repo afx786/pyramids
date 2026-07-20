@@ -1,4 +1,4 @@
-import { Check, Inbox, Bell } from 'lucide-react';
+import { Check, Bell } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import EmptyState from '../../components/common/EmptyState.jsx';
 import Card from '../../components/ui/Card.jsx';

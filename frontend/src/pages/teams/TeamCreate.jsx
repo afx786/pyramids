@@ -48,7 +48,7 @@ function TeamCreate() {
       <Card className="mt-10 p-8">
         <form onSubmit={handleSubmit} className="space-y-6">
           {errors._api && (
-            <p className="rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-600">{errors._api}</p>
+            <p className="rounded-lg px-4 py-3 text-sm font-medium" style={{ background: 'rgb(var(--color-error-container))', color: 'rgb(var(--color-on-error-container))' }}>{errors._api}</p>
           )}
 
           <label className="space-y-2">

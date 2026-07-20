@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, FlaskConical } from 'lucide-react';
 import EmptyState from '../../components/common/EmptyState.jsx';
 import PageHeader from '../../components/common/PageHeader.jsx';
-import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import { api } from '../../services/api.js';
 

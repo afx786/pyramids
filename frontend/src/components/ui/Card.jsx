@@ -1,7 +1,7 @@
-function Card({ children, className = '', hover = false, glow = false }) {
+function Card({ children, className = '', hover = false }) {
   return (
     <section
-      className={`rounded-xl p-lg card-border card-hover ${glow ? 'animate-glow-pulse' : ''} ${className}`}
+      className={`rounded-xl p-lg card-border ${hover ? 'card-hover' : ''} ${className}`}
       style={{
         background: 'rgb(var(--color-surface-container-low))',
       }}

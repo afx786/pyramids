@@ -1,4 +1,4 @@
-import { Grid3X3, List, Search, SlidersHorizontal, AlertCircle } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Grid3X3, List, Plus, Search, SlidersHorizontal, AlertCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import EmptyState from '../../components/common/EmptyState.jsx';
@@ -140,9 +140,7 @@ function ProjectsExplorer() {
           </div>
           <Link to="/projects/new">
             <Button variant="primary">
-              <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-              </svg>
+              <Plus size={18} />
               <span className="font-label-caps text-label-caps">New Project</span>
             </Button>
           </Link>
@@ -394,9 +392,7 @@ function ProjectsExplorer() {
                     color: page <= 1 ? 'rgb(var(--color-on-surface-variant) / 0.4)' : 'rgb(var(--color-on-surface-variant))',
                   }}
                 >
-                  <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                  </svg>
+                  <ChevronLeft size={18} />
                   <span className="font-label-caps text-label-caps">Prev</span>
                 </button>
                 <button
@@ -410,9 +406,7 @@ function ProjectsExplorer() {
                   }}
                 >
                   <span className="font-label-caps text-label-caps">Next</span>
-                  <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                  </svg>
+                  <ChevronRight size={18} />
                 </button>
               </div>
             </div>

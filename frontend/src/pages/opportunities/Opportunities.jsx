@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Briefcase, ExternalLink } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import EmptyState from '../../components/common/EmptyState.jsx';
 import PageHeader from '../../components/common/PageHeader.jsx';
 import Card from '../../components/ui/Card.jsx';

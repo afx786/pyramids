@@ -54,7 +54,7 @@ function Signup() {
           </p>
 
           {apiError && (
-            <p className="mt-5 border border-red-300 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">{apiError}</p>
+            <p className="mt-5 px-4 py-3 text-sm font-semibold rounded-lg" style={{ background: 'rgb(var(--color-error-container))', color: 'rgb(var(--color-on-error-container))' }}>{apiError}</p>
           )}
 
           <form className="mt-8 grid gap-5 sm:grid-cols-2" onSubmit={handleSubmit}>
@@ -129,7 +129,7 @@ function Signup() {
           </div>
           <div className="grid grid-cols-2 gap-px bg-white/15">
             {['Analyze GitHub repositories', 'Showcase projects', 'Find builders', 'Form teams'].map((item, index) => (
-              <div className="bg-[#050505] p-5" key={item}>
+              <div className="p-5" style={{ background: 'rgb(var(--color-surface-container-lowest))' }} key={item}>
                 <p className="font-mono-label text-[11px] text-white/38">0{index + 1}</p>
                 <p className="mt-4 text-sm font-extrabold text-white">{item}</p>
               </div>

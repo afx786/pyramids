@@ -1,13 +1,11 @@
-import { ArrowLeft, Check, ChevronRight, ExternalLink, GitBranch, Pencil, Plus, Star, Trash2, UserPlus, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, ChevronRight, Code2, ExternalLink, Folder, GitBranch, Pencil, Trash2, UserPlus, Users, X, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import ErrorState from '../../components/common/ErrorState.jsx';
 import FieldError from '../../components/common/FieldError.jsx';
 import LoadingState from '../../components/common/LoadingState.jsx';
 import VerificationSeal from '../../components/evidence/VerificationSeal.jsx';
-import ConfidenceIndicator from '../../components/evidence/ConfidenceIndicator.jsx';
 import VerifiedSkills from '../../components/evidence/VerifiedSkills.jsx';
-import VerifiedTechnologies from '../../components/evidence/VerifiedTechnologies.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import Input from '../../components/ui/Input.jsx';
@@ -343,25 +341,19 @@ function ProjectDetail() {
         style={{ borderTop: '1px solid rgb(var(--color-outline-variant) / 0.2)', borderBottom: '1px solid rgb(var(--color-outline-variant) / 0.2)' }}
       >
         <div className="flex items-center gap-sm">
-          <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-          </svg>
+          <Folder size={18} style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
           <span className="font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
             <strong style={{ color: 'rgb(var(--color-primary))' }}>{project.verified_repos ?? members.length}</strong> Verified Repositories
           </span>
         </div>
         <div className="flex items-center gap-sm">
-          <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-          </svg>
+          <Users size={18} style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
           <span className="font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
             <strong style={{ color: 'rgb(var(--color-primary))' }}>{members.length}</strong> Verified Contributors
           </span>
         </div>
         <div className="flex items-center gap-sm">
-          <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
+          <Zap size={18} style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
           <span className="font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
             <strong style={{ color: 'rgb(var(--color-primary))' }}>{verifiedSkills.length}</strong> Extracted Skills
           </span>
@@ -456,9 +448,7 @@ function ProjectDetail() {
               <p className="font-label-caps text-label-caps" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>LINES OF CODE</p>
               <p className="font-headline-md text-headline-md" style={{ color: 'rgb(var(--color-primary))' }}>{project.lines_of_code?.toLocaleString() ?? '—'}</p>
             </div>
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} style={{ color: 'rgb(var(--color-on-surface-variant) / 0.4)' }}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-            </svg>
+            <Code2 size={24} style={{ color: 'rgb(var(--color-on-surface-variant) / 0.4)' }} />
           </div>
         </div>
       </section>
@@ -571,9 +561,7 @@ function ProjectDetail() {
                       <p className="font-body-sm font-bold" style={{ color: 'rgb(var(--color-primary))' }}>{m.user_name ?? `User #${m.user_id}`}</p>
                       <p className="text-[12px] uppercase tracking-tighter" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{m.role ?? 'Contributor'}</p>
                     </div>
-                    <svg className="w-[18px] h-[18px] opacity-0 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} style={{ color: 'rgb(var(--color-primary))' }}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
+                    <ArrowRight size={18} className="opacity-0 group-hover:opacity-100" style={{ color: 'rgb(var(--color-primary))' }} />
                   </div>
                 ))}
               </div>
@@ -769,9 +757,7 @@ function ProjectDetail() {
                       className="w-12 h-12 rounded flex items-center justify-center"
                       style={{ background: 'rgb(var(--color-surface-container-highest))', border: '1px solid rgb(var(--color-outline-variant))' }}
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                      </svg>
+                      <Folder size={20} style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
                     </div>
                     <div>
                       <p className="font-body-sm font-bold group-hover:underline" style={{ color: 'rgb(var(--color-primary))' }}>

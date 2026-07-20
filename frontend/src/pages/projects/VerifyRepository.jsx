@@ -1,11 +1,10 @@
-import { ArrowLeft, Check, ChevronRight, ExternalLink, GitBranch, Pencil, Terminal } from 'lucide-react';
+import { ArrowLeft, Check, ChevronRight, GitBranch, LayoutGrid, Pencil, ShieldCheck, Terminal } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import ErrorState from '../../components/common/ErrorState.jsx';
 import LoadingState from '../../components/common/LoadingState.jsx';
 import VerificationTimeline from '../../components/evidence/VerificationTimeline.jsx';
-import VerifiedSkills from '../../components/evidence/VerifiedSkills.jsx';
-import VerifiedTechnologies from '../../components/evidence/VerifiedTechnologies.jsx';
+
 import Card from '../../components/ui/Card.jsx';
 import Input from '../../components/ui/Input.jsx';
 import Button from '../../components/ui/Button.jsx';
@@ -553,9 +552,7 @@ function VerifyRepository() {
               >
                 <div className="flex items-center justify-between mb-lg">
                   <h3 className="font-label-caps text-label-caps uppercase tracking-widest" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Verified Skills</h3>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} style={{ color: 'rgb(var(--color-primary))' }}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                  </svg>
+                  <ShieldCheck size={20} style={{ color: 'rgb(var(--color-primary))' }} />
                 </div>
                 <div className="flex flex-wrap gap-sm">
                   {result.skills.map((skill) => (
@@ -593,19 +590,7 @@ function VerifyRepository() {
                     border: '1px solid rgb(var(--color-primary) / 0.2)',
                   }}
                 >
-                  <svg
-                    className="w-6 h-6 -rotate-45 transition-transform duration-500 hover:rotate-0"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    style={{ color: 'rgb(var(--color-primary))' }}
-                  >
-                    <rect x="3" y="3" width="7" height="7" />
-                    <rect x="14" y="3" width="7" height="7" />
-                    <rect x="14" y="14" width="7" height="7" />
-                    <rect x="3" y="14" width="7" height="7" />
-                  </svg>
+                  <LayoutGrid size={24} className="-rotate-45 transition-transform duration-500 hover:rotate-0" style={{ color: 'rgb(var(--color-primary))' }} />
                 </div>
                 <div>
                   <h4 className="font-label-caps text-label-caps uppercase tracking-[0.2em]" style={{ color: 'rgb(var(--color-primary))' }}>Rank Projection</h4>

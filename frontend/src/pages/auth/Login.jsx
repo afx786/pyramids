@@ -79,7 +79,7 @@ function Login() {
           <p className="mt-4 text-sm font-semibold leading-6 text-secondary">Enter your credentials to continue to your Pyramids workspace.</p>
 
           {apiError && (
-            <p className="mt-5 border border-red-300 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">{apiError}</p>
+            <p className="mt-5 px-4 py-3 text-sm font-semibold rounded-lg" style={{ background: 'rgb(var(--color-error-container))', color: 'rgb(var(--color-on-error-container))' }}>{apiError}</p>
           )}
 
           <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
