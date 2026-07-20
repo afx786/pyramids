@@ -23,7 +23,9 @@ export function AuthProvider({ children }) {
       ]);
       setProfile(profileData);
       setRankData(rank);
-    } catch {}
+    } catch (err) {
+      console.warn('[auth] failed to load profile/rank:', err);
+    }
   }, []);
 
   useEffect(() => {

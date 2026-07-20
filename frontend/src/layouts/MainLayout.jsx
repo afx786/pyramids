@@ -6,11 +6,11 @@ function MainLayout() {
   const { pathname } = useLocation();
 
   return (
-    <div className="min-h-screen" style={{ background: 'rgb(var(--color-surface))', color: 'rgb(var(--color-on-surface))' }}>
+    <div className="min-h-screen overflow-x-hidden" style={{ background: 'rgb(var(--color-surface))', color: 'rgb(var(--color-on-surface))' }}>
       <Sidebar />
       <div className="min-h-screen lg:pl-[240px]">
         <Topbar />
-        <main className="px-4 pb-28 sm:px-6 lg:px-10 xl:px-2xl lg:pb-12 pt-lg max-w-container-max mx-auto">
+        <main className="px-4 pb-28 sm:px-6 lg:px-10 xl:px-lg lg:pb-12 pt-lg mx-auto">
           <div key={pathname} className="animate-fade-in">
             <Outlet />
           </div>

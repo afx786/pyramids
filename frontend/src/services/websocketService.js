@@ -27,7 +27,9 @@ export function connectWebSocket() {
       if (type && listeners[type]) {
         listeners[type].forEach((fn) => fn(data.payload));
       }
-    } catch {}
+    } catch (err) {
+      console.warn('[ws] message parse error:', err);
+    }
   };
 
   ws.onclose = () => {

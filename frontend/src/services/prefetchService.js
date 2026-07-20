@@ -8,19 +8,19 @@ export const prefetchService = {
   connections() {
     if (prefetched.connections) return;
     prefetched.connections = true;
-    connectionService.listConnections().catch(() => {});
-    connectionService.listIncomingRequests().catch(() => {});
+    connectionService.listConnections().catch(() => console.warn('[prefetch] connections failed'));
+    connectionService.listIncomingRequests().catch(() => console.warn('[prefetch] incoming requests failed'));
   },
   messages() {
     if (prefetched.messages) return;
     prefetched.messages = true;
-    messageService.listConversations().catch(() => {});
-    connectionService.listConnections().catch(() => {});
+    messageService.listConversations().catch(() => console.warn('[prefetch] conversations failed'));
+    connectionService.listConnections().catch(() => console.warn('[prefetch] connections failed'));
   },
   notifications() {
     if (prefetched.notifications) return;
     prefetched.notifications = true;
-    notificationService.listNotifications().catch(() => {});
+    notificationService.listNotifications().catch(() => console.warn('[prefetch] notifications failed'));
   },
   search() {
     /* prefetch is minimal for search */

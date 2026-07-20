@@ -44,6 +44,7 @@ function Topbar() {
             className="relative transition-opacity hover:opacity-80"
             style={{ color: 'rgb(var(--color-on-surface-variant))' }}
             onClick={() => navigate('/notifications')}
+            aria-label="Notifications"
           >
             <Bell className="h-5 w-5" strokeWidth={1.5} />
             <span className="absolute top-0 right-0 w-1.5 h-1.5 rounded-full"

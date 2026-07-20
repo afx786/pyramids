@@ -261,6 +261,7 @@ function Messages() {
                     className="absolute right-sm top-1 hidden p-xs group-hover:block transition-opacity hover:opacity-60"
                     style={{ color: 'rgb(var(--color-error))' }}
                     title="Delete conversation"
+                    aria-label="Delete conversation"
                   >
                     <Trash2 size={12} />
                   </button>

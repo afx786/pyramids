@@ -51,7 +51,7 @@ function Sidebar() {
       notificationService.listNotifications().then((data) => {
         const count = Array.isArray(data) ? data.filter((n) => !n.is_read).length : 0;
         setUnreadCount(count);
-      }).catch(() => {});
+      }).catch((err) => console.warn('[sidebar] unread count failed:', err));
     }
     fetchUnread();
     const interval = setInterval(fetchUnread, 30000);
@@ -136,6 +136,7 @@ function Sidebar() {
             type="button"
             onClick={() => { logout(); navigate('/login'); }}
             style={{ color: 'rgb(var(--color-on-surface-variant))' }}
+            aria-label="Log out"
           >
             <LogOut className="h-4 w-4" strokeWidth={1.5} />
           </button>

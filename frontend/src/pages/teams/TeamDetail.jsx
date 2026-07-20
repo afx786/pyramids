@@ -43,27 +43,40 @@ function TeamDetail() {
       ]);
       setTeam(teamData);
       setRequests(requestsData);
-    } catch {}
+    } catch (err) {
+      console.warn('[team] join failed:', err);
+      setError(err.message || 'Failed to join team');
+    }
   }
 
   async function handleLeave() {
-    try { await teamService.leaveTeam(id); navigate('/teams'); } catch {}
+    try { await teamService.leaveTeam(id); navigate('/teams'); } catch (err) {
+      console.warn('[team] leave failed:', err);
+    }
   }
 
   async function handleDelete() {
-    try { await teamService.deleteTeam(id); navigate('/teams'); } catch {}
+    try { await teamService.deleteTeam(id); navigate('/teams'); } catch (err) {
+      console.warn('[team] delete failed:', err);
+    }
   }
 
   async function handleApprove(reqId) {
-    try { await teamService.approveRequest(reqId); setRequests((prev) => prev.filter((r) => r.id !== reqId)); } catch {}
+    try { await teamService.approveRequest(reqId); setRequests((prev) => prev.filter((r) => r.id !== reqId)); } catch (err) {
+      console.warn('[team] approve failed:', err);
+    }
   }
 
   async function handleReject(reqId) {
-    try { await teamService.rejectRequest(reqId); setRequests((prev) => prev.filter((r) => r.id !== reqId)); } catch {}
+    try { await teamService.rejectRequest(reqId); setRequests((prev) => prev.filter((r) => r.id !== reqId)); } catch (err) {
+      console.warn('[team] reject failed:', err);
+    }
   }
 
   async function handleRemoveMember(userId) {
-    try { await teamService.removeMember(id, userId); setTeam((prev) => ({ ...prev, members: prev.members.filter((m) => m.id !== userId) })); } catch {}
+    try { await teamService.removeMember(id, userId); setTeam((prev) => ({ ...prev, members: prev.members.filter((m) => m.id !== userId) })); } catch (err) {
+      console.warn('[team] remove member failed:', err);
+    }
   }
 
   if (loading) return <LoadingState label="Loading team..." />;
@@ -122,7 +135,7 @@ function TeamDetail() {
                     {m.id === team.owner?.id && <Crown className="h-4 w-4" style={{ color: 'rgb(var(--color-warning))' }} />}
                   </div>
                   {isOwner && m.id !== user.id && (
-                    <button type="button" onClick={() => handleRemoveMember(m.id)} className="text-secondary hover:text-error transition-colors">
+                    <button type="button" onClick={() => handleRemoveMember(m.id)} className="text-secondary hover:text-error transition-colors" aria-label="Remove member">
                       <UserMinus className="h-4 w-4" />
                     </button>
                   )}

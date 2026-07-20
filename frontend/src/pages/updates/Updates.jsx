@@ -9,7 +9,7 @@ function Updates() {
   const [feed, setFeed] = useState({ projects: [], research: [], hackathons: [] });
 
   useEffect(() => {
-    discoveryService.getFeed('all').then(setFeed).catch(() => {});
+    discoveryService.getFeed('all').then(setFeed).catch((err) => console.warn('[updates] feed failed:', err));
   }, []);
 
   const allItems = [
@@ -26,7 +26,7 @@ function Updates() {
         description="Recent projects, research, and hackathons across the platform."
       />
 
-      <section className="mt-10 grid grid-cols-[1fr_340px] gap-8">
+      <section className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_340px]">
         <div className="space-y-4">
           {allItems.length > 0 ? (
             allItems.map((item, idx) => (
