@@ -1,22 +1,41 @@
 import { Check, Bell } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import EmptyState from '../../components/common/EmptyState.jsx';
-import Card from '../../components/ui/Card.jsx';
 import Button from '../../components/ui/Button.jsx';
 import { notificationService } from '../../services/notificationService.js';
+
+function formatDate(raw) {
+  try {
+    const d = new Date(raw);
+    if (isNaN(d.getTime())) return '—';
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  } catch {
+    return '—';
+  }
+}
+
+function normalizeNotifications(data) {
+  if (Array.isArray(data)) return data;
+  if (data && Array.isArray(data.items)) return data.items;
+  return [];
+}
 
 function Notifications() {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    notificationService.listNotifications().then(setNotifications).catch(() => {});
+    notificationService.listNotifications()
+      .then((data) => setNotifications(normalizeNotifications(data)))
+      .catch((err) => console.warn('[notifications] list failed:', err));
   }, []);
 
   async function handleMarkRead(id) {
     try {
       await notificationService.markAsRead(id);
       setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)));
-    } catch {}
+    } catch (err) {
+      console.warn('[notifications] mark read failed:', err);
+    }
   }
 
   const unreadCount = notifications.filter((n) => !n.is_read).length;
@@ -65,7 +84,7 @@ function Notifications() {
                 </div>
                 <p className="font-body-sm leading-6" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{n.message}</p>
                 <p className="mt-sm font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
-                  {new Date(n.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                  {formatDate(n.created_at)}
                 </p>
               </div>
               {!n.is_read ? (
