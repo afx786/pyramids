@@ -1,0 +1,1 @@
+import{a as r}from"./index-BQGWruGX.js";const u={getMe(){return r.get("/users/me")},getProfile(e){return r.get(`/profile/${e}`)},getRank(e){return r.get(`/ranks/user/${e}`)},updateProfile(e){return r.put("/users/me",e)}};export{u};

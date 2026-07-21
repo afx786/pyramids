@@ -1,0 +1,1 @@
+import{j as o}from"./index-BQGWruGX.js";function n({children:r}){return o.jsx("span",{className:"font-mono text-[11px] px-2 py-0.5 rounded",style:{background:"rgb(var(--color-surface-variant))",color:"rgb(var(--color-on-surface))"},children:r})}export{n as S};
