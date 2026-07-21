@@ -72,6 +72,11 @@ from app.models.notification import Notification
 from app.routes.notifications import (
     router as notifications_router
 )
+from app.models.hackathon_submission import HackathonSubmission
+from app.models.hackathon_announcement import HackathonAnnouncement
+from app.models.organization import Organization, OrganizationMember
+from app.models.research_milestone import ResearchMilestone
+from app.models.research_update import ResearchUpdate
 from app.models.bookmark import Bookmark
 from app.routes.bookmarks import (
     router as bookmarks_router
@@ -102,6 +107,9 @@ from app.routes.dashboard import (
 )
 from app.routes.ws import (
     router as ws_router
+)
+from app.routes.organizations import (
+    router as organizations_router
 )
 app = FastAPI(title="Pyramids API")
 
@@ -199,4 +207,7 @@ app.include_router(
 )
 app.include_router(
     ws_router
+)
+app.include_router(
+    organizations_router
 )

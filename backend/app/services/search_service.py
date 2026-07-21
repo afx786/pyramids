@@ -8,6 +8,7 @@ from app.models.project import Project
 from app.models.team import Team
 from app.models.research_project import ResearchProject
 from app.models.hackathon import Hackathon
+from app.models.organization import Organization
 
 def search_users_by_skill(
     db: Session,
@@ -173,6 +174,15 @@ def unified_search(
         .all()
     )
 
+    organizations = (
+        db.query(Organization)
+        .filter(
+            (Organization.name.ilike(f"%{query}%")) |
+            (Organization.description.ilike(f"%{query}%"))
+        )
+        .all()
+    )
+
     return {
         "users": [
             {
@@ -217,6 +227,15 @@ def unified_search(
                 "description": hackathon.description
             }
             for hackathon in hackathons
+        ],
+
+        "organizations": [
+            {
+                "id": org.id,
+                "name": org.name,
+                "description": org.description
+            }
+            for org in organizations
         ]
     }
 def search_users_by_branch(

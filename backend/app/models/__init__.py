@@ -6,9 +6,14 @@ from .team import Team
 from .team_member import TeamMember
 from .hackathon import Hackathon
 from .hackathon_team import HackathonTeam
+from .hackathon_submission import HackathonSubmission
+from .hackathon_announcement import HackathonAnnouncement
 from .opportunity import Opportunity
 from .research_project import ResearchProject
 from .research_member import ResearchMember
+from .research_milestone import ResearchMilestone
+from .research_update import ResearchUpdate
+from .organization import Organization, OrganizationMember
 from .conversation import Conversation
 from .conversation_participant import ConversationParticipant
 from .message import Message

@@ -1,91 +1,70 @@
 from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    DateTime,
-    ForeignKey
+    Column, Integer, String, Text, DateTime, Boolean, ForeignKey
 )
-
+from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.orm import relationship
-
 from datetime import datetime
-
 from app.database.base import Base
 
 
 class Hackathon(Base):
     __tablename__ = "hackathons"
 
-    id = Column(
-        Integer,
-        primary_key=True,
-        index=True
-    )
+    id = Column(Integer, primary_key=True, index=True)
 
-    title = Column(
-        String,
-        nullable=False
-    )
+    # Basic Information
+    title = Column(String, nullable=False)
+    description = Column(Text)
+    theme = Column(String)
+    banner_url = Column(String)
+    organizer = Column(String, nullable=False)
 
-    description = Column(
-        String
-    )
+    # Schedule
+    registration_opens = Column(DateTime)
+    registration_closes = Column(DateTime)
+    start_date = Column(DateTime)
+    end_date = Column(DateTime)
 
-    organizer = Column(
-        String,
-        nullable=False
-    )
+    # Mode & Location
+    mode = Column(String)
+    venue = Column(String)
+    city = Column(String)
+    country = Column(String)
 
-    mode = Column(
-        String
-    )
+    # Links
+    official_website = Column(String)
+    registration_link = Column(String)
 
-    start_date = Column(
-        DateTime
-    )
+    # Competition
+    prize_pool = Column(String)
+    team_size_min = Column(Integer, default=1)
+    team_size_max = Column(Integer)
+    eligibility = Column(Text)
 
-    end_date = Column(
-        DateTime
-    )
+    # Domains & Technologies
+    domains = Column(JSON, default=list)
+    technologies = Column(JSON, default=list)
 
-    registration_deadline = Column(
-        DateTime
-    )
+    # Sponsors, Judges, Rules, FAQs
+    sponsors = Column(JSON, default=list)
+    judges = Column(JSON, default=list)
+    rules = Column(Text)
+    faqs = Column(JSON, default=list)
+    contact_info = Column(String)
 
-    created_at = Column(
-        DateTime,
-        default=datetime.utcnow
-    )
+    # Status Workflow
+    status = Column(String, default="draft")
+    admin_feedback = Column(Text)
 
-    source = Column(
-        String,
-        default="admin"
-    )
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    status = Column(
-        String,
-        default="approved"
-    )
+    source = Column(String, default="host")
+    external_url = Column(String)
+    external_id = Column(String)
 
-    external_url = Column(
-        String
-    )
+    created_by = Column(Integer, ForeignKey("users.id"), nullable=True)
 
-    external_id = Column(
-        String
-    )
-
-    created_by = Column(
-        Integer,
-        ForeignKey("users.id"),
-        nullable=True
-    )
-
-    # ----------------------------------
-    # Creator
-    # ----------------------------------
-
-    creator = relationship(
-        "User",
-        back_populates="created_hackathons"
-    )
+    creator = relationship("User", back_populates="created_hackathons")
+    teams = relationship("HackathonTeam", back_populates="hackathon", cascade="all, delete-orphan")
+    submissions = relationship("HackathonSubmission", back_populates="hackathon", cascade="all, delete-orphan")
