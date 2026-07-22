@@ -1,0 +1,1 @@
+function i(t){return!t||typeof t!="string"?!1:/^PYR-[A-Z]+-[A-Z0-9]{6}$/i.test(t.trim())}function u(t){if(!t)return null;const r=String(t).trim();return i(r)?{type:"public",value:r.toUpperCase()}:/^\d+$/.test(r)?{type:"numeric",value:r}:{type:"slug",value:r}}function n(t,r){const e=u(r);return e?e.type==="public"?`${t}?public_id=${e.value}`:`${t}/${e.value}`:t}export{n as b};
