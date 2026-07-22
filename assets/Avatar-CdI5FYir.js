@@ -1,0 +1,1 @@
+import{j as e}from"./index-wUCKi0oR.js";function i({alt:r,src:o,size:t="md",className:s=""}){const a={sm:"h-8 w-8",md:"h-12 w-12",lg:"h-16 w-16"};return e.jsx("img",{src:o,alt:r,className:`${a[t]} rounded-full object-cover border transition-all duration-150 ${s}`,style:{borderColor:"rgb(var(--color-outline-variant))"}})}export{i as A};
