@@ -206,7 +206,9 @@ def serialize_project(project):
 
             for pt in project.technologies
 
-        ]
+        ],
+
+        "member_count": len(project.members)
 
     }
 

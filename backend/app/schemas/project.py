@@ -37,6 +37,7 @@ class ProjectResponse(BaseModel):
     github_url: str | None = None
     repository_score: int | None = None
     verified_skills: list | None = None
+    member_count: int
 
     class Config:
         from_attributes = True

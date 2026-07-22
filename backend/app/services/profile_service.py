@@ -52,7 +52,8 @@ def get_user_profile(
             "id": project.id,
             "title": project.title,
             "domain": project.domain,
-            "status": project.status
+            "status": project.status,
+            "member_count": len(project.members)
         }
         for project in user.projects
     ]
@@ -142,6 +143,8 @@ def get_user_profile(
             "bio": user.bio,
             "program": user.program,
             "role": user.role,
+            "joining_year": user.joining_year,
+            "graduating_year": user.graduating_year,
             "created_at": user.created_at
         },
 
