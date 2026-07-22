@@ -4,6 +4,7 @@ from sqlalchemy import (
     String,
     Boolean,
     DateTime,
+    Text,
     ForeignKey
 )
 
@@ -42,6 +43,11 @@ class Notification(Base):
     type = Column(
         String,
         nullable=False
+    )
+
+    reference_data = Column(
+        Text,
+        nullable=True
     )
 
     is_read = Column(

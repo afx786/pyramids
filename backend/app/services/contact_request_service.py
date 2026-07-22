@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from app.models.contact_request import ContactRequest
@@ -91,12 +93,15 @@ def send_contact_request(
     db.commit()
     db.refresh(request)
 
+    requester_name = requester.name or "A builder"
+
     create_notification(
         db=db,
         user_id=target_id,
         title="Contact Request",
-        message="A builder has requested your contact information.",
-        notification_type="CONTACT_REQUEST"
+        message=f"{requester_name} has requested your contact information.",
+        notification_type="CONTACT_REQUEST",
+        data={"requester_id": requester_id, "requester_name": requester_name}
     )
 
     return request
@@ -124,6 +129,7 @@ def approve_contact_request(
         return "already_processed"
 
     req.status = "approved"
+    req.approved_at = datetime.now(timezone.utc)
     db.commit()
     db.refresh(req)
 
@@ -133,12 +139,15 @@ def approve_contact_request(
         .first()
     )
 
+    target_name = target.name or "A builder"
+
     create_notification(
         db=db,
         user_id=req.requester_id,
         title="Contact Information Shared",
-        message="The builder has shared their contact details with you.",
-        notification_type="CONTACT_APPROVED"
+        message=f"{target_name} has shared their contact details with you.",
+        notification_type="CONTACT_APPROVED",
+        data={"target_id": req.target_id, "target_name": target_name}
     )
 
     return {
@@ -173,15 +182,51 @@ def decline_contact_request(
     db.commit()
     db.refresh(req)
 
+    target = (
+        db.query(User)
+        .filter(User.id == req.target_id)
+        .first()
+    )
+
+    target_name = target.name or "A builder"
+
     create_notification(
         db=db,
         user_id=req.requester_id,
         title="Contact Request Declined",
-        message="Your request for contact information was declined.",
-        notification_type="CONTACT_DECLINED"
+        message=f"{target_name} declined your request for contact information.",
+        notification_type="CONTACT_DECLINED",
+        data={"target_id": req.target_id, "target_name": target_name}
     )
 
     return req
+
+
+def withdraw_contact_request(
+    db: Session,
+    request_id: int,
+    current_user_id: int
+):
+
+    req = (
+        db.query(ContactRequest)
+        .filter(ContactRequest.id == request_id)
+        .first()
+    )
+
+    if not req:
+        return "request_not_found"
+
+    if req.requester_id != current_user_id:
+        return "not_requester"
+
+    if req.status != "pending":
+        return "already_processed"
+
+    db.delete(req)
+    db.commit()
+
+    return {"message": "Request withdrawn."}
 
 
 def get_contact_request_status(

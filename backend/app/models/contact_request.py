@@ -50,6 +50,11 @@ class ContactRequest(Base):
         onupdate=func.now()
     )
 
+    approved_at = Column(
+        DateTime(timezone=True),
+        nullable=True
+    )
+
     requester = relationship(
         "User",
         foreign_keys=[requester_id]

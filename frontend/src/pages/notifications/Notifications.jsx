@@ -1,4 +1,4 @@
-import { Check, Bell, Eye, ThumbsUp, ThumbsDown } from 'lucide-react';
+import { Check, Bell, Eye, ThumbsUp, ThumbsDown, Mail, Smartphone } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import EmptyState from '../../components/common/EmptyState.jsx';
 import Button from '../../components/ui/Button.jsx';
@@ -78,17 +78,17 @@ function Notifications() {
     }
   }
 
-  async function handleViewContact() {
+  async function handleViewContact(n) {
+    const targetId = n.reference_data?.target_id;
+    if (!targetId) return;
     try {
-      const myInfo = await contactService.getMyInfo();
-      if (myInfo.contact_email || myInfo.whatsapp_number) {
-        setSharedContactInfo({ contact_email: myInfo.contact_email, whatsapp_number: myInfo.whatsapp_number });
-      } else {
-        return;
+      const status = await contactService.getRequestStatus(targetId);
+      if (status?.contact_email || status?.whatsapp_number) {
+        setSharedContactInfo({ contact_email: status.contact_email, whatsapp_number: status.whatsapp_number });
+        setShowContactShared(true);
       }
-      setShowContactShared(true);
     } catch (err) {
-      console.warn('[notifications] fetch contact failed:', err);
+      console.warn('[notifications] fetch shared contact failed:', err);
     }
   }
 
@@ -152,7 +152,7 @@ function Notifications() {
                 ) : null}
                 {n.type === 'CONTACT_APPROVED' ? (
                   <div className="mt-md">
-                    <Button variant="primary" onClick={handleViewContact}>
+                    <Button variant="primary" onClick={() => handleViewContact(n)} disabled={!n.reference_data?.target_id}>
                       <Eye size={14} /> View Contact
                     </Button>
                   </div>

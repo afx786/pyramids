@@ -144,8 +144,6 @@ function Connections() {
     setShowRequesterInfo(false);
     if (hasSaved && pendingRequestTarget) {
       await doSendRequest(pendingRequestTarget);
-    } else if (!hasSaved && pendingRequestTarget) {
-      setError('You need to provide contact information before requesting someone else\'s.');
     }
     setPendingRequestTarget(null);
   }
@@ -153,9 +151,21 @@ function Connections() {
   function handleViewContact(person) {
     const userId = person._userId || person.id;
     const status = contactStatuses[userId];
-    if (status?.contact_info) {
-      setSharedContactInfo(status.contact_info);
+    if (status?.contact_email || status?.whatsapp_number) {
+      setSharedContactInfo({ contact_email: status.contact_email, whatsapp_number: status.whatsapp_number });
       setShowContactShared(true);
+    }
+  }
+
+  async function handleWithdrawContact(person) {
+    const userId = person._userId || person.id;
+    const status = contactStatuses[userId];
+    if (!status?.request_id) return;
+    try {
+      await contactService.withdrawRequest(status.request_id);
+      setContactStatuses((prev) => ({ ...prev, [userId]: { status: 'none' } }));
+    } catch (err) {
+      setError(err.message || 'Failed to withdraw request');
     }
   }
 
@@ -230,9 +240,12 @@ function Connections() {
                       status?.status === 'approved' ? 'View Contact' :
                       status?.status === 'pending' ? 'Pending' :
                       status?.status === 'declined' ? 'Declined' :
-                      'Request Contact Details'
+                      'Request Contact'
                     }
-                    secondaryAction="Message"
+                    secondaryAction={
+                      status?.status === 'pending' ? 'Withdraw' :
+                      'Message'
+                    }
                     onPrimary={
                       isLoading ? undefined :
                       status?.status === 'approved' ? () => handleViewContact(person) :
@@ -240,7 +253,10 @@ function Connections() {
                       status?.status === 'declined' ? undefined :
                       () => handleRequestContact(person)
                     }
-                    onSecondary={() => handleMessage(person)}
+                    onSecondary={
+                      status?.status === 'pending' ? () => handleWithdrawContact(person) :
+                      () => handleMessage(person)
+                    }
                   />
                 </div>
               );

@@ -1,3 +1,5 @@
+import json
+
 from sqlalchemy.orm import Session
 
 from app.models.notification import Notification
@@ -49,13 +51,15 @@ def create_notification(
     user_id: int,
     title: str,
     message: str,
-    notification_type: str
+    notification_type: str,
+    data: dict | None = None
 ):
     notification = Notification(
         user_id=user_id,
         title=title,
         message=message,
-        type=notification_type
+        type=notification_type,
+        reference_data=json.dumps(data) if data else None
     )
 
     db.add(notification)

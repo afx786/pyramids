@@ -8,4 +8,5 @@ export const contactService = {
   declineRequest: (requestId) => api.post(`/contacts/request/${requestId}/decline`),
   getRequestStatus: (targetId) => api.get(`/contacts/request/status/${targetId}`),
   getReceivedRequests: () => api.get('/contacts/requests/received'),
+  withdrawRequest: (requestId) => api.post(`/contacts/request/${requestId}/withdraw`),
 };

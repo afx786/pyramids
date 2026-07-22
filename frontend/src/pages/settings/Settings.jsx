@@ -269,18 +269,20 @@ function Settings() {
           }}
         >
           <div className="flex items-center gap-md mb-lg">
-            <Smartphone size={20} style={{ color: 'rgb(var(--color-primary))' }} />
+            <Mail size={20} style={{ color: 'rgb(var(--color-primary))' }} />
             <h3 className="font-headline-md text-headline-md" style={{ color: 'rgb(var(--color-primary))' }}>Contact Information</h3>
           </div>
           <p className="font-body-sm mb-lg" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
-            Your contact information remains private until you approve a request from another connected builder.
+            Your contact details stay private. Only connected builders you approve can see them.
           </p>
           <div className="space-y-lg">
             {contactSaved ? (
               <p className="rounded-lg px-lg py-sm font-body-sm" style={{ background: 'rgb(var(--color-success) / 0.15)', color: 'rgb(var(--color-success))' }}>Contact information saved.</p>
             ) : null}
             <div>
-              <label className="font-label-caps text-label-caps block mb-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Email</label>
+              <label className="font-label-caps text-label-caps block mb-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                <Mail size={14} className="inline mr-1" /> Email
+              </label>
               <input
                 className="w-full rounded-lg py-sm px-md font-body-sm"
                 style={{
@@ -294,7 +296,12 @@ function Settings() {
               />
             </div>
             <div>
-              <label className="font-label-caps text-label-caps block mb-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>WhatsApp Number</label>
+              <label className="font-label-caps text-label-caps block mb-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                <Smartphone size={14} className="inline mr-1" /> Phone Number
+              </label>
+              <p className="font-body-sm mb-xs" style={{ color: 'rgb(var(--color-on-surface-variant) / 0.7)' }}>
+                (e.g., WhatsApp, Telegram, or mobile)
+              </p>
               <input
                 className="w-full rounded-lg py-sm px-md font-body-sm"
                 style={{

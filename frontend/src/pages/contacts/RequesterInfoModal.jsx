@@ -3,23 +3,23 @@ import { X, Mail, Smartphone } from 'lucide-react';
 import { contactService } from '../../services/contactService.js';
 import Button from '../../components/ui/Button.jsx';
 
-function RequesterInfoModal({ isOpen, onClose, onSkip }) {
+function RequesterInfoModal({ isOpen, onClose }) {
   const [email, setEmail] = useState('');
-  const [whatsapp, setWhatsapp] = useState('');
+  const [phone, setPhone] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
   if (!isOpen) return null;
 
   async function handleSave() {
-    if (!email.trim() && !whatsapp.trim()) {
+    if (!email.trim() && !phone.trim()) {
       setError('Please provide at least one contact method.');
       return;
     }
     setSaving(true);
     setError('');
     try {
-      await contactService.updateMyInfo({ contact_email: email.trim() || null, whatsapp_number: whatsapp.trim() || null });
+      await contactService.updateMyInfo({ contact_email: email.trim() || null, whatsapp_number: phone.trim() || null });
       onClose(true);
     } catch (err) {
       setError(err.message || 'Failed to save');
@@ -35,7 +35,7 @@ function RequesterInfoModal({ isOpen, onClose, onSkip }) {
       onClick={(e) => { if (e.target === e.currentTarget) onClose(false); }}
       role="dialog"
       aria-modal="true"
-      aria-label="Share your contact information"
+      aria-label="Connect Beyond Pyramids"
     >
       <div
         className="w-full max-w-md rounded-xl p-xl"
@@ -46,7 +46,7 @@ function RequesterInfoModal({ isOpen, onClose, onSkip }) {
       >
         <div className="flex items-center justify-between mb-lg">
           <h3 className="font-headline-md text-headline-md font-semibold" style={{ color: 'rgb(var(--color-on-surface))' }}>
-            Share Your Contact Information
+            Connect Beyond Pyramids
           </h3>
           <button type="button" onClick={() => onClose(false)} className="p-xs rounded-lg hover:opacity-80" aria-label="Close">
             <X size={18} style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
@@ -54,7 +54,7 @@ function RequesterInfoModal({ isOpen, onClose, onSkip }) {
         </div>
 
         <p className="font-body-sm mb-xl" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
-          To request another builder&apos;s contact details, you should first provide at least one way for collaborators to reach you. Your information remains private until you approve a request.
+          To request another builder&apos;s contact details, share how they can reach you. Your information remains private until you approve a request.
         </p>
 
         {error ? (
@@ -80,8 +80,11 @@ function RequesterInfoModal({ isOpen, onClose, onSkip }) {
           </div>
           <div>
             <label className="font-label-caps text-label-caps block mb-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
-              <Smartphone size={14} className="inline mr-1" /> WhatsApp Number
+              <Smartphone size={14} className="inline mr-1" /> Phone Number
             </label>
+            <p className="font-body-sm mb-xs" style={{ color: 'rgb(var(--color-on-surface-variant) / 0.7)' }}>
+              (e.g., WhatsApp, Telegram, or mobile)
+            </p>
             <input
               className="w-full rounded-lg py-sm px-md font-body-sm"
               style={{
@@ -90,16 +93,16 @@ function RequesterInfoModal({ isOpen, onClose, onSkip }) {
                 color: 'rgb(var(--color-on-surface))',
               }}
               placeholder="+1 555 123 4567"
-              value={whatsapp}
-              onChange={(e) => setWhatsapp(e.target.value)}
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
             />
           </div>
         </div>
 
         <div className="flex gap-md justify-end">
-          <Button variant="secondary" onClick={() => onClose(false)}>Skip</Button>
+          <Button variant="secondary" onClick={() => onClose(false)}>Cancel</Button>
           <Button variant="primary" onClick={handleSave} disabled={saving}>
-            {saving ? 'Saving...' : 'Save & Continue'}
+            {saving ? 'Saving...' : 'Save & Send Request'}
           </Button>
         </div>
       </div>

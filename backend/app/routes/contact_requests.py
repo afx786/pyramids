@@ -20,6 +20,7 @@ from app.services.contact_request_service import (
     send_contact_request,
     approve_contact_request,
     decline_contact_request,
+    withdraw_contact_request,
     get_contact_request_status,
     get_received_requests,
     get_my_contact_info,
@@ -199,3 +200,36 @@ def received_requests(
         db,
         current_user.id
     )
+
+
+@router.post("/request/{request_id}/withdraw")
+def withdraw_request(
+    request_id: int,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    result = withdraw_contact_request(
+        db,
+        request_id,
+        current_user.id
+    )
+
+    if result == "request_not_found":
+        raise HTTPException(
+            status_code=404,
+            detail="Request not found."
+        )
+
+    if result == "not_requester":
+        raise HTTPException(
+            status_code=403,
+            detail="You cannot withdraw this request."
+        )
+
+    if result == "already_processed":
+        raise HTTPException(
+            status_code=400,
+            detail="Request already processed."
+        )
+
+    return result
