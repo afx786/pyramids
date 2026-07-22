@@ -55,7 +55,11 @@ async def get_current_user_ws(ws: WebSocket, db: Session):
     if not token:
         await ws.close(code=4001, reason="Missing token")
         return None
-    payload = decode_token(token)
+    try:
+        payload = decode_token(token)
+    except HTTPException:
+        await ws.close(code=4001, reason="Invalid token")
+        return None
     user_id = payload.get("user_id")
     if user_id is None:
         await ws.close(code=4001, reason="Invalid token")

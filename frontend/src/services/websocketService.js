@@ -32,8 +32,13 @@ export function connectWebSocket() {
     }
   };
 
-  ws.onclose = () => {
+  ws.onclose = (event) => {
     ws = null;
+    if (event.code === 4001) {
+      localStorage.removeItem('pyramids_token');
+      localStorage.removeItem('pyramids_user');
+      return;
+    }
     reconnectTimer = setTimeout(connectWebSocket, 5000);
   };
 
