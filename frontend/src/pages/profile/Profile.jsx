@@ -9,7 +9,7 @@ import Avatar from '../../components/ui/Avatar.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import SkillTag from '../../components/ui/SkillTag.jsx';
-import { formatShortBatch } from '../../utils/batch.js';
+import { formatBatch, formatShortBatch } from '../../utils/batch.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { connectionService } from '../../services/connectionService.js';
 import { messageService } from '../../services/messageService.js';
