@@ -6,6 +6,7 @@ import Landing from './pages/landing/Landing.jsx';
 import Login from './pages/auth/Login.jsx';
 import Signup from './pages/auth/Signup.jsx';
 import ProtectedRoute from './routes/ProtectedRoute.jsx';
+import { authService } from './services/authService.js';
 
 const Bookmarks = lazy(() => import('./pages/bookmarks/Bookmarks.jsx'));
 const NotFound = lazy(() => import('./pages/errors/NotFound.jsx'));
@@ -66,16 +67,22 @@ function PageLoading() {
   );
 }
 
+function RootHandler() {
+  if (authService.isAuthenticated()) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  return <Landing />;
+}
+
 function App() {
   return (
     <ErrorBoundary>
       <Routes>
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<Signup />} />
-        <Route path="/" element={<Landing />} />
+        <Route path="/" element={<RootHandler />} />
         <Route element={<ProtectedRoute />}>
           <Route element={<MainLayout />}>
-            <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<Suspense fallback={<PageLoading />}><Dashboard /></Suspense>} />
             <Route path="domains" element={<Suspense fallback={<PageLoading />}><Domains /></Suspense>} />
             <Route path="teams" element={<Suspense fallback={<PageLoading />}><Teams /></Suspense>} />
