@@ -9,6 +9,7 @@ import VerifiedSkills from '../../components/evidence/VerifiedSkills.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import Input from '../../components/ui/Input.jsx';
+import PublicIdDisplay from '../../components/ui/PublicIdDisplay.jsx';
 import SkillTag from '../../components/ui/SkillTag.jsx';
 import Avatar from '../../components/ui/Avatar.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
@@ -310,9 +311,9 @@ function ProjectDetail() {
             ) : null}
           </div>
           {project.public_id ? (
-            <p className="font-mono text-[11px] tracking-tight mt-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
-              {project.public_id}
-            </p>
+            <div className="mt-1">
+              <PublicIdDisplay publicId={project.public_id} label="Project ID" />
+            </div>
           ) : null}
           <p className="font-body-lg text-body-lg max-w-2xl" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
             {project.description}

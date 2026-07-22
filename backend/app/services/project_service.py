@@ -19,7 +19,7 @@ def create_project(
     owner_id: int
 ):
     project = Project(
-        public_id=generate_public_id('PROJ'),
+        public_id=generate_public_id('PROJ', db=db, model=Project),
         title=data.title,
         description=data.description,
         domain=data.domain,

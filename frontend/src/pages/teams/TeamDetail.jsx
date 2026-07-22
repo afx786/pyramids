@@ -5,6 +5,7 @@ import { formatShortBatch } from '../../utils/batch.js';
 import ErrorState from '../../components/common/ErrorState.jsx';
 import LoadingState from '../../components/common/LoadingState.jsx';
 import Button from '../../components/ui/Button.jsx';
+import PublicIdDisplay from '../../components/ui/PublicIdDisplay.jsx';
 import Card from '../../components/ui/Card.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { teamService } from '../../services/teamService.js';
@@ -96,7 +97,7 @@ function TeamDetail() {
         <div className="flex items-start justify-between">
           <div>
             <p className="font-mono-label text-[11px] text-secondary">{team.members?.length ?? 0} members</p>
-            {team.public_id ? <p className="font-mono text-[11px] tracking-tight mt-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{team.public_id}</p> : null}
+            {team.public_id ? <div className="mt-1"><PublicIdDisplay publicId={team.public_id} label="Team ID" /></div> : null}
             <h1 className="mt-3 text-4xl font-black text-primary">{team.name}</h1>
             <p className="mt-4 max-w-2xl text-sm font-medium leading-6 text-secondary">{team.description}</p>
             <p className="mt-4 text-sm font-semibold text-secondary">Owner: {team.owner?.name || '—'}</p>

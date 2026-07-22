@@ -2,6 +2,7 @@ import { Bell, ShieldCheck, User } from 'lucide-react';
 import { useState } from 'react';
 import Card from '../../components/ui/Card.jsx';
 import Button from '../../components/ui/Button.jsx';
+import PublicIdDisplay from '../../components/ui/PublicIdDisplay.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { userService } from '../../services/userService.js';
 
@@ -56,7 +57,7 @@ function Settings() {
           Manage your account preferences and developer profile.
         </p>
         {user?.public_id ? (
-          <p className="font-mono text-[11px] tracking-tight mt-2" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{user.public_id}</p>
+          <div className="mt-2"><PublicIdDisplay publicId={user.public_id} label="Builder ID" /></div>
         ) : null}
       </header>
 

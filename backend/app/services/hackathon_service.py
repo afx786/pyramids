@@ -12,7 +12,7 @@ from app.services.id_service import generate_public_id
 
 def create_hackathon(db: Session, data, user_id: int):
     hackathon = Hackathon(
-        public_id=generate_public_id('HACK'),
+        public_id=generate_public_id('HACK', db=db, model=Hackathon),
         title=data.title,
         description=data.description,
         theme=data.theme,

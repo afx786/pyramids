@@ -11,7 +11,7 @@ from app.services.id_service import generate_public_id
 
 def create_research_project(db: Session, data, owner_id: int):
     project = ResearchProject(
-        public_id=generate_public_id('RES'),
+        public_id=generate_public_id('RES', db=db, model=ResearchProject),
         title=data.title,
         abstract=data.abstract,
         problem_statement=data.problem_statement,

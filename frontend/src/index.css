@@ -104,6 +104,20 @@
 
 * {
   box-sizing: border-box;
+  min-width: 0;
+}
+
+img, video, canvas, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+input, textarea, select, button {
+  min-height: 44px;
+}
+
+button, a, [role="button"], [tabindex]:not([tabindex="-1"]) {
+  min-height: 44px;
 }
 
 body {

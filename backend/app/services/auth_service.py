@@ -13,7 +13,7 @@ def signup_user(db: Session, name: str, email: str, password: str, program: str 
         raise HTTPException(status_code=400, detail="An account with this email address already exists. Please log in instead.")
 
     new_user = User(
-        public_id=generate_public_id('USER'),
+        public_id=generate_public_id('USER', db=db, model=User),
         name=name,
         email=email,
         password_hash=hash_password(password),

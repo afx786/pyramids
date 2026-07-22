@@ -14,7 +14,7 @@ def create_team(
     owner_id: int
 ):
     team = Team(
-        public_id=generate_public_id('TEAM'),
+        public_id=generate_public_id('TEAM', db=db, model=Team),
         name=name,
         description=description,
         owner_id=owner_id

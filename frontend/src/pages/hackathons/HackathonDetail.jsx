@@ -7,6 +7,7 @@ import LoadingState from '../../components/common/LoadingState.jsx';
 import Avatar from '../../components/ui/Avatar.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
+import PublicIdDisplay from '../../components/ui/PublicIdDisplay.jsx';
 import StatusBadge from '../../components/ui/StatusBadge.jsx';
 import { hackathonService } from '../../services/hackathonService.js';
 
@@ -77,7 +78,7 @@ function HackathonDetail() {
           {hackathon.title}
         </h1>
         {hackathon.public_id ? (
-          <p className="font-mono text-[11px] tracking-tight mt-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{hackathon.public_id}</p>
+          <div className="mt-1"><PublicIdDisplay publicId={hackathon.public_id} label="Hackathon ID" /></div>
         ) : null}
         <p className="font-body-lg text-body-lg mt-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
           Organized by {hackathon.organizer || '—'}

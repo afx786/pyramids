@@ -5,6 +5,7 @@ import { formatShortBatch } from '../../utils/batch.js';
 import ErrorState from '../../components/common/ErrorState.jsx';
 import LoadingState from '../../components/common/LoadingState.jsx';
 import Avatar from '../../components/ui/Avatar.jsx';
+import PublicIdDisplay from '../../components/ui/PublicIdDisplay.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import Input from '../../components/ui/Input.jsx';
@@ -113,7 +114,7 @@ function OrganizationDetail() {
                   {org.name}
                 </h1>
                 {org.public_id ? (
-                  <p className="font-mono text-[11px] tracking-tight w-full mt-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{org.public_id}</p>
+                  <div className="w-full mt-1"><PublicIdDisplay publicId={org.public_id} label="Org ID" /></div>
                 ) : null}
                 {org.verified ? (
                   <ShieldCheck size={20} style={{ color: 'rgb(var(--color-success))' }} />

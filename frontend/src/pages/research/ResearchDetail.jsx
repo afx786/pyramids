@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import ErrorState from '../../components/common/ErrorState.jsx';
 import LoadingState from '../../components/common/LoadingState.jsx';
+import PublicIdDisplay from '../../components/ui/PublicIdDisplay.jsx';
 import Avatar from '../../components/ui/Avatar.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
@@ -178,7 +179,7 @@ function ResearchDetail() {
               {research.title}
             </h1>
             {research.public_id ? (
-              <p className="font-mono text-[11px] tracking-tight mt-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{research.public_id}</p>
+              <div className="mt-1"><PublicIdDisplay publicId={research.public_id} label="Research ID" /></div>
             ) : null}
             <div className="mt-3 flex items-center gap-4 flex-wrap">
               {research.domain ? (

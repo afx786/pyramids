@@ -9,6 +9,7 @@ import Avatar from '../../components/ui/Avatar.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import SkillTag from '../../components/ui/SkillTag.jsx';
+import PublicIdDisplay from '../../components/ui/PublicIdDisplay.jsx';
 import { formatBatch, formatShortBatch } from '../../utils/batch.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { connectionService } from '../../services/connectionService.js';
@@ -160,7 +161,7 @@ function Profile() {
           </div>
           <div className="flex flex-col items-end" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
             {displayUser?.public_id ? (
-              <span className="font-mono text-[11px] tracking-tight">{displayUser.public_id}</span>
+              <PublicIdDisplay publicId={displayUser.public_id} label="Builder ID" />
             ) : displayUser?.id ? (
               <span className="font-mono text-body-sm">ID: {String(displayUser.id).padStart(8, '0').slice(0, 8)}...</span>
             ) : null}

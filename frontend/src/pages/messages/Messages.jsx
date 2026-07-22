@@ -19,6 +19,7 @@ function Messages() {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState('');
   const [showNewChat, setShowNewChat] = useState(false);
+  const [showChatMobile, setShowChatMobile] = useState(false);
   const [connections, setConnections] = useState([]);
   const [connectionsLoading, setConnectionsLoading] = useState(false);
   const [conversationsLoading, setConversationsLoading] = useState(true);
@@ -160,9 +161,9 @@ function Messages() {
         </div>
       ) : null}
 
-      <section className="grid h-[620px] grid-cols-1 lg:grid-cols-[320px_1fr] gap-lg">
+      <section className="grid h-[calc(100vh-18rem)] min-h-[480px] grid-cols-1 lg:grid-cols-[320px_1fr] gap-lg">
         <div
-          className="flex flex-col overflow-hidden rounded-xl p-md"
+          className={`flex flex-col overflow-hidden rounded-xl p-md ${showChatMobile && activeConversation ? 'hidden lg:flex' : ''}`}
           style={{
             background: 'rgb(var(--color-surface-container-low))',
             border: '1px solid rgb(var(--color-outline-variant))',
@@ -266,7 +267,7 @@ function Messages() {
                       graduating_year: conv.other_user?.graduating_year,
                     }}
                     active={conv.conversation_id === activeId}
-                    onClick={() => setActiveId(conv.conversation_id)}
+                    onClick={() => { setActiveId(conv.conversation_id); setShowChatMobile(true); }}
                   />
                   <button
                     type="button"
@@ -291,7 +292,7 @@ function Messages() {
 
         {activeConversation ? (
           <div
-            className="flex min-h-0 flex-col overflow-hidden rounded-xl"
+            className={`flex min-h-0 flex-col overflow-hidden rounded-xl ${!showChatMobile ? 'hidden lg:flex' : ''}`}
             style={{
               background: 'rgb(var(--color-surface-container-low))',
               border: '1px solid rgb(var(--color-outline-variant))',
@@ -302,6 +303,15 @@ function Messages() {
               style={{ borderBottom: '1px solid rgb(var(--color-outline-variant))' }}
             >
               <div className="flex items-center gap-md">
+                <button
+                  type="button"
+                  className="lg:hidden flex items-center justify-center w-8 h-8 rounded-lg btn-press"
+                  onClick={() => setShowChatMobile(false)}
+                  aria-label="Back to conversations"
+                  style={{ color: 'rgb(var(--color-on-surface-variant))' }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+                </button>
                 <Avatar src={null} alt={activeConversation.other_user?.name || 'User'} size="sm" />
                 <div>
                   <h3 className="font-body-sm font-bold" style={{ color: 'rgb(var(--color-primary))' }}>

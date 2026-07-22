@@ -8,7 +8,7 @@ from app.services.id_service import generate_public_id
 
 def create_organization(db: Session, data, user_id: int):
     org = Organization(
-        public_id=generate_public_id('ORG'),
+        public_id=generate_public_id('ORG', db=db, model=Organization),
         name=data.name,
         description=data.description,
         org_type=data.org_type,
