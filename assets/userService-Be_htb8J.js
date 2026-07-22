@@ -1,1 +1,0 @@
-import{a as r}from"./index-Q_scY88D.js";import{b as t}from"./resolveEntity-CUV_--DI.js";const i={getMe(){return r.get("/users/me")},getProfile(e){return r.get(t("/profile",e))},getRank(e){return r.get(`/ranks/user/${e}`)},updateProfile(e){return r.put("/users/me",e)}};export{i as u};
