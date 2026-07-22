@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Menu, Moon, Sun, X } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext.jsx';
 import { useTheme } from '../../context/ThemeContext.jsx';
 import HeroSection from './HeroSection';
 import StatisticsSection from './StatisticsSection';
@@ -15,14 +14,8 @@ import CTASection from './CTASection';
 import FooterSection from './FooterSection';
 
 function Landing() {
-  const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    if (isAuthenticated) navigate('/dashboard', { replace: true });
-  }, [isAuthenticated, navigate]);
 
   const scrollTo = (id) => {
     setMobileMenuOpen(false);
