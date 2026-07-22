@@ -45,10 +45,20 @@ export function AuthProvider({ children }) {
     return me;
   }, []);
 
-  const signup = useCallback(async ({ name, program, email, password }) => {
-    await api.post('/auth/signup', { name, program, email, password });
+  const signup = useCallback(async ({ name, program, email, password, joining_year, graduating_year }) => {
+    await api.post('/auth/signup', { name, program, email, password, joining_year, graduating_year });
     return login({ email, password });
   }, [login]);
+
+  const refreshUser = useCallback(async () => {
+    try {
+      const me = await api.get('/users/me');
+      localStorage.setItem(USER_KEY, JSON.stringify(me));
+      setUser(me);
+    } catch (err) {
+      console.warn('[auth] failed to refresh user:', err);
+    }
+  }, []);
 
   const logout = useCallback(() => {
     disconnectWebSocket();
@@ -62,7 +72,7 @@ export function AuthProvider({ children }) {
   const isAuthenticated = !!localStorage.getItem(TOKEN_KEY);
 
   return (
-    <AuthContext.Provider value={{ user, profile, rankData, isAuthenticated, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, profile, rankData, isAuthenticated, login, signup, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

@@ -5,20 +5,40 @@ import Button from '../../components/ui/Button.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { userService } from '../../services/userService.js';
 
+const YEAR_OPTIONS = Array.from({ length: 21 }, (_, i) => 2020 + i);
+
 function Settings() {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const [name, setName] = useState(user?.name || 'Builder');
   const [bio, setBio] = useState(user?.bio || 'Builder in the Pyramids ecosystem.');
+  const [joiningYear, setJoiningYear] = useState(user?.joining_year || '');
+  const [graduatingYear, setGraduatingYear] = useState(user?.graduating_year || '');
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
   const [saveSuccess, setSaveSuccess] = useState(false);
 
   async function handleSave() {
+    const nextErrors = {};
+    if (!name.trim()) nextErrors.name = 'Name cannot be empty.';
+    if (!joiningYear) nextErrors.joiningYear = 'Select your joining year.';
+    if (!graduatingYear) nextErrors.graduatingYear = 'Select your graduating year.';
+    if (joiningYear && graduatingYear && Number(graduatingYear) < Number(joiningYear)) {
+      nextErrors.graduatingYear = 'Graduating year cannot be earlier than joining year.';
+    }
+    setFieldErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) return;
+
     setSaving(true);
     setSaveError('');
     setSaveSuccess(false);
     try {
-      await userService.updateProfile({ name, bio });
+      const payload = { name: name.trim() };
+      if (bio) payload.bio = bio;
+      if (joiningYear) payload.joining_year = Number(joiningYear);
+      if (graduatingYear) payload.graduating_year = Number(graduatingYear);
+      await userService.updateProfile(payload);
+      await refreshUser();
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 2000);
     } catch (err) {
@@ -70,6 +90,47 @@ function Settings() {
                 onFocus={(e) => { e.target.style.borderColor = 'rgb(var(--color-primary))'; }}
                 onBlur={(e) => { e.target.style.borderColor = 'rgb(var(--color-outline-variant))'; }}
               />
+              {fieldErrors.name ? <p className="mt-1 font-body-sm" style={{ color: 'rgb(var(--color-error))' }}>{fieldErrors.name}</p> : null}
+            </div>
+            <div className="grid grid-cols-2 gap-lg">
+              <div>
+                <label className="font-label-caps text-label-caps block mb-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Joining Year</label>
+                <select
+                  className="w-full rounded-lg py-sm px-md font-body-sm"
+                  style={{
+                    background: 'rgb(var(--color-surface-container))',
+                    border: '1px solid rgb(var(--color-outline-variant))',
+                    color: 'rgb(var(--color-on-surface))',
+                  }}
+                  value={joiningYear}
+                  onChange={(e) => { setJoiningYear(e.target.value); setFieldErrors((prev) => ({ ...prev, joiningYear: '' })); }}
+                >
+                  <option value="">Select year</option>
+                  {YEAR_OPTIONS.map((year) => (
+                    <option key={year} value={year}>{year}</option>
+                  ))}
+                </select>
+                {fieldErrors.joiningYear ? <p className="mt-1 font-body-sm" style={{ color: 'rgb(var(--color-error))' }}>{fieldErrors.joiningYear}</p> : null}
+              </div>
+              <div>
+                <label className="font-label-caps text-label-caps block mb-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Graduating Year</label>
+                <select
+                  className="w-full rounded-lg py-sm px-md font-body-sm"
+                  style={{
+                    background: 'rgb(var(--color-surface-container))',
+                    border: '1px solid rgb(var(--color-outline-variant))',
+                    color: 'rgb(var(--color-on-surface))',
+                  }}
+                  value={graduatingYear}
+                  onChange={(e) => { setGraduatingYear(e.target.value); setFieldErrors((prev) => ({ ...prev, graduatingYear: '' })); }}
+                >
+                  <option value="">Select year</option>
+                  {YEAR_OPTIONS.map((year) => (
+                    <option key={year} value={year}>{year}</option>
+                  ))}
+                </select>
+                {fieldErrors.graduatingYear ? <p className="mt-1 font-body-sm" style={{ color: 'rgb(var(--color-error))' }}>{fieldErrors.graduatingYear}</p> : null}
+              </div>
             </div>
             <div>
               <label className="font-label-caps text-label-caps block mb-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Bio</label>
