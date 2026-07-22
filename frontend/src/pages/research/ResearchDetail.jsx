@@ -177,6 +177,9 @@ function ResearchDetail() {
             <h1 className="font-display-serif text-display-serif leading-tight" style={{ color: 'rgb(var(--color-primary))' }}>
               {research.title}
             </h1>
+            {research.public_id ? (
+              <p className="font-mono text-[11px] tracking-tight mt-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{research.public_id}</p>
+            ) : null}
             <div className="mt-3 flex items-center gap-4 flex-wrap">
               {research.domain ? (
                 <span className="font-label-caps text-[11px]" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>

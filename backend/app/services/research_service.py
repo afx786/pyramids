@@ -6,10 +6,12 @@ from app.models.research_member import ResearchMember
 from app.models.research_milestone import ResearchMilestone
 from app.models.research_update import ResearchUpdate
 from app.services.notification_service import create_notification
+from app.services.id_service import generate_public_id
 
 
 def create_research_project(db: Session, data, owner_id: int):
     project = ResearchProject(
+        public_id=generate_public_id('RES'),
         title=data.title,
         abstract=data.abstract,
         problem_statement=data.problem_statement,

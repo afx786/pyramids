@@ -63,6 +63,7 @@ class HackathonUpdate(BaseModel):
 
 class HackathonResponse(BaseModel):
     id: int
+    public_id: str
     title: str
     description: str | None = None
     theme: str | None = None

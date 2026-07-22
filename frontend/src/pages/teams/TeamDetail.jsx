@@ -96,6 +96,7 @@ function TeamDetail() {
         <div className="flex items-start justify-between">
           <div>
             <p className="font-mono-label text-[11px] text-secondary">{team.members?.length ?? 0} members</p>
+            {team.public_id ? <p className="font-mono text-[11px] tracking-tight mt-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{team.public_id}</p> : null}
             <h1 className="mt-3 text-4xl font-black text-primary">{team.name}</h1>
             <p className="mt-4 max-w-2xl text-sm font-medium leading-6 text-secondary">{team.description}</p>
             <p className="mt-4 text-sm font-semibold text-secondary">Owner: {team.owner?.name || '—'}</p>

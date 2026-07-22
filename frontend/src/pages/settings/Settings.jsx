@@ -55,6 +55,9 @@ function Settings() {
         <p className="font-body-lg text-body-lg mt-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
           Manage your account preferences and developer profile.
         </p>
+        {user?.public_id ? (
+          <p className="font-mono text-[11px] tracking-tight mt-2" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{user.public_id}</p>
+        ) : null}
       </header>
 
       <div className="space-y-xl">

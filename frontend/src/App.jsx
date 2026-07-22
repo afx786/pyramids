@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import ErrorBoundary from './components/ui/ErrorBoundary.jsx';
 import MainLayout from './layouts/MainLayout.jsx';
+import Landing from './pages/landing/Landing.jsx';
 import Login from './pages/auth/Login.jsx';
 import Signup from './pages/auth/Signup.jsx';
 import ProtectedRoute from './routes/ProtectedRoute.jsx';
@@ -68,6 +69,7 @@ function App() {
       <Routes>
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<Signup />} />
+        <Route path="/" element={<Landing />} />
         <Route element={<ProtectedRoute />}>
           <Route element={<MainLayout />}>
             <Route index element={<Navigate to="/dashboard" replace />} />

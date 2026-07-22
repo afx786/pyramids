@@ -41,6 +41,7 @@ class UserLogin(BaseModel):
 
 class UserResponse(BaseModel):
     id: int
+    public_id: str
     name: str
     email: str
     program: str | None = None

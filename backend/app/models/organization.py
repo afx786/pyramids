@@ -12,6 +12,8 @@ class Organization(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
+    public_id = Column(String(20), unique=True, nullable=False, index=True)
+
     name = Column(String, nullable=False)
     description = Column(Text)
     org_type = Column(String)

@@ -10,7 +10,7 @@ function Topbar() {
 
   return (
     <header
-      className="sticky top-0 z-40 flex h-16 items-center justify-between px-lg py-sm border-b glass-nav"
+      className="sticky top-0 z-40 flex h-16 items-center justify-between px-lg pl-14 lg:pl-lg py-sm border-b glass-nav"
       style={{
         background: 'rgb(var(--color-surface) / 0.8)',
         borderColor: 'rgb(var(--color-outline-variant))',

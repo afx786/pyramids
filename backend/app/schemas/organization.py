@@ -29,6 +29,7 @@ class OrganizationUpdate(BaseModel):
 
 class OrganizationResponse(BaseModel):
     id: int
+    public_id: str
     name: str
     description: str | None = None
     org_type: str | None = None

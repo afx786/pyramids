@@ -11,6 +11,7 @@ from datetime import datetime
 from app.services.notification_service import create_notification
 from app.services.github_service import extract_repo
 from app.services.intelligence.orchestrator import analyze_repository
+from app.services.id_service import generate_public_id
 
 def create_project(
     db: Session,
@@ -18,6 +19,7 @@ def create_project(
     owner_id: int
 ):
     project = Project(
+        public_id=generate_public_id('PROJ'),
         title=data.title,
         description=data.description,
         domain=data.domain,
@@ -155,6 +157,8 @@ def serialize_project(project):
     return {
 
         "id": project.id,
+
+        "public_id": project.public_id,
 
         "title": project.title,
 

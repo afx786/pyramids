@@ -159,7 +159,9 @@ function Profile() {
             ) : null}
           </div>
           <div className="flex flex-col items-end" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
-            {displayUser?.id ? (
+            {displayUser?.public_id ? (
+              <span className="font-mono text-[11px] tracking-tight">{displayUser.public_id}</span>
+            ) : displayUser?.id ? (
               <span className="font-mono text-body-sm">ID: {String(displayUser.id).padStart(8, '0').slice(0, 8)}...</span>
             ) : null}
             <span className="font-mono text-body-sm">Trust Score: {Math.min(100, Math.round(avgScore * 10 + 50))}%</span>

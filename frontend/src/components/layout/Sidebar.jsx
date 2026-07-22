@@ -5,8 +5,10 @@ import {
   List,
   LogOut,
   Medal,
+  Menu,
   MessageSquare,
   Network,
+  Plus,
   Pyramid,
   Search,
   Send,
@@ -16,7 +18,7 @@ import {
   Trophy,
   UserRound,
   UsersRound,
-  Plus,
+  X,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -48,6 +50,7 @@ function Sidebar() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [unreadCount, setUnreadCount] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     function fetchUnread() {
@@ -62,90 +65,164 @@ function Sidebar() {
     return () => { clearInterval(interval); document.removeEventListener('visibilitychange', fetchUnread); };
   }, []);
 
-  return (
-    <aside className="fixed inset-x-0 bottom-0 z-50 flex h-16 border-t lg:inset-y-0 lg:left-0 lg:right-auto lg:flex-col lg:w-[240px] lg:border-r lg:border-t-0 lg:h-full glass-nav"
-      style={{ background: 'rgb(var(--color-surface-container-low) / 0.8)', borderColor: 'rgb(var(--color-outline-variant))' }}
-    >
-      {/* Logo — desktop only */}
-      <div className="hidden lg:block px-md pt-lg pb-xl">
-        <h1 className="text-headline-md font-bold tracking-tight" style={{ color: 'rgb(var(--color-on-surface))' }}>
-          Pyramids
-        </h1>
-        <p className="font-label-caps text-[11px]" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
-          Builder Workspace
-        </p>
-      </div>
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === 'Escape') setIsOpen(false);
+    }
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
-      {/* Nav — horizontal on mobile, vertical on desktop */}
-      <nav className="flex items-center gap-0.5 overflow-x-auto px-2 no-scrollbar lg:flex-col lg:items-stretch lg:flex-1 lg:gap-0.5 lg:px-md lg:overflow-y-auto">
-        {navigation.map((item) => {
-          const Icon = item.icon;
-          return (
-            <NavLink
-              key={item.label}
-              to={item.to}
-              onMouseEnter={() => prefetchService[item.label.toLowerCase()]?.()}
-              className="group flex items-center gap-md rounded-lg px-md py-sm transition-all duration-150"
-              style={({ isActive }) => ({
-                color: isActive ? 'rgb(var(--color-primary))' : 'rgb(var(--color-on-surface-variant))',
-                background: isActive ? 'rgb(var(--color-surface-container-highest))' : 'transparent',
-                fontWeight: isActive ? 700 : 500,
-                borderLeft: isActive ? '2px solid rgb(var(--color-primary))' : '2px solid transparent',
-                borderRadius: 0,
-              })}
-              title={item.label}
-            >
-              <Icon className="h-5 w-5 shrink-0" strokeWidth={1.5} aria-hidden="true" />
-              <span className="hidden lg:inline text-body-sm">{item.label}</span>
-              {item.label === 'Notifications' && unreadCount > 0 && (
-                <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-bold"
-                  style={{ background: 'rgb(var(--color-error))', color: 'rgb(var(--color-on-error))' }}
-                >
-                  {unreadCount}
-                </span>
-              )}
-            </NavLink>
-          );
-        })}
-      </nav>
+  const closeDrawer = () => setIsOpen(false);
 
-      {/* Bottom section — desktop only */}
-      <div className="hidden lg:block px-sm pt-lg border-t" style={{ borderColor: 'rgb(var(--color-outline-variant))' }}>
-        <button
-          className="w-full flex items-center justify-center gap-sm bg-primary font-medium py-sm px-md rounded-lg active:scale-[0.98] transition-all hover:opacity-90"
-          style={{ color: 'rgb(var(--color-on-primary))' }}
-          type="button"
-          onClick={() => navigate('/projects/new')}
+  const renderNavItems = ({ onClick, labelClass = 'hidden lg:inline' } = {}) =>
+    navigation.map((item) => {
+      const Icon = item.icon;
+      return (
+        <NavLink
+          key={item.label}
+          to={item.to}
+          onClick={onClick}
+          onMouseEnter={() => prefetchService[item.label.toLowerCase()]?.()}
+          className="group flex items-center gap-md rounded-lg px-md py-sm transition-all duration-150"
+          style={({ isActive }) => ({
+            color: isActive ? 'rgb(var(--color-primary))' : 'rgb(var(--color-on-surface-variant))',
+            background: isActive ? 'rgb(var(--color-surface-container-highest))' : 'transparent',
+            fontWeight: isActive ? 700 : 500,
+            borderLeft: isActive ? '2px solid rgb(var(--color-primary))' : '2px solid transparent',
+            borderRadius: 0,
+          })}
+          title={item.label}
         >
-          <Plus className="h-[18px] w-[18px]" strokeWidth={2} />
-          <span className="font-body-sm font-semibold">New Project</span>
+          <Icon className="h-5 w-5 shrink-0" strokeWidth={1.5} aria-hidden="true" />
+          <span className={`${labelClass} text-body-sm`}>{item.label}</span>
+          {item.label === 'Notifications' && unreadCount > 0 && (
+            <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-bold"
+              style={{ background: 'rgb(var(--color-error))', color: 'rgb(var(--color-on-error))' }}
+            >
+              {unreadCount}
+            </span>
+          )}
+        </NavLink>
+      );
+    });
+
+  const renderBottom = ({ onNewProject } = {}) => (
+    <div className="px-sm pt-lg border-t" style={{ borderColor: 'rgb(var(--color-outline-variant))' }}>
+      <button
+        className="w-full flex items-center justify-center gap-sm bg-primary font-medium py-sm px-md rounded-lg active:scale-[0.98] transition-all hover:opacity-90"
+        style={{ color: 'rgb(var(--color-on-primary))' }}
+        type="button"
+        onClick={() => { navigate('/projects/new'); onNewProject?.(); }}
+      >
+        <Plus className="h-[18px] w-[18px]" strokeWidth={2} />
+        <span className="font-body-sm font-semibold">New Project</span>
+      </button>
+      <div className="mt-lg flex items-center gap-md px-sm pb-lg">
+        <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden"
+          style={{ background: 'rgb(var(--color-surface-container-high))' }}
+        >
+          <UserRound className="h-4 w-4" style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
+        </div>
+        <div className="flex flex-col">
+          <span className="font-body-sm font-semibold" style={{ color: 'rgb(var(--color-on-surface))' }}>
+            {user?.name || 'Builder'}
+          </span>
+          <span className="font-label-caps text-[10px] uppercase tracking-wider" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+            Builder
+          </span>
+        </div>
+        <button
+          className="ml-auto btn-press"
+          type="button"
+          onClick={() => { logout(); navigate('/login'); }}
+          style={{ color: 'rgb(var(--color-on-surface-variant))' }}
+          aria-label="Log out"
+        >
+          <LogOut className="h-4 w-4" strokeWidth={1.5} />
         </button>
-        <div className="mt-lg flex items-center gap-md px-sm pb-lg">
-          <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden"
-            style={{ background: 'rgb(var(--color-surface-container-high))' }}
-          >
-            <UserRound className="h-4 w-4" style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-body-sm font-semibold" style={{ color: 'rgb(var(--color-on-surface))' }}>
-              {user?.name || 'Builder'}
-            </span>
-            <span className="font-label-caps text-[10px] uppercase tracking-wider" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
-              Builder
-            </span>
+      </div>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Desktop sidebar — unchanged */}
+      <aside className="hidden lg:flex fixed inset-y-0 left-0 z-50 flex-col w-[240px] border-r h-full glass-nav"
+        style={{ background: 'rgb(var(--color-surface-container-low) / 0.8)', borderColor: 'rgb(var(--color-outline-variant))' }}
+      >
+        <div className="px-md pt-lg pb-xl">
+          <h1 className="text-headline-md font-bold tracking-tight" style={{ color: 'rgb(var(--color-on-surface))' }}>
+            Pyramids
+          </h1>
+          <p className="font-label-caps text-[11px]" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+            Builder Workspace
+          </p>
+        </div>
+        <nav className="flex flex-col flex-1 gap-0.5 px-md overflow-y-auto">
+          {renderNavItems()}
+        </nav>
+        {renderBottom()}
+      </aside>
+
+      {/* Mobile hamburger button */}
+      <button
+        className="fixed top-4 left-4 z-50 flex items-center justify-center w-10 h-10 rounded-lg lg:hidden"
+        style={{ background: 'rgb(var(--color-surface-container-low) / 0.8)' }}
+        onClick={() => setIsOpen(true)}
+        aria-label="Open navigation menu"
+        aria-expanded={isOpen}
+        type="button"
+      >
+        <Menu className="h-5 w-5" style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
+      </button>
+
+      {/* Backdrop */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 transition-opacity lg:hidden"
+          onClick={closeDrawer}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Mobile slide-out drawer */}
+      <aside
+        className={`fixed top-0 left-0 z-50 h-full w-[280px] transform transition-transform duration-300 ease-in-out lg:hidden flex flex-col ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+        style={{ background: 'rgb(var(--color-surface-container-low) / 0.95)', borderRight: '1px solid rgb(var(--color-outline-variant))' }}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
+      >
+        <div className="flex items-center justify-between px-md pt-lg pb-xl">
+          <div>
+            <h1 className="text-headline-md font-bold tracking-tight" style={{ color: 'rgb(var(--color-on-surface))' }}>
+              Pyramids
+            </h1>
+            <p className="font-label-caps text-[11px]" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+              Builder Workspace
+            </p>
           </div>
           <button
-            className="ml-auto btn-press"
+            className="flex items-center justify-center w-8 h-8 rounded-lg btn-press"
             type="button"
-            onClick={() => { logout(); navigate('/login'); }}
+            onClick={closeDrawer}
+            aria-label="Close navigation menu"
             style={{ color: 'rgb(var(--color-on-surface-variant))' }}
-            aria-label="Log out"
           >
-            <LogOut className="h-4 w-4" strokeWidth={1.5} />
+            <X className="h-5 w-5" />
           </button>
         </div>
-      </div>
-    </aside>
+        <nav className="flex-1 overflow-y-auto px-md pb-md">
+          {renderNavItems({ onClick: closeDrawer, labelClass: 'inline' })}
+        </nav>
+        <div className="flex-shrink-0">
+          {renderBottom({ onNewProject: closeDrawer })}
+        </div>
+      </aside>
+    </>
   );
 }
 

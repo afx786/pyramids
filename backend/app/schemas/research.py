@@ -62,6 +62,7 @@ class ResearchUpdate(BaseModel):
 
 class ResearchProjectResponse(BaseModel):
     id: int
+    public_id: str
     title: str
     abstract: str | None = None
     problem_statement: str | None = None

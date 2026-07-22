@@ -12,6 +12,8 @@ class Hackathon(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
+    public_id = Column(String(20), unique=True, nullable=False, index=True)
+
     # Basic Information
     title = Column(String, nullable=False)
     description = Column(Text)

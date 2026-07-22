@@ -8,6 +8,7 @@ class TeamCreate(BaseModel):
 
 class TeamResponse(BaseModel):
     id: int
+    public_id: str
     name: str
     description: str
     owner_id: int
@@ -25,6 +26,7 @@ class TeamOwnerResponse(BaseModel):
 
 class TeamDetailResponse(BaseModel):
     id: int
+    public_id: str
     name: str
     description: str
 

@@ -21,6 +21,7 @@ class ProjectCreate(BaseModel):
 
 class ProjectResponse(BaseModel):
     id: int
+    public_id: str
     title: str
     description: str
     domain: str

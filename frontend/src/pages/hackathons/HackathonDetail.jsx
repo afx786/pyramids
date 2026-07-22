@@ -76,6 +76,9 @@ function HackathonDetail() {
         <h1 className="font-display-serif text-display-serif leading-tight" style={{ color: 'rgb(var(--color-primary))' }}>
           {hackathon.title}
         </h1>
+        {hackathon.public_id ? (
+          <p className="font-mono text-[11px] tracking-tight mt-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{hackathon.public_id}</p>
+        ) : null}
         <p className="font-body-lg text-body-lg mt-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
           Organized by {hackathon.organizer || '—'}
         </p>

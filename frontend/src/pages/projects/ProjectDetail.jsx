@@ -309,6 +309,11 @@ function ProjectDetail() {
               </div>
             ) : null}
           </div>
+          {project.public_id ? (
+            <p className="font-mono text-[11px] tracking-tight mt-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+              {project.public_id}
+            </p>
+          ) : null}
           <p className="font-body-lg text-body-lg max-w-2xl" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
             {project.description}
           </p>

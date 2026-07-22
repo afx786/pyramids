@@ -3,10 +3,12 @@ from sqlalchemy import desc
 
 from app.models.organization import Organization, OrganizationMember
 from app.services.notification_service import create_notification
+from app.services.id_service import generate_public_id
 
 
 def create_organization(db: Session, data, user_id: int):
     org = Organization(
+        public_id=generate_public_id('ORG'),
         name=data.name,
         description=data.description,
         org_type=data.org_type,

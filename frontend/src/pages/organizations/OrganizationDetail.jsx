@@ -112,6 +112,9 @@ function OrganizationDetail() {
                 <h1 className="font-display-serif text-display-serif" style={{ color: 'rgb(var(--color-on-surface))' }}>
                   {org.name}
                 </h1>
+                {org.public_id ? (
+                  <p className="font-mono text-[11px] tracking-tight w-full mt-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{org.public_id}</p>
+                ) : null}
                 {org.verified ? (
                   <ShieldCheck size={20} style={{ color: 'rgb(var(--color-success))' }} />
                 ) : null}

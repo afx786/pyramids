@@ -20,6 +20,8 @@ class Project(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
+    public_id = Column(String(20), unique=True, nullable=False, index=True)
+
     title = Column(String(255), nullable=False)
     description = Column(Text, nullable=False)
 
