@@ -14,14 +14,15 @@ async function request(path, options = {}) {
 
   const response = await fetch(`${BASE_URL}${path}`, { ...options, headers });
 
-  if (response.status === 401) {
-    localStorage.removeItem('pyramids_token');
-    localStorage.removeItem('pyramids_user');
-    throw new Error('Session expired. Please log in again.');
-  }
-
   if (!response.ok) {
     const err = await response.json().catch(() => ({ detail: 'Request failed' }));
+
+    if (response.status === 401 && token) {
+      localStorage.removeItem('pyramids_token');
+      localStorage.removeItem('pyramids_user');
+      throw new Error('Session expired. Please log in again.');
+    }
+
     throw new Error(err.detail || 'Request failed');
   }
 
