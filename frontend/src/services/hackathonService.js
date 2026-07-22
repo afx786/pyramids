@@ -1,4 +1,5 @@
 import { api } from './api.js';
+import { buildEntityUrl } from '../utils/resolveEntity.js';
 
 export const hackathonService = {
   listPublished(params = {}) {
@@ -7,7 +8,7 @@ export const hackathonService = {
   },
 
   get(id) {
-    return api.get(`/hackathons/${id}`);
+    return api.get(buildEntityUrl('/hackathons', id));
   },
 
   // Host

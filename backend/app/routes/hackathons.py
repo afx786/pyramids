@@ -1,9 +1,21 @@
+import re
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.deps import get_db
 from app.core.auth import get_current_user
 from app.core.admin import get_current_admin
+from app.models.hackathon import Hackathon
+
+
+def _resolve_public_id(db, model, identifier):
+    if re.match(r'^PYR-[A-Z]+-[A-Z0-9]{6}$', str(identifier).upper()):
+        return db.query(model).filter(func.upper(model.public_id) == str(identifier).upper()).first()
+    try:
+        return db.query(model).get(int(identifier))
+    except (ValueError, TypeError):
+        return None
 
 from app.schemas.hackathon import (
     HackathonCreate, HackathonUpdate, HackathonResponse,
@@ -50,12 +62,13 @@ def list_host_hackathons(db: Session = Depends(get_db),
 
 
 @router.patch("/{hackathon_id}", response_model=HackathonResponse)
-def edit_hackathon(hackathon_id: int, data: HackathonUpdate,
+def edit_hackathon(hackathon_id: str, data: HackathonUpdate,
                     db: Session = Depends(get_db),
                     current_user=Depends(get_current_user)):
-    result = update_hackathon(db, hackathon_id, current_user.id, data)
-    if result == "not_found":
+    hackathon = _resolve_public_id(db, Hackathon, hackathon_id)
+    if not hackathon:
         raise HTTPException(404, "Hackathon not found")
+    result = update_hackathon(db, hackathon.id, current_user.id, data)
     if result == "forbidden":
         raise HTTPException(403, "Not authorized")
     if result == "cannot_edit":
@@ -64,11 +77,12 @@ def edit_hackathon(hackathon_id: int, data: HackathonUpdate,
 
 
 @router.delete("/drafts/{hackathon_id}")
-def remove_draft(hackathon_id: int, db: Session = Depends(get_db),
+def remove_draft(hackathon_id: str, db: Session = Depends(get_db),
                   current_user=Depends(get_current_user)):
-    result = delete_hackathon(db, hackathon_id, current_user.id)
-    if result == "not_found":
+    hackathon = _resolve_public_id(db, Hackathon, hackathon_id)
+    if not hackathon:
         raise HTTPException(404, "Hackathon not found")
+    result = delete_hackathon(db, hackathon.id, current_user.id)
     if result == "forbidden":
         raise HTTPException(403, "Not authorized")
     if result == "cannot_delete":
@@ -77,12 +91,13 @@ def remove_draft(hackathon_id: int, db: Session = Depends(get_db),
 
 
 @router.post("/{hackathon_id}/submit", response_model=HackathonResponse)
-def submit_hackathon_for_review(hackathon_id: int,
+def submit_hackathon_for_review(hackathon_id: str,
                                  db: Session = Depends(get_db),
                                  current_user=Depends(get_current_user)):
-    result = submit_for_review(db, hackathon_id, current_user.id)
-    if result == "not_found":
+    hackathon = _resolve_public_id(db, Hackathon, hackathon_id)
+    if not hackathon:
         raise HTTPException(404, "Hackathon not found")
+    result = submit_for_review(db, hackathon.id, current_user.id)
     if result == "forbidden":
         raise HTTPException(403, "Not authorized")
     if result == "invalid_status":
@@ -91,23 +106,25 @@ def submit_hackathon_for_review(hackathon_id: int,
 
 
 @router.post("/{hackathon_id}/publish", response_model=HackathonResponse)
-def publish_hackathon_endpoint(hackathon_id: int,
+def publish_hackathon_endpoint(hackathon_id: str,
                                 db: Session = Depends(get_db)):
-    result = publish_hackathon(db, hackathon_id)
-    if result == "not_found":
+    hackathon = _resolve_public_id(db, Hackathon, hackathon_id)
+    if not hackathon:
         raise HTTPException(404, "Hackathon not found")
+    result = publish_hackathon(db, hackathon.id)
     if result == "invalid_status":
         raise HTTPException(400, "Only approved hackathons can be published")
     return result
 
 
 @router.post("/{hackathon_id}/complete", response_model=HackathonResponse)
-def complete_hackathon_endpoint(hackathon_id: int,
+def complete_hackathon_endpoint(hackathon_id: str,
                                  db: Session = Depends(get_db),
                                  current_user=Depends(get_current_user)):
-    result = complete_hackathon(db, hackathon_id, current_user.id)
-    if result == "not_found":
+    hackathon = _resolve_public_id(db, Hackathon, hackathon_id)
+    if not hackathon:
         raise HTTPException(404, "Hackathon not found")
+    result = complete_hackathon(db, hackathon.id, current_user.id)
     if result == "forbidden":
         raise HTTPException(403, "Not authorized")
     if result == "invalid_status":
@@ -116,12 +133,13 @@ def complete_hackathon_endpoint(hackathon_id: int,
 
 
 @router.post("/{hackathon_id}/archive", response_model=HackathonResponse)
-def archive_hackathon_endpoint(hackathon_id: int,
+def archive_hackathon_endpoint(hackathon_id: str,
                                 db: Session = Depends(get_db),
                                 current_user=Depends(get_current_user)):
-    result = archive_hackathon(db, hackathon_id, current_user.id)
-    if result == "not_found":
+    hackathon = _resolve_public_id(db, Hackathon, hackathon_id)
+    if not hackathon:
         raise HTTPException(404, "Hackathon not found")
+    result = archive_hackathon(db, hackathon.id, current_user.id)
     if result == "forbidden":
         raise HTTPException(403, "Not authorized")
     return result
@@ -135,33 +153,36 @@ def pending_hackathons(db: Session = Depends(get_db)):
 
 
 @router.post("/{hackathon_id}/approve", response_model=HackathonResponse)
-def approve_submitted_hackathon(hackathon_id: int, feedback: str | None = None,
+def approve_submitted_hackathon(hackathon_id: str, feedback: str | None = None,
                                  db: Session = Depends(get_db)):
-    result = approve_hackathon(db, hackathon_id, feedback)
-    if result == "not_found":
+    hackathon = _resolve_public_id(db, Hackathon, hackathon_id)
+    if not hackathon:
         raise HTTPException(404, "Hackathon not found")
+    result = approve_hackathon(db, hackathon.id, feedback)
     if result == "invalid_status":
         raise HTTPException(400, "Hackathon is not in submitted status")
     return result
 
 
 @router.post("/{hackathon_id}/reject", response_model=HackathonResponse)
-def reject_submitted_hackathon(hackathon_id: int, feedback: str | None = None,
+def reject_submitted_hackathon(hackathon_id: str, feedback: str | None = None,
                                 db: Session = Depends(get_db)):
-    result = reject_hackathon(db, hackathon_id, feedback)
-    if result == "not_found":
+    hackathon = _resolve_public_id(db, Hackathon, hackathon_id)
+    if not hackathon:
         raise HTTPException(404, "Hackathon not found")
+    result = reject_hackathon(db, hackathon.id, feedback)
     if result == "invalid_status":
         raise HTTPException(400, "Hackathon is not in submitted status")
     return result
 
 
 @router.post("/{hackathon_id}/request-changes", response_model=HackathonResponse)
-def request_hackathon_changes(hackathon_id: int, feedback: str | None = None,
+def request_hackathon_changes(hackathon_id: str, feedback: str | None = None,
                                db: Session = Depends(get_db)):
-    result = request_changes_hackathon(db, hackathon_id, feedback)
-    if result == "not_found":
+    hackathon = _resolve_public_id(db, Hackathon, hackathon_id)
+    if not hackathon:
         raise HTTPException(404, "Hackathon not found")
+    result = request_changes_hackathon(db, hackathon.id, feedback)
     if result == "invalid_status":
         raise HTTPException(400, "Hackathon is not in submitted status")
     return result
@@ -183,22 +204,23 @@ def list_hackathons(db: Session = Depends(get_db),
 
 
 @router.get("/{hackathon_id}", response_model=HackathonResponse)
-def single_hackathon(hackathon_id: int, db: Session = Depends(get_db)):
-    hackathon = get_hackathon(db, hackathon_id)
+def single_hackathon(hackathon_id: str, db: Session = Depends(get_db)):
+    hackathon = _resolve_public_id(db, Hackathon, hackathon_id)
     if not hackathon:
         raise HTTPException(404, "Hackathon not found")
-    return hackathon
+    return get_hackathon(db, hackathon.id)
 
 
 # ── Team Registration ──
 
 @router.post("/{hackathon_id}/register-team")
-def register_team(hackathon_id: int, data: TeamRegistrationRequest,
+def register_team(hackathon_id: str, data: TeamRegistrationRequest,
                    db: Session = Depends(get_db),
                    current_user=Depends(get_current_user)):
-    result = register_team_for_hackathon(db, hackathon_id, data.team_id, current_user.id)
-    if result is None:
+    hackathon = _resolve_public_id(db, Hackathon, hackathon_id)
+    if not hackathon:
         raise HTTPException(404, "Hackathon not found")
+    result = register_team_for_hackathon(db, hackathon.id, data.team_id, current_user.id)
     if result == "team_not_found":
         raise HTTPException(404, "Team not found")
     if result == "forbidden":
@@ -209,8 +231,11 @@ def register_team(hackathon_id: int, data: TeamRegistrationRequest,
 
 
 @router.get("/{hackathon_id}/teams", response_model=list[HackathonTeamResponse])
-def list_registered_teams(hackathon_id: int, db: Session = Depends(get_db)):
-    return get_hackathon_teams(db, hackathon_id)
+def list_registered_teams(hackathon_id: str, db: Session = Depends(get_db)):
+    hackathon = _resolve_public_id(db, Hackathon, hackathon_id)
+    if not hackathon:
+        raise HTTPException(404, "Hackathon not found")
+    return get_hackathon_teams(db, hackathon.id)
 
 
 # ── Invitations ──
@@ -222,12 +247,13 @@ def my_hackathon_invitations(db: Session = Depends(get_db),
 
 
 @router.post("/{hackathon_id}/invitations", response_model=HackathonInvitationResponse)
-def invite_to_hackathon_team(hackathon_id: int, data: HackathonInvitationCreate,
+def invite_to_hackathon_team(hackathon_id: str, data: HackathonInvitationCreate,
                               db: Session = Depends(get_db),
                               current_user=Depends(get_current_user)):
-    result = invite_hackathon_member(db, hackathon_id, data.team_id, data.user_id, current_user.id)
-    if result == "hackathon_not_found":
+    hackathon = _resolve_public_id(db, Hackathon, hackathon_id)
+    if not hackathon:
         raise HTTPException(404, "Hackathon not found")
+    result = invite_hackathon_member(db, hackathon.id, data.team_id, data.user_id, current_user.id)
     if result == "team_not_found":
         raise HTTPException(404, "Team not found")
     if result == "forbidden":
@@ -270,18 +296,24 @@ def reject_hackathon_invite(invitation_id: int, db: Session = Depends(get_db),
 # ── Submissions ──
 
 @router.post("/{hackathon_id}/submissions", response_model=HackathonSubmissionResponse)
-def submit_project(hackathon_id: int, data: HackathonSubmissionCreate,
+def submit_project(hackathon_id: str, data: HackathonSubmissionCreate,
                     db: Session = Depends(get_db),
                     current_user=Depends(get_current_user)):
+    hackathon = _resolve_public_id(db, Hackathon, hackathon_id)
+    if not hackathon:
+        raise HTTPException(404, "Hackathon not found")
     team_id = data.team_id if hasattr(data, "team_id") and data.team_id else None
     if not team_id:
         raise HTTPException(400, "team_id is required")
-    return create_submission(db, hackathon_id, team_id, current_user.id, data)
+    return create_submission(db, hackathon.id, team_id, current_user.id, data)
 
 
 @router.get("/{hackathon_id}/submissions", response_model=list[HackathonSubmissionResponse])
-def list_submissions(hackathon_id: int, db: Session = Depends(get_db)):
-    return get_submissions(db, hackathon_id)
+def list_submissions(hackathon_id: str, db: Session = Depends(get_db)):
+    hackathon = _resolve_public_id(db, Hackathon, hackathon_id)
+    if not hackathon:
+        raise HTTPException(404, "Hackathon not found")
+    return get_submissions(db, hackathon.id)
 
 
 @router.post("/submissions/{submission_id}/review", response_model=HackathonSubmissionResponse)
@@ -296,12 +328,18 @@ def review_submission_endpoint(submission_id: int, status: str,
 # ── Announcements ──
 
 @router.post("/{hackathon_id}/announcements", response_model=HackathonAnnouncementResponse)
-def create_hackathon_announcement(hackathon_id: int, data: HackathonAnnouncementCreate,
+def create_hackathon_announcement(hackathon_id: str, data: HackathonAnnouncementCreate,
                                    db: Session = Depends(get_db),
                                    current_user=Depends(get_current_user)):
-    return create_announcement(db, hackathon_id, current_user.id, data)
+    hackathon = _resolve_public_id(db, Hackathon, hackathon_id)
+    if not hackathon:
+        raise HTTPException(404, "Hackathon not found")
+    return create_announcement(db, hackathon.id, current_user.id, data)
 
 
 @router.get("/{hackathon_id}/announcements", response_model=list[HackathonAnnouncementResponse])
-def list_hackathon_announcements(hackathon_id: int, db: Session = Depends(get_db)):
-    return get_announcements(db, hackathon_id)
+def list_hackathon_announcements(hackathon_id: str, db: Session = Depends(get_db)):
+    hackathon = _resolve_public_id(db, Hackathon, hackathon_id)
+    if not hackathon:
+        raise HTTPException(404, "Hackathon not found")
+    return get_announcements(db, hackathon.id)

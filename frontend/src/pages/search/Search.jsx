@@ -1,9 +1,9 @@
 import { Search as SearchIcon, UserPlus, Check, Users, FolderGit2, Trophy, Star, Building2 } from 'lucide-react';
+import EmptyState from '../../components/common/EmptyState.jsx';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { formatShortBatch } from '../../utils/batch.js';
 import Button from '../../components/ui/Button.jsx';
-import Card from '../../components/ui/Card.jsx';
 import Skeleton from '../../components/ui/Skeleton.jsx';
 import SkillTag from '../../components/ui/SkillTag.jsx';
 import { connectionService } from '../../services/connectionService.js';
@@ -235,11 +235,11 @@ function Search() {
             ))}
           </div>
         ) : searched && results.length === 0 && !error ? (
-          <Card className="mt-lg p-xl text-center">
-            <p className="font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
-              No results found for &ldquo;{query}&rdquo;.
-            </p>
-          </Card>
+          <EmptyState
+            icon={SearchIcon}
+            title="No results found"
+            description="Try searching for a different term."
+          />
         ) : results.length > 0 ? (
           <div className="mt-lg grid gap-lg sm:grid-cols-2 xl:grid-cols-3">
             {results.map(renderResult)}

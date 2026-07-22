@@ -1,9 +1,21 @@
+import re
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.deps import get_db
 from app.core.auth import get_current_user
 from app.core.admin import get_current_admin
+from app.models.organization import Organization
+
+
+def _resolve_public_id(db, model, identifier):
+    if re.match(r'^PYR-[A-Z]+-[A-Z0-9]{6}$', str(identifier).upper()):
+        return db.query(model).filter(func.upper(model.public_id) == str(identifier).upper()).first()
+    try:
+        return db.query(model).get(int(identifier))
+    except (ValueError, TypeError):
+        return None
 
 from app.schemas.organization import (
     OrganizationCreate, OrganizationUpdate, OrganizationResponse,
@@ -46,48 +58,54 @@ def list_organizations(db: Session = Depends(get_db),
 
 
 @router.get("/{org_id}", response_model=OrganizationResponse)
-def single_organization(org_id: int, db: Session = Depends(get_db)):
-    org = get_organization(db, org_id)
+def single_organization(org_id: str, db: Session = Depends(get_db)):
+    org = _resolve_public_id(db, Organization, org_id)
     if not org:
         raise HTTPException(404, "Organization not found")
-    return org
+    return get_organization(db, org.id)
 
 
 @router.patch("/{org_id}", response_model=OrganizationResponse)
-def edit_organization(org_id: int, data: OrganizationUpdate,
+def edit_organization(org_id: str, data: OrganizationUpdate,
                        db: Session = Depends(get_db),
                        current_user=Depends(get_current_user)):
-    result = update_organization(db, org_id, current_user.id, data)
-    if result == "not_found":
+    org = _resolve_public_id(db, Organization, org_id)
+    if not org:
         raise HTTPException(404, "Organization not found")
+    result = update_organization(db, org.id, current_user.id, data)
     if result == "forbidden":
         raise HTTPException(403, "Only the owner can update")
     return result
 
 
 @router.delete("/{org_id}")
-def remove_organization(org_id: int, db: Session = Depends(get_db),
+def remove_organization(org_id: str, db: Session = Depends(get_db),
                          current_user=Depends(get_current_user)):
-    result = delete_organization(db, org_id, current_user.id)
-    if result == "not_found":
+    org = _resolve_public_id(db, Organization, org_id)
+    if not org:
         raise HTTPException(404, "Organization not found")
+    result = delete_organization(db, org.id, current_user.id)
     if result == "forbidden":
         raise HTTPException(403, "Only the owner can delete")
     return {"message": "Organization deleted"}
 
 
 @router.get("/{org_id}/members", response_model=list[OrganizationMemberResponse])
-def list_organization_members(org_id: int, db: Session = Depends(get_db)):
-    return get_organization_members(db, org_id)
+def list_organization_members(org_id: str, db: Session = Depends(get_db)):
+    org = _resolve_public_id(db, Organization, org_id)
+    if not org:
+        raise HTTPException(404, "Organization not found")
+    return get_organization_members(db, org.id)
 
 
 @router.post("/{org_id}/members", response_model=OrganizationMemberResponse)
-def add_member(org_id: int, user_id: int,
+def add_member(org_id: str, user_id: int,
                db: Session = Depends(get_db),
                current_user=Depends(get_current_user)):
-    result = add_organization_member(db, org_id, user_id, current_user.id)
-    if result == "not_found":
+    org = _resolve_public_id(db, Organization, org_id)
+    if not org:
         raise HTTPException(404, "Organization not found")
+    result = add_organization_member(db, org.id, user_id, current_user.id)
     if result == "forbidden":
         raise HTTPException(403, "Only the owner can add members")
     if result == "already_member":
@@ -96,12 +114,13 @@ def add_member(org_id: int, user_id: int,
 
 
 @router.delete("/{org_id}/members/{user_id}")
-def remove_member(org_id: int, user_id: int,
+def remove_member(org_id: str, user_id: int,
                    db: Session = Depends(get_db),
                    current_user=Depends(get_current_user)):
-    result = remove_organization_member(db, org_id, user_id, current_user.id)
-    if result == "not_found":
+    org = _resolve_public_id(db, Organization, org_id)
+    if not org:
         raise HTTPException(404, "Organization not found")
+    result = remove_organization_member(db, org.id, user_id, current_user.id)
     if result == "forbidden":
         raise HTTPException(403, "Only the owner can remove members")
     if result == "not_member":
@@ -114,11 +133,12 @@ def remove_member(org_id: int, user_id: int,
 # ── Admin ──
 
 @router.post("/{org_id}/verify", response_model=OrganizationResponse)
-def verify_organization(org_id: int, db: Session = Depends(get_db),
+def verify_organization(org_id: str, db: Session = Depends(get_db),
                          current_user=Depends(get_current_admin)):
-    result = approve_organization(db, org_id, current_user.id)
-    if result == "not_found":
+    org = _resolve_public_id(db, Organization, org_id)
+    if not org:
         raise HTTPException(404, "Organization not found")
+    result = approve_organization(db, org.id, current_user.id)
     return result
 
 

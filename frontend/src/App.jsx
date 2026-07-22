@@ -8,6 +8,9 @@ import Signup from './pages/auth/Signup.jsx';
 import ProtectedRoute from './routes/ProtectedRoute.jsx';
 
 const Bookmarks = lazy(() => import('./pages/bookmarks/Bookmarks.jsx'));
+const NotFound = lazy(() => import('./pages/errors/NotFound.jsx'));
+const Forbidden = lazy(() => import('./pages/errors/Forbidden.jsx'));
+const ServerError = lazy(() => import('./pages/errors/ServerError.jsx'));
 const Connections = lazy(() => import('./pages/connections/Connections.jsx'));
 const Dashboard = lazy(() => import('./pages/dashboard/Dashboard.jsx'));
 const Domains = lazy(() => import('./pages/domains/Domains.jsx'));
@@ -113,9 +116,12 @@ function App() {
             <Route path="projects/:id" element={<Suspense fallback={<PageLoading />}><ProjectDetail /></Suspense>} />
             <Route path="verify/:id" element={<Suspense fallback={<PageLoading />}><VerifyRepository /></Suspense>} />
             <Route path="settings" element={<Suspense fallback={<PageLoading />}><Settings /></Suspense>} />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            <Route path="*" element={<Navigate to="/404" replace />} />
           </Route>
         </Route>
+        <Route path="404" element={<Suspense fallback={<PageLoading />}><NotFound /></Suspense>} />
+        <Route path="403" element={<Suspense fallback={<PageLoading />}><Forbidden /></Suspense>} />
+        <Route path="500" element={<Suspense fallback={<PageLoading />}><ServerError /></Suspense>} />
       </Routes>
     </ErrorBoundary>
   );

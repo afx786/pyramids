@@ -1,8 +1,21 @@
+import re
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.deps import get_db
 from app.core.auth import get_current_user
+from app.models.research_project import ResearchProject
+
+
+def _resolve_public_id(db, model, identifier):
+    if re.match(r'^PYR-[A-Z]+-[A-Z0-9]{6}$', str(identifier).upper()):
+        return db.query(model).filter(func.upper(model.public_id) == str(identifier).upper()).first()
+    try:
+        return db.query(model).get(int(identifier))
+    except (ValueError, TypeError):
+        return None
+
 
 from app.schemas.research import (
     ResearchProjectCreate, ResearchProjectResponse, ResearchUpdate,
@@ -56,47 +69,53 @@ def list_research(db: Session = Depends(get_db),
 
 
 @router.get("/{research_id}", response_model=ResearchProjectResponse)
-def single_research(research_id: int, db: Session = Depends(get_db)):
-    research = get_research_project(db, research_id)
+def single_research(research_id: str, db: Session = Depends(get_db)):
+    research = _resolve_public_id(db, ResearchProject, research_id)
     if not research:
         raise HTTPException(404, "Research project not found")
     return research
 
 
 @router.patch("/{research_id}", response_model=ResearchProjectResponse)
-def edit_research(research_id: int, data: ResearchUpdate,
+def edit_research(research_id: str, data: ResearchUpdate,
                    db: Session = Depends(get_db),
                    current_user=Depends(get_current_user)):
-    result = update_research(db, research_id, current_user.id, data)
-    if result == "not_found":
+    research = _resolve_public_id(db, ResearchProject, research_id)
+    if not research:
         raise HTTPException(404, "Research project not found")
+    result = update_research(db, research.id, current_user.id, data)
     if result == "forbidden":
         raise HTTPException(403, "Only the owner can update")
     return result
 
 
 @router.delete("/{research_id}")
-def remove_research(research_id: int, db: Session = Depends(get_db),
+def remove_research(research_id: str, db: Session = Depends(get_db),
                      current_user=Depends(get_current_user)):
-    result = delete_research(db, research_id, current_user.id)
-    if result == "not_found":
+    research = _resolve_public_id(db, ResearchProject, research_id)
+    if not research:
         raise HTTPException(404, "Research project not found")
+    result = delete_research(db, research.id, current_user.id)
     if result == "forbidden":
         raise HTTPException(403, "Only the owner can delete")
     return {"message": "Research project deleted"}
 
 
 @router.get("/{research_id}/members", response_model=list[ResearchMemberResponse])
-def list_research_members(research_id: int, db: Session = Depends(get_db)):
-    return get_research_members(db, research_id)
+def list_research_members(research_id: str, db: Session = Depends(get_db)):
+    research = _resolve_public_id(db, ResearchProject, research_id)
+    if not research:
+        raise HTTPException(404, "Research project not found")
+    return get_research_members(db, research.id)
 
 
 @router.post("/{research_id}/join", response_model=ResearchJoinRequestResponse)
-def join_research(research_id: int, db: Session = Depends(get_db),
+def join_research(research_id: str, db: Session = Depends(get_db),
                    current_user=Depends(get_current_user)):
-    result = create_research_join_request(db, research_id, current_user.id)
-    if result == "research_not_found":
+    research = _resolve_public_id(db, ResearchProject, research_id)
+    if not research:
         raise HTTPException(404, "Research project not found")
+    result = create_research_join_request(db, research.id, current_user.id)
     if result == "owner":
         raise HTTPException(400, "Owner cannot request collaboration")
     if result == "already_member":
@@ -107,12 +126,13 @@ def join_research(research_id: int, db: Session = Depends(get_db),
 
 
 @router.get("/{research_id}/requests", response_model=list[ResearchJoinRequestResponse])
-def list_research_requests(research_id: int, db: Session = Depends(get_db),
+def list_research_requests(research_id: str, db: Session = Depends(get_db),
                             current_user=Depends(get_current_user)):
     from app.services.research_service import get_research_requests
-    result = get_research_requests(db, research_id, current_user.id)
-    if result == "research_not_found":
+    research = _resolve_public_id(db, ResearchProject, research_id)
+    if not research:
         raise HTTPException(404, "Research project not found")
+    result = get_research_requests(db, research.id, current_user.id)
     if result == "forbidden":
         raise HTTPException(403, "Only the owner can view requests")
     return result
@@ -145,12 +165,15 @@ def reject_request(request_id: int, db: Session = Depends(get_db),
 
 
 @router.post("/{research_id}/leave")
-def leave_research_project(research_id: int, db: Session = Depends(get_db),
+def leave_research_project(research_id: str, db: Session = Depends(get_db),
                             current_user=Depends(get_current_user)):
     from app.services.research_service import delete_research as leave_service
     from app.models.research_member import ResearchMember
+    research = _resolve_public_id(db, ResearchProject, research_id)
+    if not research:
+        raise HTTPException(404, "Research project not found")
     member = db.query(ResearchMember).filter(
-        ResearchMember.research_id == research_id,
+        ResearchMember.research_id == research.id,
         ResearchMember.user_id == current_user.id
     ).first()
     if not member:
@@ -165,20 +188,24 @@ def leave_research_project(research_id: int, db: Session = Depends(get_db),
 # ── Milestones ──
 
 @router.post("/{research_id}/milestones", response_model=ResearchMilestoneResponse)
-def create_research_milestone(research_id: int, data: ResearchMilestoneCreate,
+def create_research_milestone(research_id: str, data: ResearchMilestoneCreate,
                                db: Session = Depends(get_db),
                                current_user=Depends(get_current_user)):
-    result = add_milestone(db, research_id, current_user.id, data)
-    if result == "not_found":
+    research = _resolve_public_id(db, ResearchProject, research_id)
+    if not research:
         raise HTTPException(404, "Research project not found")
+    result = add_milestone(db, research.id, current_user.id, data)
     if result == "forbidden":
         raise HTTPException(403, "Only the owner can create milestones")
     return result
 
 
 @router.get("/{research_id}/milestones", response_model=list[ResearchMilestoneResponse])
-def list_research_milestones(research_id: int, db: Session = Depends(get_db)):
-    return get_milestones(db, research_id)
+def list_research_milestones(research_id: str, db: Session = Depends(get_db)):
+    research = _resolve_public_id(db, ResearchProject, research_id)
+    if not research:
+        raise HTTPException(404, "Research project not found")
+    return get_milestones(db, research.id)
 
 
 @router.post("/milestones/{milestone_id}/complete", response_model=ResearchMilestoneResponse)
@@ -195,17 +222,21 @@ def complete_research_milestone(milestone_id: int, db: Session = Depends(get_db)
 # ── Updates ──
 
 @router.post("/{research_id}/updates", response_model=ResearchUpdateResponse)
-def create_research_update(research_id: int, data: ResearchUpdateContent,
+def create_research_update(research_id: str, data: ResearchUpdateContent,
                             db: Session = Depends(get_db),
                             current_user=Depends(get_current_user)):
-    result = create_update(db, research_id, current_user.id, data.content)
-    if result == "not_found":
+    research = _resolve_public_id(db, ResearchProject, research_id)
+    if not research:
         raise HTTPException(404, "Research project not found")
+    result = create_update(db, research.id, current_user.id, data.content)
     if result == "forbidden":
         raise HTTPException(403, "Only members can post updates")
     return result
 
 
 @router.get("/{research_id}/updates", response_model=list[ResearchUpdateResponse])
-def list_research_updates(research_id: int, db: Session = Depends(get_db)):
-    return get_updates(db, research_id)
+def list_research_updates(research_id: str, db: Session = Depends(get_db)):
+    research = _resolve_public_id(db, ResearchProject, research_id)
+    if not research:
+        raise HTTPException(404, "Research project not found")
+    return get_updates(db, research.id)

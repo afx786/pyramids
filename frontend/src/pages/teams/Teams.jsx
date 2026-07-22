@@ -1,4 +1,4 @@
-import { ChevronRight, Plus, Workflow, TrendingUp, ShieldCheck, Layers } from 'lucide-react';
+import { ChevronRight, Plus, Users, Workflow, TrendingUp, ShieldCheck, Layers } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { formatShortBatch } from '../../utils/batch.js';
@@ -55,8 +55,9 @@ function Teams() {
 
             {teams.length === 0 ? (
               <EmptyState
-                title="No teams yet"
-                description="Create a team to start collaborating with other builders."
+                icon={Users}
+                title="No Teams Yet"
+                description="Create a team to collaborate."
                 actionLabel="Create Team"
                 onAction={() => navigate('/teams/new')}
               />

@@ -1,12 +1,19 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
 
+from app.models.user import User
 from app.models.research_project import ResearchProject
 from app.models.research_member import ResearchMember
 from app.models.research_milestone import ResearchMilestone
 from app.models.research_update import ResearchUpdate
 from app.services.notification_service import create_notification
 from app.services.id_service import generate_public_id
+
+
+def get_user_research_projects(db: Session, user_id: int):
+    return db.query(ResearchProject).filter(
+        ResearchProject.owner_id == user_id
+    ).order_by(ResearchProject.created_at.desc()).all()
 
 
 def create_research_project(db: Session, data, owner_id: int):

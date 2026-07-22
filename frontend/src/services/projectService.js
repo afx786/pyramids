@@ -1,4 +1,5 @@
 import { api } from './api.js';
+import { buildEntityUrl } from '../utils/resolveEntity.js';
 
 export const projectService = {
   listProjects() {
@@ -6,7 +7,7 @@ export const projectService = {
   },
 
   getProject(id) {
-    return api.get(`/projects/${id}`);
+    return api.get(buildEntityUrl('/projects', id));
   },
 
   createProject({ title, domain, description, skills, technologies = [], github_url }) {

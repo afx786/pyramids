@@ -1,3 +1,4 @@
+import { UserPlus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ConnectionCard from '../../components/common/ConnectionCard.jsx';
@@ -168,8 +169,9 @@ function Connections() {
         ) : (
           <div className="col-span-full">
             <EmptyState
-              title={`No ${activeTab} connections yet`}
-              description={`${activeTab === 'connected' ? 'Connect with builders to grow your network.' : activeTab === 'pending' ? 'Incoming requests will appear here.' : 'Sent requests will appear here.'}`}
+              icon={UserPlus}
+              title="No Connections Yet"
+              description="Connect with builders in your network."
             />
           </div>
         )}

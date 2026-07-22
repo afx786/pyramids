@@ -50,9 +50,9 @@ function Bookmarks() {
         ) : (
           <div className="col-span-full">
             <EmptyState
-              title="No bookmarks yet"
-              description="Save projects and opportunities to revisit them later."
-              icon={<Bookmark className="h-6 w-6" />}
+              icon={Bookmark}
+              title="No Bookmarks Yet"
+              description="Save projects and research for later."
             />
           </div>
         )}

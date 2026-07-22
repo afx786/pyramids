@@ -45,8 +45,9 @@ function Organizations() {
       {organizations.length === 0 ? (
         <div className="mt-xl">
           <EmptyState
-            title="No organizations yet"
-            description="Create an organization to bring your team together."
+            icon={Building2}
+            title="No Organizations Yet"
+            description="Create or join an organization."
             actionLabel="Create Organization"
             onAction={() => navigate('/organizations/new')}
           />

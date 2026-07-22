@@ -1,22 +1,24 @@
-import Button from '../ui/Button.jsx';
-
-function EmptyState({ title, description, actionLabel, onAction, icon }) {
-  const IconComponent = typeof icon === 'function' || (icon && typeof icon === 'object' && '$$typeof' in icon) ? icon : null;
+function EmptyState({ title, description, actionLabel, onAction, icon: Icon }) {
   return (
-    <div className="rounded-xl p-2xl text-center" style={{ border: '1px dashed rgb(var(--color-outline-variant))', background: 'rgb(var(--color-surface-container-low))' }}>
-      {icon ? (
-        <div className="mx-auto mb-lg flex h-14 w-14 animate-float items-center justify-center rounded-xl" style={{ background: 'rgb(var(--color-surface-container-high))', border: '1px solid rgb(var(--color-outline-variant))' }}>
-          {IconComponent ? (
-            <IconComponent className="h-6 w-6" strokeWidth={1.5} style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
-          ) : null}
+    <div className="flex flex-col items-center justify-center py-2xl px-lg text-center" style={{ minHeight: 280 }}>
+      {Icon ? (
+        <div className="mb-lg flex items-center justify-center w-14 h-14 rounded-2xl" style={{ background: 'rgb(var(--color-surface-container-high))', border: '1px solid rgb(var(--color-outline-variant))' }}>
+          <Icon className="h-6 w-6" strokeWidth={1.5} style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
         </div>
       ) : null}
-      <h2 className="font-headline-md font-semibold" style={{ color: 'rgb(var(--color-on-surface))' }}>{title}</h2>
-      {description ? <p className="mx-auto mt-md max-w-md font-body-sm text-body-sm leading-6" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{description}</p> : null}
-      {actionLabel ? (
-        <Button className="mt-lg" onClick={onAction}>
+      <h3 className="font-headline-md font-semibold mb-sm" style={{ color: 'rgb(var(--color-on-surface))' }}>{title}</h3>
+      {description ? (
+        <p className="font-body-sm max-w-sm mb-lg" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{description}</p>
+      ) : null}
+      {actionLabel && onAction ? (
+        <button
+          type="button"
+          onClick={onAction}
+          className="inline-flex items-center gap-2 px-lg py-sm rounded-lg font-body-sm font-semibold transition-all hover:opacity-90 active:scale-[0.98]"
+          style={{ background: 'rgb(var(--color-primary))', color: 'rgb(var(--color-on-primary))' }}
+        >
           {actionLabel}
-        </Button>
+        </button>
       ) : null}
     </div>
   );

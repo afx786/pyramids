@@ -101,8 +101,8 @@ function Dashboard() {
             {visibleProjects.length === 0 ? (
               <Card className="flex flex-col items-center justify-center py-2xl text-center stagger">
                 <GitBranch className="h-8 w-8 mb-md" style={{ color: 'rgb(var(--color-on-surface-variant))' }} strokeWidth={1.5} />
-                <h3 className="font-headline-md" style={{ color: 'rgb(var(--color-on-surface))' }}>No projects yet</h3>
-                <p className="font-body-sm mt-sm max-w-md" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Add your first build and connect it to a public GitHub repository.</p>
+                <h3 className="font-headline-md" style={{ color: 'rgb(var(--color-on-surface))' }}>No Projects Yet</h3>
+                <p className="font-body-sm mt-sm max-w-md" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Start building your first project.</p>
                 <Link to="/projects/new" className="mt-lg"><Button><Plus className="h-4 w-4" strokeWidth={1.5} />Add Project</Button></Link>
               </Card>
             ) : (

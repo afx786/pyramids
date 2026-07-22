@@ -283,8 +283,9 @@ function Messages() {
               ))
             ) : (
               <EmptyState
-                title="No messages"
-                description="Start a conversation with a connection."
+                icon={MessageSquare}
+                title="No Messages Yet"
+                description="Start a conversation with another builder."
               />
             )}
           </div>

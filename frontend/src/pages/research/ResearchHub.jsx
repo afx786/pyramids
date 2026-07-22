@@ -286,8 +286,8 @@ function ResearchHub() {
           ) : filtered.length === 0 ? (
             <EmptyState
               icon={BookOpen}
-              title={hasActiveFilters ? 'No matching research' : 'No research yet'}
-              description={hasActiveFilters ? 'Try adjusting your filters or search query.' : 'Be the first to create a research project.'}
+              title={hasActiveFilters ? 'No matching research' : 'No Research Yet'}
+              description={hasActiveFilters ? 'Try adjusting your filters or search query.' : 'Publish your first research project.'}
               actionLabel={hasActiveFilters ? undefined : 'Create Research'}
               onAction={hasActiveFilters ? undefined : () => navigate('/research/new')}
             />

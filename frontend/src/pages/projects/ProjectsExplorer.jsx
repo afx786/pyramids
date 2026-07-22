@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, Grid3X3, List, Plus, Search, SlidersHorizontal, AlertCircle } from 'lucide-react';
+import { ChevronLeft, ChevronRight, FolderGit2, Grid3X3, List, Plus, Search, SlidersHorizontal, AlertCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import EmptyState from '../../components/common/EmptyState.jsx';
@@ -343,11 +343,11 @@ function ProjectsExplorer() {
         </div>
       ) : paginated.length === 0 ? (
         <EmptyState
-          icon={AlertCircle}
-          title={hasFilters ? 'No matching projects' : 'No projects yet'}
+          icon={FolderGit2}
+          title={hasFilters ? 'No matching projects' : 'No Projects Found'}
           description={hasFilters
             ? 'Try adjusting your filters or search query.'
-            : 'Be the first to create a verified project.'
+            : 'Create your first project to showcase your work.'
           }
           actionLabel={hasFilters ? undefined : 'Create Project'}
           onAction={hasFilters ? undefined : () => { navigate('/projects/new'); }}

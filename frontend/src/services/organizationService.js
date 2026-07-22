@@ -1,4 +1,5 @@
 import { api } from './api.js';
+import { buildEntityUrl } from '../utils/resolveEntity.js';
 
 export const organizationService = {
   list() {
@@ -6,7 +7,7 @@ export const organizationService = {
   },
 
   get(id) {
-    return api.get(`/organizations/${id}`);
+    return api.get(buildEntityUrl('/organizations', id));
   },
 
   getMy() {

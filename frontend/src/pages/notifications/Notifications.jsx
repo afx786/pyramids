@@ -96,9 +96,9 @@ function Notifications() {
           ))
         ) : (
           <EmptyState
-            title="No notifications yet"
-            description="Notifications about project invitations, connection requests, and updates will appear here."
             icon={Bell}
+            title="No Notifications Yet"
+            description="You're all caught up."
           />
         )}
       </section>

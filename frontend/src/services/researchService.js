@@ -1,4 +1,5 @@
 import { api } from './api.js';
+import { buildEntityUrl } from '../utils/resolveEntity.js';
 
 export const researchService = {
   list(params = {}) {
@@ -7,7 +8,7 @@ export const researchService = {
   },
 
   get(id) {
-    return api.get(`/research/${id}`);
+    return api.get(buildEntityUrl('/research', id));
   },
 
   getMy() {

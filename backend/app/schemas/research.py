@@ -60,6 +60,24 @@ class ResearchUpdate(BaseModel):
     status: str | None = None
 
 
+class UserResearchResponse(BaseModel):
+    id: int
+    public_id: str
+    title: str
+    abstract: str | None = None
+    description: str
+    research_type: str
+    domain: str
+    status: str | None = None
+    owner_id: int
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    member_count: int = 0
+
+    class Config:
+        from_attributes = True
+
+
 class ResearchProjectResponse(BaseModel):
     id: int
     public_id: str

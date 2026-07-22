@@ -1,4 +1,5 @@
 import { api } from './api.js';
+import { buildEntityUrl } from '../utils/resolveEntity.js';
 
 export const teamService = {
   listTeams() {
@@ -6,7 +7,7 @@ export const teamService = {
   },
 
   getTeam(id) {
-    return api.get(`/teams/${id}`);
+    return api.get(buildEntityUrl('/teams', id));
   },
 
   createTeam(data) {
