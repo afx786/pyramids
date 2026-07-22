@@ -30,6 +30,8 @@ function Requests() {
     name: req.sender?.name ?? 'Unknown',
     role: req.sender?.headline || 'Wants to connect',
     avatar: req.sender?.profile_picture,
+    joining_year: req.sender?.joining_year,
+    graduating_year: req.sender?.graduating_year,
     skills: [],
   }));
 

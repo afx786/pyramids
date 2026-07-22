@@ -350,7 +350,7 @@ function OverviewTab({ research }) {
               Skills Needed
             </h3>
             <div className="flex flex-wrap gap-2">
-              {research.skills_needed.split(',').map((s, i) => (
+              {(Array.isArray(research.skills_needed) ? research.skills_needed : typeof research.skills_needed === 'string' ? research.skills_needed.split(',') : []).map((s, i) => (
                 <span
                   key={i}
                   className="px-2 py-1 rounded text-xs font-mono font-semibold"

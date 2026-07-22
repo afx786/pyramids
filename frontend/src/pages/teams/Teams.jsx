@@ -1,6 +1,7 @@
 import { ChevronRight, Plus, Workflow, TrendingUp, ShieldCheck, Layers } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { formatShortBatch } from '../../utils/batch.js';
 import EmptyState from '../../components/common/EmptyState.jsx';
 import ErrorState from '../../components/common/ErrorState.jsx';
 import LoadingState from '../../components/common/LoadingState.jsx';
@@ -121,6 +122,10 @@ function Teams() {
                               <div className="flex items-center justify-between gap-sm">
                                 <p className="font-body-sm font-bold truncate" style={{ color: 'rgb(var(--color-primary))' }}>
                                   {member.name || member.user_name || 'Member'}
+                                  {(() => {
+                                    const batch = formatShortBatch(member.joining_year, member.graduating_year);
+                                    return batch ? <span className="font-mono text-[10px] ml-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>({batch})</span> : null;
+                                  })()}
                                 </p>
                                 <TrendingUp size={16} style={{ color: 'rgb(var(--color-primary))' }} />
                               </div>

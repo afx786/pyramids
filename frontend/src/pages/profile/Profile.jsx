@@ -9,6 +9,7 @@ import Avatar from '../../components/ui/Avatar.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import SkillTag from '../../components/ui/SkillTag.jsx';
+import { formatShortBatch } from '../../utils/batch.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { connectionService } from '../../services/connectionService.js';
 import { messageService } from '../../services/messageService.js';
@@ -124,9 +125,19 @@ function Profile() {
           </div>
           <div className="flex items-center gap-lg">
             <Avatar src={displayUser?.profile_picture} alt={displayUser?.name} size="lg" className="shrink-0" />
-            <h2 className="font-display-serif text-display-serif leading-none" style={{ color: 'rgb(var(--color-primary))' }}>
-              {displayUser?.name ?? 'Builder'}
-            </h2>
+            <div>
+              <h2 className="font-display-serif text-display-serif leading-none" style={{ color: 'rgb(var(--color-primary))' }}>
+                {displayUser?.name ?? 'Builder'}
+              </h2>
+              {(() => {
+                const batch = formatBatch(displayUser?.joining_year, displayUser?.graduating_year);
+                return batch ? (
+                  <span className="font-mono-label text-xs block mt-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                    Batch {batch}
+                  </span>
+                ) : null;
+              })()}
+            </div>
           </div>
           <p className="font-body-lg text-body-lg max-w-xl" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
             {displayUser?.headline || displayUser?.bio || 'Builder'}
@@ -273,6 +284,7 @@ function Profile() {
                     creator: displayUser?.name ?? 'Builder',
                     avatar: displayUser?.profile_picture,
                     stack: project.skills ?? [],
+                    member_count: project.member_count,
                   }} />
                 ))}
               </div>

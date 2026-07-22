@@ -36,6 +36,8 @@ function Connections() {
       name: user.name || 'Unknown',
       role: user.headline || 'Builder',
       avatar: user.profile_picture,
+      joining_year: user.joining_year,
+      graduating_year: user.graduating_year,
       skills: [],
     };
   }
@@ -48,6 +50,8 @@ function Connections() {
       name: person.name || 'Unknown',
       role: person.headline || (role === 'sender' ? 'Wants to connect' : 'Awaiting response'),
       avatar: person.profile_picture,
+      joining_year: person.joining_year,
+      graduating_year: person.graduating_year,
       skills: [],
     };
   }

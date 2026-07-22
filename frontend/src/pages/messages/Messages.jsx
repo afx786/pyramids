@@ -1,5 +1,6 @@
 import { Send, Trash2, UserPlus, MessageSquare } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { formatShortBatch } from '../../utils/batch.js';
 import ConversationListItem from '../../components/common/ConversationListItem.jsx';
 import EmptyState from '../../components/common/EmptyState.jsx';
 import MessageBubble from '../../components/common/MessageBubble.jsx';
@@ -123,7 +124,7 @@ function Messages() {
       const otherUser = connections.find((c) => c.user?.id === userId)?.user || { id: userId, name: 'User' };
       const newConv = {
         conversation_id: conv.id,
-        other_user: { id: otherUser.id, name: otherUser.name },
+        other_user: { id: otherUser.id, name: otherUser.name, joining_year: otherUser.joining_year, graduating_year: otherUser.graduating_year },
         last_message: null,
         last_message_time: null,
         unread_count: 0,
@@ -209,7 +210,17 @@ function Messages() {
                           onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
                         >
                           <Avatar src={c.user.profile_picture} alt={c.user.name} size="sm" />
-                          <span className="font-medium">{c.user.name}</span>
+                          <div>
+                            <span className="font-medium">{c.user.name}</span>
+                            {(() => {
+                              const batch = formatShortBatch(c.user.joining_year, c.user.graduating_year);
+                              return batch ? (
+                                <span className="ml-2 font-mono text-[10px]" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                                  {batch}
+                                </span>
+                              ) : null;
+                            })()}
+                          </div>
                         </button>
                       ))}
                     {!connectionsLoading && connections.length === 0 ? (
@@ -251,6 +262,8 @@ function Messages() {
                       user: conv.other_user?.name || 'Unknown',
                       avatar: null,
                       preview: conv.last_message || '—',
+                      joining_year: conv.other_user?.joining_year,
+                      graduating_year: conv.other_user?.graduating_year,
                     }}
                     active={conv.conversation_id === activeId}
                     onClick={() => setActiveId(conv.conversation_id)}
@@ -294,7 +307,12 @@ function Messages() {
                   <h3 className="font-body-sm font-bold" style={{ color: 'rgb(var(--color-primary))' }}>
                     {activeConversation.other_user?.name || 'User'}
                   </h3>
-                  <p className="font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Project collaborator</p>
+                  <p className="font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                    {(() => {
+                      const batch = formatShortBatch(activeConversation.other_user?.joining_year, activeConversation.other_user?.graduating_year);
+                      return batch ? batch : 'Project collaborator';
+                    })()}
+                  </p>
                 </div>
               </div>
             </div>

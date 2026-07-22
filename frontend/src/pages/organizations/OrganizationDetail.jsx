@@ -1,6 +1,7 @@
 import { ArrowLeft, Building2, Globe, Mail, MapPin, Pencil, Plus, ShieldCheck, Trash2, UserMinus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { formatShortBatch } from '../../utils/batch.js';
 import ErrorState from '../../components/common/ErrorState.jsx';
 import LoadingState from '../../components/common/LoadingState.jsx';
 import Avatar from '../../components/ui/Avatar.jsx';
@@ -205,6 +206,10 @@ function OrganizationDetail() {
                     <div>
                       <p className="font-body-sm font-bold" style={{ color: 'rgb(var(--color-primary))' }}>
                         {m.name || m.user_name || `User #${m.id}`}
+                        {(() => {
+                          const batch = formatShortBatch(m.joining_year, m.graduating_year);
+                          return batch ? <span className="font-mono text-[10px] ml-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>({batch})</span> : null;
+                        })()}
                       </p>
                       <p className="font-body-sm capitalize" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
                         {m.role || 'Member'}
@@ -255,7 +260,7 @@ function OrganizationDetail() {
       </div>
 
       {showDeleteConfirm ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-lg" style={{ background: 'rgb(0 0 0 / 0.4)' }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-lg" style={{ background: 'rgb(var(--color-surface-dim) / 0.8)' }}>
           <Card className="mx-auto w-full max-w-md p-xl">
             <div className="flex items-center gap-md">
               <div

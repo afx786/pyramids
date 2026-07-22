@@ -29,7 +29,7 @@ function ResearchVerification({ research, className = '' }) {
       {research.skills_needed && (
         <div>
           <span className="font-label-caps text-[9px] uppercase" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Skills Needed</span>
-          <VerifiedSkills skills={research.skills_needed.split(',').map(s => s.trim())} variant="compact" />
+          <VerifiedSkills skills={(Array.isArray(research.skills_needed) ? research.skills_needed : typeof research.skills_needed === 'string' ? research.skills_needed.split(',') : []).map(s => s.trim())} variant="compact" />
         </div>
       )}
       <div className="grid grid-cols-2 gap-3">

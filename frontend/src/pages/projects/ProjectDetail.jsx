@@ -1,6 +1,7 @@
 import { ArrowLeft, ArrowRight, Check, ChevronRight, Code2, ExternalLink, Folder, GitBranch, Pencil, Trash2, UserPlus, Users, X, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { formatShortBatch } from '../../utils/batch.js';
 import ErrorState from '../../components/common/ErrorState.jsx';
 import FieldError from '../../components/common/FieldError.jsx';
 import LoadingState from '../../components/common/LoadingState.jsx';
@@ -557,7 +558,13 @@ function ProjectDetail() {
                   >
                     <Avatar size="sm" {...(m.avatar ? { src: m.avatar } : {})} alt={m.user_name ?? `User #${m.user_id}`} />
                     <div className="flex-1">
-                      <p className="font-body-sm font-bold" style={{ color: 'rgb(var(--color-primary))' }}>{m.user_name ?? `User #${m.user_id}`}</p>
+                      <p className="font-body-sm font-bold" style={{ color: 'rgb(var(--color-primary))' }}>
+                        {m.user_name ?? `User #${m.user_id}`}
+                        {(() => {
+                          const batch = formatShortBatch(m.joining_year, m.graduating_year);
+                          return batch ? <span className="font-mono text-[10px] ml-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>({batch})</span> : null;
+                        })()}
+                      </p>
                       <p className="text-[12px] uppercase tracking-tighter" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{m.role ?? 'Contributor'}</p>
                     </div>
                     <ArrowRight size={18} className="opacity-0 group-hover:opacity-100" style={{ color: 'rgb(var(--color-primary))' }} />
@@ -607,7 +614,13 @@ function ProjectDetail() {
                         onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
                       >
                         <div>
-                          <p className="font-semibold" style={{ color: 'rgb(var(--color-primary))' }}>{u.name}</p>
+                          <p className="font-semibold" style={{ color: 'rgb(var(--color-primary))' }}>
+                            {u.name}
+                            {(() => {
+                              const batch = formatShortBatch(u.joining_year, u.graduating_year);
+                              return batch ? <span className="font-mono text-[10px] ml-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>({batch})</span> : null;
+                            })()}
+                          </p>
                           <p className="text-xs" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{u.rank ?? 'Builder'} · {u.headline ?? 'Builder'}</p>
                         </div>
                         <Plus size={16} style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
@@ -643,7 +656,7 @@ function ProjectDetail() {
                         className="font-body-sm capitalize"
                         style={{
                           color: inv.status === 'accepted'
-                            ? 'rgb(var(--color-success, 34 197 94))'
+                            ? 'rgb(var(--color-success))'
                             : inv.status === 'rejected'
                             ? 'rgb(var(--color-error))'
                             : 'rgb(var(--color-on-surface-variant))',
@@ -775,7 +788,7 @@ function ProjectDetail() {
       </div>
 
       {showDeleteConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-lg" style={{ background: 'rgb(0 0 0 / 0.4)' }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-lg" style={{ background: 'rgb(var(--color-surface-dim) / 0.8)' }}>
           <Card className="mx-auto w-full max-w-md p-xl">
             <div className="flex items-center gap-md">
               <div

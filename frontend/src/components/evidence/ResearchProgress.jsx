@@ -1,4 +1,5 @@
-function ResearchProgress({ milestones = [], className = '' }) {
+function ResearchProgress({ milestones, className = '' }) {
+  if (!Array.isArray(milestones)) milestones = [];
   if (milestones.length === 0) {
     return <p className="font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>No milestones defined.</p>;
   }

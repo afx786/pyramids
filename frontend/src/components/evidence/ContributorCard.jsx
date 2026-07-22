@@ -1,3 +1,4 @@
+import { formatShortBatch } from '../../utils/batch.js';
 import Avatar from '../ui/Avatar.jsx';
 import RepositoryScore from './RepositoryScore.jsx';
 import VerifiedSkills from './VerifiedSkills.jsx';
@@ -16,7 +17,13 @@ function ContributorCard({ contributor, variant = 'standard', className = '' }) 
       <div className={`flex items-center gap-3 ${variant === 'compact' ? '' : ''}`}>
         <Avatar src={contributor.avatar} alt={contributor.name || 'Contributor'} size={variant === 'compact' ? 'sm' : 'md'} />
         <div className="min-w-0 flex-1">
-          <p className="font-body-sm font-semibold truncate" style={{ color: 'rgb(var(--color-on-surface))' }}>{contributor.name}</p>
+          <p className="font-body-sm font-semibold truncate" style={{ color: 'rgb(var(--color-on-surface))' }}>
+            {contributor.name}
+            {(() => {
+              const batch = formatShortBatch(contributor.joining_year, contributor.graduating_year);
+              return batch ? <span className="font-mono text-[10px] ml-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>({batch})</span> : null;
+            })()}
+          </p>
           <p className="font-body-sm truncate" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{contributor.role || 'Builder'}</p>
         </div>
         {variant === 'compact' && contributor.repositoryScore != null && (

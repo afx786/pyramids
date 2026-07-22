@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ShieldCheck, Users, GitBranch } from 'lucide-react';
+import { formatShortBatch } from '../../utils/batch.js';
 import ErrorState from '../../components/common/ErrorState.jsx';
 import LoadingState from '../../components/common/LoadingState.jsx';
 import PageHeader from '../../components/common/PageHeader.jsx';
@@ -59,7 +60,13 @@ function Admin() {
           <div className="mt-5 space-y-3">
             {recentUsers.length > 0 ? recentUsers.map((u) => (
               <div key={u.id} className="flex items-center justify-between border-t border-subtle pt-3 first:border-t-0 first:pt-0">
-                <span className="text-sm font-semibold text-primary">{u.name || `User #${u.id}`}</span>
+                <span className="text-sm font-semibold text-primary">
+                  {u.name || `User #${u.id}`}
+                  {(() => {
+                    const batch = formatShortBatch(u.joining_year, u.graduating_year);
+                    return batch ? <span className="font-mono text-[10px] ml-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>({batch})</span> : null;
+                  })()}
+                </span>
                 <span className="text-xs text-secondary">{u.email || '—'}</span>
               </div>
             )) : <p className="text-sm text-secondary">No users yet.</p>}

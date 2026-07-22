@@ -1,6 +1,7 @@
 import { Search as SearchIcon, UserPlus, Check, Users, FolderGit2, Trophy, Star, Building2 } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { formatShortBatch } from '../../utils/batch.js';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import Skeleton from '../../components/ui/Skeleton.jsx';
@@ -72,7 +73,13 @@ function Search() {
           >
             <div className="flex items-start justify-between gap-lg">
               <div className="min-w-0 flex-1">
-                <p className="font-body-sm font-bold" style={{ color: 'rgb(var(--color-primary))' }}>{item.name}</p>
+                <p className="font-body-sm font-bold" style={{ color: 'rgb(var(--color-primary))' }}>
+                  {item.name}
+                  {(() => {
+                    const batch = formatShortBatch(item.joining_year, item.graduating_year);
+                    return batch ? <span className="font-mono text-[10px] ml-1.5" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>({batch})</span> : null;
+                  })()}
+                </p>
                 {item.headline ? <p className="font-body-sm mt-xs" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{item.headline}</p> : null}
                 <div className="flex items-center gap-sm mt-sm">
                   <SkillTag>{item.rank || 'Builder'}</SkillTag>

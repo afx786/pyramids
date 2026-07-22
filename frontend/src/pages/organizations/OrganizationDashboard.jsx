@@ -1,6 +1,7 @@
 import { Beaker, Building2, FlaskConical, Plus, Trophy, UserMinus, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { formatShortBatch } from '../../utils/batch.js';
 import ErrorState from '../../components/common/ErrorState.jsx';
 import LoadingState from '../../components/common/LoadingState.jsx';
 import Avatar from '../../components/ui/Avatar.jsx';
@@ -132,6 +133,10 @@ function OrganizationDashboard() {
                     <div>
                       <p className="font-body-sm font-bold" style={{ color: 'rgb(var(--color-primary))' }}>
                         {m.name || m.user_name || `User #${m.id}`}
+                        {(() => {
+                          const batch = formatShortBatch(m.joining_year, m.graduating_year);
+                          return batch ? <span className="font-mono text-[10px] ml-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>({batch})</span> : null;
+                        })()}
                       </p>
                       <p className="font-body-sm capitalize" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
                         {m.role || 'Member'}

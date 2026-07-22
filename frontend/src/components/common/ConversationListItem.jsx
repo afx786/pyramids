@@ -1,3 +1,4 @@
+import { formatShortBatch } from '../../utils/batch.js';
 import Avatar from '../ui/Avatar.jsx';
 
 function ConversationListItem({ conversation, active, onClick }) {
@@ -20,7 +21,13 @@ function ConversationListItem({ conversation, active, onClick }) {
     >
       <Avatar src={conversation.avatar} alt={conversation.user} size="sm" />
       <div className="min-w-0">
-        <p className="font-body-sm font-semibold" style={{ color: 'rgb(var(--color-on-surface))' }}>{conversation.user}</p>
+        <p className="font-body-sm font-semibold" style={{ color: 'rgb(var(--color-on-surface))' }}>
+          {conversation.user}
+          {(() => {
+            const batch = formatShortBatch(conversation.joining_year, conversation.graduating_year);
+            return batch ? <span className="font-mono text-[10px] ml-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>({batch})</span> : null;
+          })()}
+        </p>
         <p className="truncate font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{conversation.preview}</p>
       </div>
     </button>

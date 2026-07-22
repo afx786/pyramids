@@ -1,6 +1,7 @@
 import { ArrowLeft, LogOut, Trash2, UserPlus, UserMinus, Crown } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { formatShortBatch } from '../../utils/batch.js';
 import ErrorState from '../../components/common/ErrorState.jsx';
 import LoadingState from '../../components/common/LoadingState.jsx';
 import Button from '../../components/ui/Button.jsx';
@@ -129,7 +130,13 @@ function TeamDetail() {
                 <div key={m.id} className="flex items-center justify-between border-t border-subtle pt-4 first:border-t-0 first:pt-0">
                   <div className="flex items-center gap-3">
                     <div>
-                      <p className="text-sm font-semibold text-primary">{m.name}</p>
+                      <p className="text-sm font-semibold text-primary">
+                        {m.name}
+                        {(() => {
+                          const batch = formatShortBatch(m.joining_year, m.graduating_year);
+                          return batch ? <span className="font-mono text-[10px] ml-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>({batch})</span> : null;
+                        })()}
+                      </p>
                       <p className="text-xs font-medium text-secondary capitalize">{m.role}</p>
                     </div>
                     {m.id === team.owner?.id && <Crown className="h-4 w-4" style={{ color: 'rgb(var(--color-warning))' }} />}

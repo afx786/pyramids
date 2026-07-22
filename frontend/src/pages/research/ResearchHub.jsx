@@ -46,7 +46,7 @@ function ResearchHub() {
     setError(null);
     try {
       const data = await researchService.list();
-      setResearchList(Array.isArray(data) ? data : []);
+      setResearchList(Array.isArray(data) ? data.filter(r => r && typeof r === 'object') : []);
     } catch (err) {
       setError(err?.message || 'Failed to load research');
     } finally {

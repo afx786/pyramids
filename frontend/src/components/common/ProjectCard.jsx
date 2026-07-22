@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
+import { formatShortBatch } from '../../utils/batch.js';
 import Avatar from '../ui/Avatar.jsx';
 import Card from '../ui/Card.jsx';
 import SkillTag from '../ui/SkillTag.jsx';
 
 function ProjectCard({ project }) {
   const stack = project.stack ?? [];
+  const memberCount = project.member_count ?? project.members?.length;
 
   return (
     <Link to={`/projects/${project.id}`} className="block">
@@ -16,8 +18,16 @@ function ProjectCard({ project }) {
           </div>
           <div className="flex shrink-0 items-center gap-3 sm:text-right">
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-primary">{project.creator}</p>
-              <p className="text-xs text-secondary">Creator</p>
+              <p className="text-sm font-semibold text-primary">
+                by {project.creator}
+                {(() => {
+                  const batch = formatShortBatch(project.creator_joining_year, project.creator_graduating_year);
+                  return batch ? <span className="font-mono text-[10px] ml-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>({batch})</span> : null;
+                })()}
+              </p>
+              <p className="text-xs" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                {memberCount != null ? `${memberCount} ${memberCount === 1 ? 'Member' : 'Members'}` : 'Creator'}
+              </p>
             </div>
             <Avatar src={project.avatar} alt={project.creator} size="sm" />
           </div>
