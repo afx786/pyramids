@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Builder Profile - Alex Chen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Instrument+Serif&amp;family=Geist:wght@600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface": "#e5e1e4",
+                    "on-primary-fixed": "#1a1c1c",
+                    "primary-container": "#e2e2e2",
+                    "on-primary-fixed-variant": "#454747",
+                    "surface-container": "#201f22",
+                    "outline": "#8e9192",
+                    "surface-variant": "#353437",
+                    "secondary": "#c6c6cf",
+                    "secondary-fixed-dim": "#c6c6cf",
+                    "on-error-container": "#ffdad6",
+                    "surface-tint": "#c6c6c6",
+                    "inverse-primary": "#5d5f5f",
+                    "inverse-on-surface": "#313032",
+                    "primary-fixed": "#e2e2e2",
+                    "primary": "#ffffff",
+                    "inverse-surface": "#e5e1e4",
+                    "background": "#131315",
+                    "on-secondary-fixed-variant": "#45464e",
+                    "surface-container-lowest": "#0e0e10",
+                    "surface-container-high": "#2a2a2c",
+                    "surface-bright": "#39393b",
+                    "outline-variant": "#444748",
+                    "secondary-container": "#45464e",
+                    "on-tertiary-fixed-variant": "#4b4543",
+                    "surface-container-low": "#1c1b1d",
+                    "on-primary": "#2f3131",
+                    "on-tertiary-fixed": "#1f1b19",
+                    "error-container": "#93000a",
+                    "surface-container-highest": "#353437",
+                    "surface-dim": "#131315",
+                    "on-tertiary": "#342f2d",
+                    "error": "#ffb4ab",
+                    "on-surface-variant": "#c4c7c8",
+                    "on-secondary": "#2f3037",
+                    "secondary-fixed": "#e2e1eb",
+                    "on-error": "#690005",
+                    "tertiary": "#fffeff",
+                    "on-background": "#e5e1e4",
+                    "tertiary-fixed-dim": "#cec4c2",
+                    "tertiary-fixed": "#eae0dd",
+                    "on-primary-container": "#636465",
+                    "on-tertiary-container": "#696360",
+                    "on-secondary-fixed": "#1a1b22",
+                    "tertiary-container": "#eae0dd",
+                    "surface": "#131315",
+                    "primary-fixed-dim": "#c6c6c6",
+                    "on-secondary-container": "#b4b4bd"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "xl": "32px",
+                    "3xl": "64px",
+                    "xs": "4px",
+                    "sm": "8px",
+                    "2xl": "48px",
+                    "md": "16px",
+                    "unit": "8px",
+                    "lg": "24px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "label-caps": ["Geist"],
+                    "mono": ["JetBrains Mono"],
+                    "headline-lg-mobile": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "display-serif": ["Instrument Serif"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "mono": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.025em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "display-serif": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "400"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+            font-size: 20px;
+        }
+        body {
+            background-color: #131315;
+            color: #e5e1e4;
+            font-family: 'Inter', sans-serif;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+        .sidebar-fixed {
+            width: 240px;
+        }
+        .content-area {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+        }
+        .tonal-layer-1 {
+            background-color: #1c1b1d;
+            border: 1px solid #27272a;
+        }
+        .tonal-layer-2 {
+            background-color: #201f22;
+            border: 1px solid #353437;
+        }
+        .skill-indicator {
+            height: 2px;
+            background: #444748;
+            position: relative;
+        }
+        .skill-indicator-fill {
+            height: 2px;
+            background: #ffffff;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        .pyramid-glow {
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="antialiased">
+<!-- Side Navigation Bar -->
+<aside class="w-[240px] h-screen fixed left-0 top-0 bg-surface-container-low/80 backdrop-blur-md flex flex-col h-full py-lg px-md z-50">
+<div class="mb-3xl">
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">Pyramids</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant opacity-60">Builder Workspace</p>
+</div>
+<nav class="flex-1 space-y-sm">
+<a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant font-medium hover:bg-surface-container-high transition-colors group" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-sm text-body-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-md p-md rounded-lg text-primary font-bold border-l-2 border-primary bg-surface-container-highest transition-colors active:scale-[0.98] duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">groups</span>
+<span class="font-body-sm text-body-sm">Teams</span>
+</a>
+<a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant font-medium hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">account_tree</span>
+<span class="font-body-sm text-body-sm">Projects</span>
+</a>
+<a class="flex items-center gap-md p-md rounded-lg text-on-surface-variant font-medium hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">military_tech</span>
+<span class="font-body-sm text-body-sm">Rank</span>
+</a>
+</nav>
+<div class="mt-auto pt-lg border-t border-outline-variant/20">
+<div class="flex items-center gap-md p-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a software engineer with a minimalist aesthetic, shot against a dark neutral background with soft rim lighting emphasizing structural clarity. The person has a focused, intelligent expression, wearing a high-quality dark charcoal knit sweater. The overall style is clean, modern, and editorial, reflecting architectural precision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaOet7A42bH8fqyOE556E1YcECYqim_cTLEMvryl8UsXkxiAzSUW2JL7ztxEApfcmpUgaXNBz7EaLLI3FqFtSlveLsVjGnYknhor9jNy9dDTJCIFdPLMr_dNc6IjHCC1VUrZcO0y53NnDp5K8hnSBAbDDoMAsmozE_ZogeJtgo15Hj097bCZXLzwCe7z7BjrF5iP75eFIfO1wYj8augNEwKekOXpActn9YfGPvNvG26hGO7MNO0tTm"/>
+</div>
+<div>
+<p class="font-body-sm text-body-sm font-bold text-on-surface">Alex Chen</p>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase">Architect</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Viewport -->
+<main class="content-area min-h-screen flex flex-col">
+<!-- Top App Bar -->
+<header class="flex justify-between items-center w-full px-lg py-sm h-16 sticky top-0 z-40 bg-surface/80 backdrop-blur-md border-b border-outline-variant">
+<div class="flex items-center gap-lg">
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg pl-3xl pr-md py-xs font-body-sm text-body-sm focus:ring-0 focus:border-primary transition-all" placeholder="Search builders..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="p-sm hover:text-primary transition-colors active:opacity-80">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-sm hover:text-primary transition-colors active:opacity-80">
+<span class="material-symbols-outlined">workspace_premium</span>
+</button>
+<div class="h-6 w-[1px] bg-outline-variant/30"></div>
+<button class="px-md py-xs bg-primary text-on-primary font-body-sm text-body-sm font-bold rounded-lg hover:opacity-90 active:scale-[0.98] transition-all">
+                    New Project
+                </button>
+</div>
+</header>
+<div class="p-xl max-w-[1200px] mx-auto w-full">
+<!-- Hero Section -->
+<section class="mb-3xl flex flex-col md:flex-row gap-2xl items-end relative overflow-hidden p-2xl rounded-xl border border-outline-variant bg-surface-container-lowest">
+
+<div class="relative z-10 flex flex-col gap-md">
+<div class="flex items-center gap-md">
+<span class="font-label-caps text-label-caps bg-surface-container-highest px-md py-1 rounded-full border border-outline-variant text-on-surface">MEMBER SINCE 2021</span>
+<div class="flex items-center gap-xs text-[#c6c6cf]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+<span class="font-label-caps text-label-caps uppercase tracking-widest">Architect Rank</span>
+</div>
+</div>
+<h2 class="font-display-serif text-display-serif text-primary leading-none">Alex Chen</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl">Lead Systems Architect specializing in high-performance distributed databases and cryptographic verification layers. Engineering for durability and structural integrity.</p>
+</div>
+<div class="md:ml-auto relative z-10 text-right flex flex-col items-end gap-md">
+<div class="flex flex-col items-end">
+<div class="flex items-center gap-xs text-primary mb-xs">
+<span class="material-symbols-outlined font-bold">verified</span>
+<span class="font-label-caps text-label-caps tracking-[0.2em] uppercase">Verified by Pyramids</span>
+</div>
+<div class="w-32 h-[1px] bg-gradient-to-l from-primary to-transparent"></div>
+</div>
+<div class="flex flex-col items-end text-on-surface-variant">
+<span class="font-mono text-body-sm">ID: 0x8F22...E91A</span>
+<span class="font-mono text-body-sm">Trust Score: 99.8%</span>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-12 gap-xl">
+<!-- Main Column -->
+<div class="col-span-12 lg:col-span-8 flex flex-col gap-xl">
+<!-- Credibility Summary -->
+<div class="grid grid-cols-3 gap-lg">
+<div class="tonal-layer-1 p-lg rounded-xl flex flex-col gap-xs">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Verified Repositories</span>
+<span class="font-headline-lg text-headline-lg font-bold text-primary">42</span>
+<div class="w-full h-1 bg-surface-container-high rounded-full mt-sm">
+<div class="w-[85%] h-full bg-primary rounded-full"></div>
+</div>
+</div>
+<div class="tonal-layer-1 p-lg rounded-xl flex flex-col gap-xs">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Avg. Repo Score</span>
+<span class="font-headline-lg text-headline-lg font-bold text-primary">9.4<span class="text-body-lg font-medium text-on-surface-variant">/10</span></span>
+<div class="w-full h-1 bg-surface-container-high rounded-full mt-sm">
+<div class="w-[94%] h-full bg-primary rounded-full"></div>
+</div>
+</div>
+<div class="tonal-layer-1 p-lg rounded-xl flex flex-col gap-xs">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Verified Skills</span>
+<span class="font-headline-lg text-headline-lg font-bold text-primary">18</span>
+<div class="w-full h-1 bg-surface-container-high rounded-full mt-sm">
+<div class="w-[60%] h-full bg-primary rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Verified Projects -->
+<div class="flex flex-col gap-lg">
+<div class="flex justify-between items-end">
+<h3 class="font-headline-md text-headline-md font-bold text-primary">Verified Projects</h3>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors underline underline-offset-4" href="#">VIEW FULL CATALOG</a>
+</div>
+<div class="space-y-lg">
+<!-- Project Item 1 -->
+<div class="tonal-layer-1 p-lg rounded-xl flex flex-col gap-md hover:bg-surface-container-high transition-all group">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<div class="flex items-center gap-sm">
+<span class="font-mono text-body-lg font-bold text-primary">nebula-core-v2</span>
+<span class="px-sm py-[2px] border border-outline-variant rounded font-mono text-[10px] text-on-surface-variant">PROD_READY</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">High-concurrency ZK-Rollup prover optimized for AVX-512 instructions.</p>
+</div>
+<div class="flex flex-col items-end gap-xs">
+<div class="flex items-center gap-xs">
+<span class="font-headline-md text-headline-md font-bold text-primary">9.8</span>
+<span class="material-symbols-outlined text-primary text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Repo Score</span>
+</div>
+</div>
+<div class="grid grid-cols-4 gap-md pt-md border-t border-outline-variant/30">
+<div class="flex flex-col gap-xs">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Architecture</span>
+<div class="w-full h-1 bg-surface-container-high rounded-full overflow-hidden">
+<div class="w-[99%] h-full bg-primary"></div>
+</div>
+</div>
+<div class="flex flex-col gap-xs">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Testing</span>
+<div class="w-full h-1 bg-surface-container-high rounded-full overflow-hidden">
+<div class="w-[95%] h-full bg-primary"></div>
+</div>
+</div>
+<div class="flex flex-col gap-xs">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Documentation</span>
+<div class="w-full h-1 bg-surface-container-high rounded-full overflow-hidden">
+<div class="w-[88%] h-full bg-primary"></div>
+</div>
+</div>
+<div class="flex flex-col gap-xs">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Performance</span>
+<div class="w-full h-1 bg-surface-container-high rounded-full overflow-hidden">
+<div class="w-[100%] h-full bg-primary"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Project Item 2 -->
+<div class="tonal-layer-1 p-lg rounded-xl flex flex-col gap-md hover:bg-surface-container-high transition-all group">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<div class="flex items-center gap-sm">
+<span class="font-mono text-body-lg font-bold text-primary">quantum-bridge</span>
+<span class="px-sm py-[2px] border border-outline-variant rounded font-mono text-[10px] text-on-surface-variant">BETA</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Post-quantum cryptographic signature scheme for cross-chain liquidity.</p>
+</div>
+<div class="flex flex-col items-end gap-xs">
+<div class="flex items-center gap-xs">
+<span class="font-headline-md text-headline-md font-bold text-primary">9.1</span>
+<span class="material-symbols-outlined text-primary text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Repo Score</span>
+</div>
+</div>
+<div class="grid grid-cols-4 gap-md pt-md border-t border-outline-variant/30">
+<div class="flex flex-col gap-xs">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Architecture</span>
+<div class="w-full h-1 bg-surface-container-high rounded-full overflow-hidden">
+<div class="w-[92%] h-full bg-primary"></div>
+</div>
+</div>
+<div class="flex flex-col gap-xs">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Testing</span>
+<div class="w-full h-1 bg-surface-container-high rounded-full overflow-hidden">
+<div class="w-[85%] h-full bg-primary"></div>
+</div>
+</div>
+<div class="flex flex-col gap-xs">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Documentation</span>
+<div class="w-full h-1 bg-surface-container-high rounded-full overflow-hidden">
+<div class="w-[94%] h-full bg-primary"></div>
+</div>
+</div>
+<div class="flex flex-col gap-xs">
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Performance</span>
+<div class="w-full h-1 bg-surface-container-high rounded-full overflow-hidden">
+<div class="w-[89%] h-full bg-primary"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Verification Timeline -->
+<div class="flex flex-col gap-lg">
+<h3 class="font-headline-md text-headline-md font-bold text-primary">Verification Timeline</h3>
+<div class="relative pl-lg border-l border-outline-variant ml-sm space-y-xl">
+<div class="relative">
+<div class="absolute -left-[30px] top-1 w-3 h-3 bg-primary rounded-full border-4 border-background"></div>
+<div class="flex flex-col gap-xs">
+<span class="font-label-caps text-label-caps text-on-surface-variant">OCT 2023</span>
+<p class="font-body-lg text-body-lg font-bold text-primary">Rank Elevation: Architect</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Validated by 4/5 Pyramidions for architectural excellence in the Nebula expansion.</p>
+</div>
+</div>
+<div class="relative opacity-60">
+<div class="absolute -left-[30px] top-1 w-3 h-3 bg-outline-variant rounded-full border-4 border-background"></div>
+<div class="flex flex-col gap-xs">
+<span class="font-label-caps text-label-caps text-on-surface-variant">JUN 2023</span>
+<p class="font-body-lg text-body-lg font-bold text-primary">Security Audit Completion</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">No critical vulnerabilities found in 'quantum-bridge' codebase after 40-day intensive review.</p>
+</div>
+</div>
+<div class="relative opacity-40">
+<div class="absolute -left-[30px] top-1 w-3 h-3 bg-outline-variant rounded-full border-4 border-background"></div>
+<div class="flex flex-col gap-xs">
+<span class="font-label-caps text-label-caps text-on-surface-variant">JAN 2023</span>
+<p class="font-body-lg text-body-lg font-bold text-primary">First Verifiable Contribution</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Initial commit to the Pyramids core verified via hardware key.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar Column -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-xl">
+<!-- Rank Progression Card -->
+<div class="tonal-layer-1 p-lg rounded-xl flex flex-col gap-lg">
+<div class="flex justify-between items-center">
+<h4 class="font-headline-md text-headline-md font-bold text-primary">Rank Progression</h4>
+<span class="material-symbols-outlined text-on-surface-variant">trending_up</span>
+</div>
+<div class="flex flex-col gap-md">
+<div class="flex items-center gap-md opacity-40">
+<span class="material-symbols-outlined text-[16px]">radio_button_checked</span>
+<span class="font-body-sm text-body-sm">Explorer</span>
+</div>
+<div class="flex items-center gap-md opacity-40">
+<span class="material-symbols-outlined text-[16px]">crop_square</span>
+<span class="font-body-sm text-body-sm">Builder</span>
+</div>
+<div class="flex items-center gap-md text-primary bg-surface-container-high p-sm rounded border border-outline-variant -mx-sm">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+<span class="font-body-sm text-body-sm font-bold">Architect</span>
+</div>
+<div class="flex items-center gap-md opacity-20">
+<span class="material-symbols-outlined text-[16px]">change_history</span>
+<span class="font-body-sm text-body-sm">Innovator</span>
+</div>
+<div class="flex items-center gap-md opacity-10">
+<span class="material-symbols-outlined text-[16px]">diamond</span>
+<span class="font-body-sm text-body-sm">Pyramidion</span>
+</div>
+</div>
+<div class="pt-lg border-t border-outline-variant/30">
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-sm">Next milestone: <span class="text-primary font-bold">Innovator</span></p>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="w-[45%] h-full bg-gradient-to-r from-primary/50 to-primary"></div>
+</div>
+</div>
+</div>
+<!-- Builder Reputation Metrics -->
+<div class="tonal-layer-1 p-lg rounded-xl flex flex-col gap-lg">
+<h4 class="font-headline-md text-headline-md font-bold text-primary">Reputation Metrics</h4>
+<div class="space-y-md">
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Code Solidity</span>
+<span class="font-mono text-body-sm font-bold text-primary">99.4%</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Collaboration Index</span>
+<span class="font-mono text-body-sm font-bold text-primary">0.88</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">System Impact</span>
+<span class="font-mono text-body-sm font-bold text-primary">High</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Review Precision</span>
+<span class="font-mono text-body-sm font-bold text-primary">92%</span>
+</div>
+</div>
+</div>
+<!-- Verified Skills Cloud -->
+<div class="tonal-layer-1 p-lg rounded-xl flex flex-col gap-lg">
+<h4 class="font-headline-md text-headline-md font-bold text-primary">Verified Skills</h4>
+<div class="flex flex-wrap gap-sm">
+<div class="flex flex-col gap-1 w-full">
+<div class="flex justify-between font-mono text-[11px] text-on-surface-variant uppercase">
+<span>Rust</span>
+<span>Lvl 9</span>
+</div>
+<div class="w-full h-[1px] bg-primary"></div>
+</div>
+<div class="flex flex-col gap-1 w-[45%]">
+<div class="flex justify-between font-mono text-[11px] text-on-surface-variant uppercase">
+<span>Solidity</span>
+<span>Lvl 8</span>
+</div>
+<div class="w-full h-[1px] bg-primary/60"></div>
+</div>
+<div class="flex flex-col gap-1 w-[45%]">
+<div class="flex justify-between font-mono text-[11px] text-on-surface-variant uppercase">
+<span>Go</span>
+<span>Lvl 7</span>
+</div>
+<div class="w-full h-[1px] bg-primary/40"></div>
+</div>
+<div class="flex flex-col gap-1 w-full">
+<div class="flex justify-between font-mono text-[11px] text-on-surface-variant uppercase">
+<span>Cryptography</span>
+<span>Lvl 9</span>
+</div>
+<div class="w-full h-[1px] bg-primary"></div>
+</div>
+<div class="flex flex-col gap-1 w-full">
+<div class="flex justify-between font-mono text-[11px] text-on-surface-variant uppercase">
+<span>Distributed Sys</span>
+<span>Lvl 10</span>
+</div>
+<div class="w-full h-[1px] bg-primary"></div>
+</div>
+</div>
+</div>
+<!-- Collaboration Status -->
+<div class="tonal-layer-2 p-lg rounded-xl border-primary/20 flex flex-col gap-md">
+<div class="flex items-center gap-md">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+<span class="font-body-sm text-body-sm font-bold text-primary">Open to Collaborate</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Currently seeking high-performance L2 engineering teams for Q3/Q4 2024.</p>
+<button class="w-full py-sm bg-surface-container-highest border border-primary/20 hover:border-primary/50 font-label-caps text-label-caps text-primary uppercase transition-all">
+                            Request Connection
+                        </button>
+</div>
+<!-- Technical Stack Badges -->
+<div class="flex flex-col gap-md">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Stack Evidence</h4>
+<div class="flex flex-wrap gap-xs">
+<span class="px-sm py-[2px] bg-surface-container-high rounded text-on-surface-variant font-mono text-[10px] border border-outline-variant/30">DOCKER_SWARM</span>
+<span class="px-sm py-[2px] bg-surface-container-high rounded text-on-surface-variant font-mono text-[10px] border border-outline-variant/30">KAFKA_CLUSTER</span>
+<span class="px-sm py-[2px] bg-surface-container-high rounded text-on-surface-variant font-mono text-[10px] border border-outline-variant/30">POSTGRES_VERIFIED</span>
+<span class="px-sm py-[2px] bg-surface-container-high rounded text-on-surface-variant font-mono text-[10px] border border-outline-variant/30">WEAK_SUBJECTIVITY_PROOF</span>
+<span class="px-sm py-[2px] bg-surface-container-high rounded text-on-surface-variant font-mono text-[10px] border border-outline-variant/30">TLS_1.3_VULN_TESTED</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="mt-auto p-xl border-t border-outline-variant/20">
+<div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-center gap-lg">
+<div class="flex flex-col gap-xs">
+<p class="font-label-caps text-label-caps text-on-surface">PYRAMIDS PROOF ENGINE v2.4.1</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Immutable verification of technical prowess.</p>
+</div>
+<div class="flex gap-xl">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">EXPLORE</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">AUDIT LOGS</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">SYSTEM STATUS</a>
+</div>
+</div>
+</footer>
+</main>
+<script>
+        // Simple interaction for cards
+        document.querySelectorAll('.tonal-layer-1').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-2px)';
+                card.style.borderColor = 'rgba(255,255,255,0.2)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+                card.style.borderColor = '#27272a';
+            });
+        });
+
+        // Search bar focus effect
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('scale-[1.02]');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('scale-[1.02]');
+        });
+    </script>
+</body></html>

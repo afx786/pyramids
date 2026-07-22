@@ -1,5 +1,6 @@
+import re
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import or_
+from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
 from app.deps import get_db
@@ -46,6 +47,16 @@ from app.services.project_service import (
     trigger_project_verification
 )
 from app.services.rank_service import get_user_rank
+
+
+def _resolve_public_id(db, model, identifier):
+    if re.match(r'^PYR-[A-Z]+-[A-Z0-9]{6}$', str(identifier).upper()):
+        return db.query(model).filter(func.upper(model.public_id) == str(identifier).upper()).first()
+    try:
+        return db.query(model).get(int(identifier))
+    except (ValueError, TypeError):
+        return None
+
 
 router = APIRouter(
     prefix="/projects",
@@ -248,10 +259,10 @@ def reject_invitation(
     response_model=ProjectResponse
 )
 def get_single_project(
-    project_id: int,
+    project_id: str,
     db: Session = Depends(get_db)
 ):
-    project = get_project(db, project_id)
+    project = _resolve_public_id(db, Project, project_id)
 
     if not project:
         raise HTTPException(
@@ -267,14 +278,18 @@ def get_single_project(
     response_model=ProjectInvitationResponse
 )
 def invite_user_to_project(
-    project_id: int,
+    project_id: str,
     data: ProjectInvitationCreate,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
+    project = _resolve_public_id(db, Project, project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+
     result = invite_project_member(
         db=db,
-        project_id=project_id,
+        project_id=project.id,
         invited_user_id=data.user_id,
         current_user_id=current_user.id
     )
@@ -305,13 +320,17 @@ def invite_user_to_project(
     response_model=list[ProjectInvitationResponse]
 )
 def project_invitations(
-    project_id: int,
+    project_id: str,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
+    project = _resolve_public_id(db, Project, project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+
     result = list_project_invitations(
         db=db,
-        project_id=project_id,
+        project_id=project.id,
         current_user_id=current_user.id
     )
 
@@ -329,12 +348,16 @@ def project_invitations(
     response_model=list[ProjectMemberResponse]
 )
 def project_members(
-    project_id: int,
+    project_id: str,
     db: Session = Depends(get_db)
 ):
+    project = _resolve_public_id(db, Project, project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+
     return get_project_members(
         db,
-        project_id
+        project.id
     )
 
 
@@ -343,14 +366,21 @@ def project_members(
     response_model=ProjectResponse
 )
 def edit_project(
-    project_id: int,
+    project_id: str,
     data: ProjectUpdate,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
-    project = update_project(
+    project = _resolve_public_id(db, Project, project_id)
+    if not project:
+        raise HTTPException(
+            status_code=404,
+            detail="Project not found"
+        )
+
+    result = update_project(
         db=db,
-        project_id=project_id,
+        project_id=project.id,
         current_user_id=current_user.id,
         title=data.title,
         description=data.description,
@@ -359,40 +389,35 @@ def edit_project(
         status=data.status
     )
 
-    if project is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Project not found"
-        )
-
-    if project == "forbidden":
+    if result == "forbidden":
         raise HTTPException(
             status_code=403,
             detail="Not project owner"
         )
 
-    return serialize_project(project)
+    return serialize_project(result)
 
 
 @router.delete(
     "/{project_id}"
 )
 def remove_project(
-    project_id: int,
+    project_id: str,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
-    result = delete_project(
-        db=db,
-        project_id=project_id,
-        current_user_id=current_user.id
-    )
-
-    if result is None:
+    project = _resolve_public_id(db, Project, project_id)
+    if not project:
         raise HTTPException(
             status_code=404,
             detail="Project not found"
         )
+
+    result = delete_project(
+        db=db,
+        project_id=project.id,
+        current_user_id=current_user.id
+    )
 
     if result == "forbidden":
         raise HTTPException(
@@ -410,40 +435,45 @@ def remove_project(
     response_model=ProjectResponse
 )
 def verify_existing_project(
-    project_id: int,
+    project_id: str,
     data: ProjectVerificationRequest,
     db: Session = Depends(get_db),
     admin=Depends(get_current_admin)
 ):
-    project = verify_project(
-        db=db,
-        project_id=project_id,
-        admin_id=admin.id,
-        status=data.status,
-        notes=data.notes
-    )
-
-    if project == "not_found":
+    project = _resolve_public_id(db, Project, project_id)
+    if not project:
         raise HTTPException(
             status_code=404,
             detail="Project not found"
         )
 
-    return serialize_project(project)
+    result = verify_project(
+        db=db,
+        project_id=project.id,
+        admin_id=admin.id,
+        status=data.status,
+        notes=data.notes
+    )
+
+    return serialize_project(result)
 
 
 @router.post(
     "/{project_id}/verify"
 )
 def verify_project_repository(
-    project_id: int,
+    project_id: str,
     data: ProjectRepositoryVerificationRequest,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
+    project = _resolve_public_id(db, Project, project_id)
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+
     result = trigger_project_verification(
         db=db,
-        project_id=project_id,
+        project_id=project.id,
         current_user_id=current_user.id,
         github_url=data.github_url
     )

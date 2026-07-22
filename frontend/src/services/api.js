@@ -17,7 +17,6 @@ async function request(path, options = {}) {
   if (response.status === 401) {
     localStorage.removeItem('pyramids_token');
     localStorage.removeItem('pyramids_user');
-    window.location.hash = '/login';
     throw new Error('Session expired. Please log in again.');
   }
 

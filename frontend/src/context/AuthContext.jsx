@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { api } from '../services/api.js';
+import { connectWebSocket, disconnectWebSocket } from '../services/websocketService.js';
 
 const TOKEN_KEY = 'pyramids_token';
 const USER_KEY = 'pyramids_user';
@@ -8,6 +9,10 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
+    if (!localStorage.getItem(TOKEN_KEY)) {
+      localStorage.removeItem(USER_KEY);
+      return null;
+    }
     const raw = localStorage.getItem(USER_KEY);
     return raw ? JSON.parse(raw) : null;
   });
@@ -22,12 +27,15 @@ export function AuthProvider({ children }) {
       ]);
       setProfile(profileData);
       setRankData(rank);
-    } catch {}
+    } catch (err) {
+      console.warn('[auth] failed to load profile/rank:', err);
+    }
   }, []);
 
   useEffect(() => {
     if (user?.id) {
       loadProfileAndRank(user.id);
+      connectWebSocket();
     }
   }, [user?.id, loadProfileAndRank]);
 
@@ -37,15 +45,27 @@ export function AuthProvider({ children }) {
     const me = await api.get('/users/me');
     localStorage.setItem(USER_KEY, JSON.stringify(me));
     setUser(me);
+    connectWebSocket();
     return me;
   }, []);
 
-  const signup = useCallback(async ({ name, program, email, password }) => {
-    await api.post('/auth/signup', { name, program, email, password });
+  const signup = useCallback(async ({ name, program, email, password, joining_year, graduating_year }) => {
+    await api.post('/auth/signup', { name, program, email, password, joining_year, graduating_year });
     return login({ email, password });
   }, [login]);
 
+  const refreshUser = useCallback(async () => {
+    try {
+      const me = await api.get('/users/me');
+      localStorage.setItem(USER_KEY, JSON.stringify(me));
+      setUser(me);
+    } catch (err) {
+      console.warn('[auth] failed to refresh user:', err);
+    }
+  }, []);
+
   const logout = useCallback(() => {
+    disconnectWebSocket();
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     setUser(null);
@@ -56,7 +76,7 @@ export function AuthProvider({ children }) {
   const isAuthenticated = !!localStorage.getItem(TOKEN_KEY);
 
   return (
-    <AuthContext.Provider value={{ user, profile, rankData, isAuthenticated, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, profile, rankData, isAuthenticated, login, signup, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

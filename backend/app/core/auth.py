@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import WebSocket
 from sqlalchemy.orm import Session
 
 from app.deps import get_db
@@ -46,4 +47,25 @@ def get_current_user(
     if user is None:
         raise HTTPException(status_code=401, detail="User not found")
 
+    return user
+
+
+async def get_current_user_ws(ws: WebSocket, db: Session):
+    token = ws.query_params.get("token")
+    if not token:
+        await ws.close(code=4001, reason="Missing token")
+        return None
+    try:
+        payload = decode_token(token)
+    except HTTPException:
+        await ws.close(code=4001, reason="Invalid token")
+        return None
+    user_id = payload.get("user_id")
+    if user_id is None:
+        await ws.close(code=4001, reason="Invalid token")
+        return None
+    user = db.query(User).filter(User.id == user_id).first()
+    if user is None:
+        await ws.close(code=4001, reason="User not found")
+        return None
     return user

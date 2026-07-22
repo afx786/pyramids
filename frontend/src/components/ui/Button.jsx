@@ -1,14 +1,41 @@
 const variants = {
-  primary: 'border border-primary bg-primary text-app shadow-sm hover:-translate-y-0.5 hover:shadow-md active:translate-y-0',
-  secondary: 'border border-subtle bg-surface text-primary shadow-sm hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-md active:translate-y-0',
-  ghost: 'border border-transparent text-primary hover:bg-surface hover:border-subtle active:bg-accent-soft',
+  primary:
+    'font-bold py-sm px-xl rounded-lg active:scale-[0.98] transition-all duration-150 hover:opacity-90',
+  secondary:
+    'border font-medium py-sm px-xl rounded-lg active:scale-[0.98] transition-all duration-150 hover:opacity-80',
+  ghost:
+    'border border-transparent font-medium py-sm px-xl rounded-lg active:scale-[0.98] transition-all duration-150 hover:opacity-80',
 };
 
-function Button({ children, className = '', variant = 'primary', type = 'button', ...props }) {
+function Button({
+  children,
+  className = '',
+  variant = 'primary',
+  type = 'button',
+  ...props
+}) {
+  const baseStyle =
+    variant === 'primary'
+      ? {
+          background: 'rgb(var(--color-primary))',
+          color: 'rgb(var(--color-on-primary))',
+        }
+      : variant === 'secondary'
+      ? {
+          background: 'transparent',
+          color: 'rgb(var(--color-on-surface))',
+          borderColor: 'rgb(var(--color-outline-variant))',
+        }
+      : {
+          background: 'transparent',
+          color: 'rgb(var(--color-on-surface-variant))',
+        };
+
   return (
     <button
       type={type}
-      className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition duration-200 ${variants[variant]} ${className}`}
+      className={`inline-flex min-h-10 items-center justify-center gap-2 text-body-sm font-semibold ${variants[variant]} ${className}`}
+      style={baseStyle}
       {...props}
     >
       {children}

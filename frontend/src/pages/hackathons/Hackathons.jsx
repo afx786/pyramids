@@ -1,0 +1,83 @@
+import { CalendarDays, MapPin } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import Card from '../../components/ui/Card.jsx';
+import EmptyState from '../../components/common/EmptyState.jsx';
+import LoadingState from '../../components/common/LoadingState.jsx';
+import { discoveryService } from '../../services/discoveryService.js';
+
+function Hackathons() {
+  const [hackathons, setHackathons] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    discoveryService.listHackathons().then((data) => {
+      setHackathons(Array.isArray(data) ? data : []);
+    }).catch(() => {}).finally(() => setLoading(false));
+  }, []);
+
+  function formatDate(dateStr) {
+    if (!dateStr) return '—';
+    return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  if (loading) return <LoadingState label="Loading hackathons..." />;
+
+  return (
+    <div className="p-xl max-w-6xl mx-auto">
+      <header className="mb-xl">
+        <h2 className="font-display-serif text-display-serif" style={{ color: 'rgb(var(--color-primary))' }}>Hackathons</h2>
+        <p className="font-body-lg text-body-lg mt-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+          Upcoming hackathons, build challenges, and coding events.
+        </p>
+      </header>
+
+      <section className="grid gap-lg sm:grid-cols-2 xl:grid-cols-3">
+        {hackathons.length > 0 ? (
+          hackathons.map((h) => (
+            <div
+              key={h.id}
+              className="p-lg rounded-xl transition-all duration-200 hover:-translate-y-0.5"
+              style={{
+                background: 'rgb(var(--color-surface-container-low))',
+                border: '1px solid rgb(var(--color-outline-variant))',
+              }}
+            >
+              <span
+                className="inline-block px-sm py-xs font-mono text-[11px] rounded"
+                style={{
+                  background: 'rgb(var(--color-surface-variant))',
+                  color: 'rgb(var(--color-on-surface))',
+                }}
+              >
+                {h.mode || 'Online'}
+              </span>
+              <h3 className="font-headline-md text-headline-md font-bold mt-md" style={{ color: 'rgb(var(--color-primary))' }}>
+                {h.title}
+              </h3>
+              <p className="font-body-sm mt-sm leading-6 line-clamp-3" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                {h.description}
+              </p>
+              <div className="mt-lg space-y-sm pt-md" style={{ borderTop: '1px solid rgb(var(--color-outline-variant))' }}>
+                <div className="flex items-center gap-sm font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                  <CalendarDays size={16} className="shrink-0" />
+                  <span>{formatDate(h.start_date)} – {formatDate(h.end_date)}</span>
+                </div>
+                <div className="flex items-center gap-sm font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                  <MapPin size={16} className="shrink-0" />
+                  <span>{h.organizer || 'TBA'}</span>
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="col-span-full">
+            <EmptyState title="No hackathons right now" description="Check back later for upcoming events." />
+          </div>
+        )}
+      </section>
+    </div>
+  );
+}
+
+export default Hackathons;

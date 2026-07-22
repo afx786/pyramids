@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pyramids | Repository Verification</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono&amp;family=Instrument+Serif&amp;family=Geist:wght@600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+        }
+        .scan-line {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ffffff, transparent);
+            animation: scan 3s linear infinite;
+        }
+        @keyframes scan {
+            0% { transform: translateY(-100%); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { transform: translateY(1000%); opacity: 0; }
+        }
+        .step-active::before {
+            content: '';
+            position: absolute;
+            left: -1px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #ffffff;
+            box-shadow: 0 0 8px #ffffff;
+        }
+        .terminal-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .4; }
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-sm antialiased selection:bg-primary selection:text-background">
+<!-- Sidebar Navigation -->
+<aside class="w-[240px] h-screen fixed left-0 top-0 bg-surface-container-low/80 backdrop-blur-md flex flex-col py-lg px-md z-50 border-r border-outline-variant/10">
+<div class="mb-3xl">
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">Pyramids</h1>
+<p class="text-on-surface-variant opacity-60 text-[11px] uppercase tracking-widest font-semibold mt-1">Builder Workspace</p>
+</div>
+<nav class="flex-1 space-y-1">
+<div class="group flex items-center px-md py-sm rounded-lg transition-colors hover:bg-surface-container-high text-on-surface-variant font-medium cursor-pointer">
+<span class="material-symbols-outlined mr-md text-[20px]">dashboard</span>
+<span>Dashboard</span>
+</div>
+<div class="group flex items-center px-md py-sm rounded-lg transition-colors text-primary font-bold border-l-2 border-primary bg-surface-container-highest cursor-pointer">
+<span class="material-symbols-outlined mr-md text-[20px]">account_tree</span>
+<span>Projects</span>
+</div>
+<div class="group flex items-center px-md py-sm rounded-lg transition-colors hover:bg-surface-container-high text-on-surface-variant font-medium cursor-pointer">
+<span class="material-symbols-outlined mr-md text-[20px]">groups</span>
+<span>Teams</span>
+</div>
+<div class="group flex items-center px-md py-sm rounded-lg transition-colors hover:bg-surface-container-high text-on-surface-variant font-medium cursor-pointer">
+<span class="material-symbols-outlined mr-md text-[20px]">military_tech</span>
+<span>Rank</span>
+</div>
+</nav>
+<div class="mt-auto pt-lg border-t border-outline-variant/20">
+<button class="w-full py-sm px-md bg-primary text-background font-bold rounded flex items-center justify-center gap-2 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                New Project
+            </button>
+</div>
+</aside>
+<!-- Top App Bar -->
+<header class="flex justify-between items-center w-full px-lg py-sm h-16 ml-[240px] max-w-[calc(100%-240px)] sticky top-0 z-40 bg-surface-container-low/80 backdrop-blur-md border-b border-outline-variant">
+<div class="flex items-center flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<input class="w-full bg-surface-container-high border-none rounded-lg pl-10 pr-4 py-2 text-body-sm focus:ring-1 focus:ring-primary transition-all placeholder:text-on-surface-variant/40" placeholder="Search repositories..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">workspace_premium</button>
+<div class="h-8 w-8 rounded-full bg-surface-container-highest border border-outline-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A monochromatic, high-contrast close-up portrait of a professional developer in a minimalist studio environment. The lighting is dramatic and directional, creating deep shadows and bright highlights. The style is editorial and sophisticated, reflecting a high-end tech workspace aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7oG0qXsDgZDuA7t6OgvMiY4nxeJ-w-rNCvK6iM6n1B6BaUf8zj5LGMtOXuhMErijLvKtGm1ZMS98zq-yiBffV78mtZYwWPGCTQ3--YnYLfUVopt3DHBFDODDLnwjN1W0_g5hYWboe30FGkXad5_mnDujMV34ieFkLM5JvVH7cnHMbVTc_lEbdZBsVOsu1G4TD87u2IESrBaQiixgvKU2b4RVyEWRhn-kjD_o8ynwD_5mGiTjbbDGp"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-[240px] p-xl min-h-[calc(100vh-64px)] flex flex-col items-center justify-center">
+<div class="w-full max-w-3xl space-y-xl relative">
+<!-- Background Decorative Element -->
+<div class="absolute -top-32 -left-32 w-64 h-64 bg-primary/5 blur-[120px] rounded-full"></div>
+<!-- Header Section -->
+<div class="text-center space-y-md relative"><div class="inline-flex items-center gap-lg bg-surface-container-low border border-outline-variant px-lg py-sm rounded-full mb-md"><div class="flex items-center gap-sm"><span class="material-symbols-outlined text-on-surface-variant text-[18px]">folder</span><span class="font-bold text-on-surface">pyramids-engine-core</span></div><div class="w-px h-4 bg-outline-variant"></div><div class="flex items-center gap-sm font-mono text-on-surface-variant text-[11px]"><span>github.com/pyramids/engine</span></div><div class="w-px h-4 bg-outline-variant"></div><div class="flex items-center gap-sm font-mono text-on-surface-variant text-[11px]"><span class="material-symbols-outlined text-[16px]">database</span><span>142.4 MB</span></div></div>
+<h2 class="font-display-serif text-display-serif text-primary">Analyzing Repository...</h2>
+<div class="flex items-center justify-center gap-sm font-mono text-[11px] uppercase tracking-[0.2em] text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-primary terminal-pulse"></span>
+                    Verification in progress
+                </div>
+</div>
+<!-- Audit Inspection Component -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl overflow-hidden shadow-2xl relative">
+<!-- Terminal Scan Effect -->
+<div class="absolute inset-0 pointer-events-none overflow-hidden opacity-10">
+<div class="scan-line w-full"></div>
+</div>
+<div class="p-lg grid grid-cols-1 md:grid-cols-2 gap-x-xl gap-y-md relative z-10"><!-- Status Item 1: Completed --><div class="flex items-center justify-between p-md rounded-lg bg-surface-container/50 border border-transparent"><div class="flex items-center gap-md"><span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span><div class="flex flex-col"><span class="font-mono text-body-sm text-on-surface">Repository connected</span><span class="text-[10px] text-on-surface-variant uppercase tracking-wider">Success</span></div></div><div class="text-right"><span class="font-mono text-[10px] text-primary">100% CONFIDENCE</span></div></div><!-- Status Item 2: Completed --><div class="flex items-center justify-between p-md rounded-lg bg-surface-container/50 border border-transparent"><div class="flex items-center gap-md"><span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span><div class="flex flex-col"><span class="font-mono text-body-sm text-on-surface">Languages detected</span><span class="text-[10px] text-on-surface-variant uppercase tracking-wider">Typescript, Rust</span></div></div><div class="text-right"><span class="font-mono text-[10px] text-primary">98% CONFIDENCE</span></div></div><!-- Status Item 3: Active --><div class="flex items-center justify-between p-md rounded-lg bg-surface-container-highest border border-outline-variant/30 relative overflow-hidden step-active"><div class="flex items-center gap-md"><span class="material-symbols-outlined text-primary text-[20px] terminal-pulse">data_exploration</span><div class="flex flex-col"><span class="font-mono text-body-sm text-primary font-bold">Frameworks identified</span><span class="text-[10px] text-primary/70 uppercase tracking-wider">Processing...</span></div></div><div class="text-right"><span class="font-mono text-[10px] text-primary/70">ANALYZING...</span></div></div><!-- Status Item 4: Score Building --><div class="flex items-center justify-between p-md rounded-lg bg-surface-container-low border border-outline-variant/20"><div class="flex items-center gap-md"><span class="material-symbols-outlined text-on-surface-variant text-[20px]">analytics</span><div class="flex flex-col"><span class="font-mono text-body-sm text-on-surface">Repository Score</span><span class="text-[10px] text-on-surface-variant uppercase tracking-wider">Building Profile</span></div></div><div class="text-right"><span class="font-mono text-[16px] text-primary font-bold">74<span class="text-[10px] opacity-40">/100</span></span></div></div></div>
+<!-- Live Log Stream (Small) -->
+<div class="p-lg border-t border-outline-variant/10 bg-surface-container-low/30"><h3 class="font-mono text-[10px] uppercase tracking-widest text-on-surface-variant mb-md opacity-60">Evidence Found</h3><div class="flex flex-wrap gap-sm"><div class="flex items-center gap-2 px-sm py-1 bg-surface-container-highest rounded border border-outline-variant/20 font-mono text-[10px] text-on-surface"><span class="material-symbols-outlined text-[14px] text-primary/60">description</span>README.md</div><div class="flex items-center gap-2 px-sm py-1 bg-surface-container-highest rounded border border-outline-variant/20 font-mono text-[10px] text-on-surface"><span class="material-symbols-outlined text-[14px] text-primary/60">settings</span>Cargo.toml</div><div class="flex items-center gap-2 px-sm py-1 bg-surface-container-highest rounded border border-outline-variant/20 font-mono text-[10px] text-on-surface"><span class="material-symbols-outlined text-[14px] text-primary/60">terminal</span>.github/workflows/ci.yml</div><div class="flex items-center gap-2 px-sm py-1 bg-surface-container-highest rounded border border-outline-variant/20 font-mono text-[10px] text-on-surface"><span class="material-symbols-outlined text-[14px] text-primary/60">deployed_code</span>Dockerfile</div></div></div><div class="bg-surface-container-lowest border-t border-outline-variant p-md px-lg flex items-center justify-between">
+<div class="font-mono text-[11px] text-on-surface-variant flex gap-md">
+<span class="text-primary/50">14:22:04</span>
+<span>ENGINEERING_TASK: Scanning /src/core/engine.rs for architectural patterns...</span>
+</div>
+<div class="font-mono text-[11px] text-on-surface-variant">
+                        64% Complete
+                    </div>
+</div>
+</div>
+<!-- Repository Mini-Preview Card -->
+<div class="flex justify-center">
+<div class="inline-flex items-center gap-lg bg-surface-container-low border border-outline-variant px-lg py-md rounded-full">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">folder</span>
+<span class="font-bold text-on-surface">pyramids-engine-core</span>
+</div>
+<div class="w-px h-4 bg-outline-variant"></div>
+<div class="flex items-center gap-sm font-mono text-on-surface-variant text-[12px]">
+<span>github.com/pyramids/engine</span>
+</div>
+<div class="w-px h-4 bg-outline-variant"></div>
+<div class="flex items-center gap-sm font-mono text-on-surface-variant text-[12px]">
+<span class="material-symbols-outlined text-[16px]">database</span>
+<span>142.4 MB</span>
+</div>
+</div>
+</div>
+<!-- Atmospheric Footer Text -->
+</div>
+</main>
+<!-- Micro-interaction Scripts -->
+<script>
+        // Simulate terminal-like log updates
+        const logs = [
+            "ANALYSIS_LOG: Indexing src/core/engine.rs...",
+            "ANALYSIS_LOG: Found React 18.2.0 in package.json",
+            "ANALYSIS_LOG: Parsing Cargo.lock for dependencies",
+            "ANALYSIS_LOG: Identifying architectural patterns...",
+            "ANALYSIS_LOG: Detecting GitHub Actions workflows",
+            "ANALYSIS_LOG: Extraction of 'Rust' skill profile started"
+        ];
+        
+        let currentLog = 0;
+        const logContainer = document.querySelector('.font-mono.text-\\[11px\\].text-on-surface-variant span:last-child');
+        
+        if (logContainer) {
+            setInterval(() => {
+                currentLog = (currentLog + 1) % logs.length;
+                logContainer.textContent = logs[currentLog];
+                
+                // Randomly flicker opacity for terminal effect
+                logContainer.style.opacity = '0.7';
+                setTimeout(() => logContainer.style.opacity = '1', 50);
+            }, 2500);
+        }
+
+        // Percentage increment simulation
+        const progressText = document.querySelector('.font-mono.text-\\[11px\\].text-on-surface-variant div:last-child');
+        let progress = 64;
+        if (progressText) {
+            setInterval(() => {
+                if (progress < 99) {
+                    progress += Math.floor(Math.random() * 2);
+                    progressText.textContent = `${progress}% Complete`;
+                }
+            }, 3000);
+        }
+    </script>
+</body></html>

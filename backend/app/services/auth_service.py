@@ -3,19 +3,23 @@ from fastapi import HTTPException
 from app.models.user import User
 from app.core.security import hash_password, verify_password
 from app.core.auth import create_access_token
+from app.services.id_service import generate_public_id
 
 
-def signup_user(db: Session, name: str, email: str, password: str, program: str | None = None):
+def signup_user(db: Session, name: str, email: str, password: str, program: str | None = None, joining_year: int | None = None, graduating_year: int | None = None):
     existing_user = db.query(User).filter(User.email == email).first()
 
     if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        raise HTTPException(status_code=400, detail="An account with this email address already exists. Please log in instead.")
 
     new_user = User(
+        public_id=generate_public_id('USER', db=db, model=User),
         name=name,
         email=email,
         password_hash=hash_password(password),
-        program=program
+        program=program,
+        joining_year=joining_year,
+        graduating_year=graduating_year
     )
 
     db.add(new_user)

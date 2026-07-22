@@ -16,9 +16,12 @@ class ProjectCreate(BaseModel):
 
     technologies: list[ProjectTechnologyCreate] = []
 
+    github_url: str | None = None
+
 
 class ProjectResponse(BaseModel):
     id: int
+    public_id: str
     title: str
     description: str
     domain: str
@@ -35,6 +38,7 @@ class ProjectResponse(BaseModel):
     github_url: str | None = None
     repository_score: int | None = None
     verified_skills: list | None = None
+    member_count: int
 
     class Config:
         from_attributes = True

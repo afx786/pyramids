@@ -38,16 +38,30 @@ router = APIRouter(
 
 @router.get("/users")
 def search_users(
-    skill: str,
+    skill: str | None = None,
+    public_id: str | None = None,
     db: Session = Depends(get_db),
     limit: int | None = None,
     offset: int = 0,
     sort: str = "newest"
 ):
-    results = search_users_by_skill(
-        db,
-        skill
-    )
+    if public_id:
+        from app.models.user import User
+        from sqlalchemy import func
+        user = db.query(User).filter(func.upper(User.public_id) == public_id.strip().upper()).first()
+        results = [{
+            "id": user.id,
+            "name": user.name,
+            "username": user.username,
+            "profile_picture": user.profile_picture,
+            "headline": user.headline,
+            "public_id": user.public_id
+        }] if user else []
+    else:
+        results = search_users_by_skill(
+            db,
+            skill
+        )
 
     if limit is None:
         return results

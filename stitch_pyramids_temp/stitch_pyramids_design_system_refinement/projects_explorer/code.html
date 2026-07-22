@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Projects - Explorer | Pyramids</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Instrument+Serif&amp;family=Geist:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface": "#e5e1e4",
+                    "on-primary-fixed": "#1a1c1c",
+                    "primary-container": "#e2e2e2",
+                    "on-primary-fixed-variant": "#454747",
+                    "surface-container": "#201f22",
+                    "outline": "#8e9192",
+                    "surface-variant": "#353437",
+                    "secondary": "#c6c6cf",
+                    "secondary-fixed-dim": "#c6c6cf",
+                    "on-error-container": "#ffdad6",
+                    "surface-tint": "#c6c6c6",
+                    "inverse-primary": "#5d5f5f",
+                    "inverse-on-surface": "#313032",
+                    "primary-fixed": "#e2e2e2",
+                    "primary": "#ffffff",
+                    "inverse-surface": "#e5e1e4",
+                    "background": "#131315",
+                    "on-secondary-fixed-variant": "#45464e",
+                    "surface-container-lowest": "#0e0e10",
+                    "surface-container-high": "#2a2a2c",
+                    "surface-bright": "#39393b",
+                    "outline-variant": "#444748",
+                    "secondary-container": "#45464e",
+                    "on-tertiary-fixed-variant": "#4b4543",
+                    "surface-container-low": "#1c1b1d",
+                    "on-primary": "#2f3131",
+                    "on-tertiary-fixed": "#1f1b19",
+                    "error-container": "#93000a",
+                    "surface-container-highest": "#353437",
+                    "surface-dim": "#131315",
+                    "on-tertiary": "#342f2d",
+                    "error": "#ffb4ab",
+                    "on-surface-variant": "#c4c7c8",
+                    "on-secondary": "#2f3037",
+                    "secondary-fixed": "#e2e1eb",
+                    "on-error": "#690005",
+                    "tertiary": "#fffeff",
+                    "on-background": "#e5e1e4",
+                    "tertiary-fixed-dim": "#cec4c2",
+                    "tertiary-fixed": "#eae0dd",
+                    "on-primary-container": "#636465",
+                    "on-tertiary-container": "#696360",
+                    "on-secondary-fixed": "#1a1b22",
+                    "tertiary-container": "#eae0dd",
+                    "surface": "#131315",
+                    "primary-fixed-dim": "#c6c6c6",
+                    "on-secondary-container": "#b4b4bd"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "xl": "32px",
+                    "3xl": "64px",
+                    "xs": "4px",
+                    "sm": "8px",
+                    "2xl": "48px",
+                    "md": "16px",
+                    "unit": "8px",
+                    "lg": "24px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "label-caps": ["Geist"],
+                    "mono": ["JetBrains Mono"],
+                    "headline-lg-mobile": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "display-serif": ["Instrument Serif"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "mono": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.025em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "display-serif": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "400"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { background-color: #131315; color: #e5e1e4; -webkit-font-smoothing: antialiased; }
+        .glass-nav { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .custom-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 12px;
+            width: 12px;
+            border-radius: 2px;
+            background: #ffffff;
+            cursor: pointer;
+            border: none;
+        }
+    </style>
+</head>
+<body class="font-body-lg text-body-lg overflow-x-hidden">
+<!-- Side Navigation Bar -->
+<aside class="w-[240px] h-screen fixed left-0 top-0 flex flex-col h-full py-lg px-md bg-surface-container-low dark:bg-surface-container-low backdrop-blur-md opacity-80 z-[60]">
+<div class="mb-2xl px-sm">
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface">Pyramids</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant opacity-60">Builder Workspace</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant font-medium hover:bg-surface-container-high transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="font-body-sm text-body-sm">Dashboard</span>
+</a>
+<!-- Active State: Projects -->
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-primary font-bold border-l-2 border-primary bg-surface-container-highest transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px]">account_tree</span>
+<span class="font-body-sm text-body-sm">Projects</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant font-medium hover:bg-surface-container-high transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px]">groups</span>
+<span class="font-body-sm text-body-sm">Teams</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant font-medium hover:bg-surface-container-high transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px]">military_tech</span>
+<span class="font-body-sm text-body-sm">Rank</span>
+</a>
+</nav>
+<div class="mt-auto px-sm pt-lg border-t border-outline-variant">
+<button class="w-full flex items-center justify-center gap-sm bg-primary text-on-primary font-bold py-sm px-md rounded-lg active:scale-[0.98] duration-150 transition-all hover:opacity-90">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span class="font-label-caps text-label-caps">New Project</span>
+</button>
+</div>
+</aside>
+<!-- Top App Bar -->
+<header class="flex justify-between items-center w-full px-lg py-sm h-16 ml-[240px] max-w-[calc(100%-240px)] sticky top-0 z-50 bg-surface-container-low/80 backdrop-blur-md border-b border-outline-variant">
+<div class="flex items-center gap-md flex-1">
+<div class="relative w-full max-w-md group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-surface-container-lowest border-none ring-1 ring-outline-variant focus:ring-primary rounded-lg py-2 pl-10 pr-4 font-body-sm text-body-sm text-on-surface focus:outline-none transition-all" placeholder="Search infrastructure..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:text-primary transition-colors active:opacity-80 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-1.5 h-1.5 bg-error rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors active:opacity-80">
+<span class="material-symbols-outlined">workspace_premium</span>
+</button>
+</div>
+<div class="flex items-center gap-sm pl-md border-l border-outline-variant">
+<div class="text-right">
+<p class="font-label-caps text-label-caps text-primary leading-none">Architect</p>
+<p class="font-mono text-[10px] text-on-surface-variant">LVL 42</p>
+</div>
+<img class="w-8 h-8 rounded-full border border-outline-variant object-cover" data-alt="A professional headshot of a software architect with a focused expression, set against a dark background with subtle geometric lighting accents. The lighting is low-key and dramatic, using a monochrome palette of deep grays and sharp white highlights. High-end editorial style with crisp focus and professional cinematic quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1vpk9wm6XzpkMbZ0V2-s4AqhoUdfRAjm-IdgxjV2FZCTHj_Nt6KLExsJF4skqyT6gPgq5du1IHRcb3yCr6HFWtTU19k7c2bQL79pc_aU7J6-rSB1Vt-kfkDo6l269TgFMxk9DVqzbzaXxYQRffw3omdCuYxi3dz_Mf69BMtnZ18mpyjLqzgxIxxti5CAHUBdBdPKgfLO9hCXVXHrQP-7Is48OrbP-Kla2-QOdfVlwlh8pRCi1nkwX"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-[240px] p-xl min-h-screen">
+<!-- Header & View Switch -->
+<div class="flex flex-col md:flex-row justify-between items-end mb-lg gap-lg">
+<div class="space-y-1">
+<h2 class="font-display-serif text-display-serif text-primary">Projects - Explorer</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Vetted repository work for high-impact contributors.</p>
+</div>
+<div class="flex items-center gap-xs bg-surface-container p-1 rounded-lg border border-outline-variant">
+<button class="p-2 rounded bg-surface-container-highest text-primary transition-all" id="grid-view-btn">
+<span class="material-symbols-outlined">grid_view</span>
+</button>
+<button class="p-2 rounded text-on-surface-variant hover:text-primary transition-all" id="list-view-btn">
+<span class="material-symbols-outlined">list</span>
+</button>
+</div>
+</div>
+<!-- Advanced Filter Bar -->
+<section class="bg-surface-container-low border border-outline-variant p-lg rounded-xl mb-2xl space-y-lg shadow-sm">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-xl">
+<!-- Repo Score Range -->
+<div class="space-y-sm">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Repository Score (Min 800)</label>
+<div class="flex items-center gap-md">
+<input class="flex-1 accent-primary h-1 bg-surface-variant rounded-lg appearance-none cursor-pointer custom-range" max="1000" min="0" type="range" value="800"/>
+<span class="font-mono text-body-sm text-primary">800</span>
+</div>
+</div>
+<!-- Verification Toggle -->
+<div class="space-y-sm">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Verification Status</label>
+<div class="flex items-center gap-md h-10">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+<span class="ms-3 font-body-sm text-body-sm text-on-surface">Verified Only</span>
+</label>
+</div>
+</div>
+<!-- Technologies -->
+<div class="space-y-sm">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Technologies</label>
+<select class="w-full bg-surface-container-lowest border-none ring-1 ring-outline-variant focus:ring-primary rounded-lg py-2 px-md font-body-sm text-body-sm text-on-surface appearance-none">
+<option>All Technologies</option>
+<option>Rust</option>
+<option>TypeScript</option>
+<option>Solidity</option>
+<option>Go</option>
+</select>
+</div>
+<!-- Domains -->
+<div class="space-y-sm">
+<label class="font-label-caps text-label-caps text-on-surface-variant">Domains</label>
+<div class="flex flex-wrap gap-xs">
+<span class="bg-surface-container-highest text-primary border border-primary/20 px-sm py-xs rounded text-[11px] font-label-caps cursor-pointer">DeFi</span>
+<span class="bg-surface-container text-on-surface-variant border border-outline-variant px-sm py-xs rounded text-[11px] font-label-caps cursor-pointer hover:border-on-surface transition-colors">Infra</span>
+<span class="bg-surface-container text-on-surface-variant border border-outline-variant px-sm py-xs rounded text-[11px] font-label-caps cursor-pointer hover:border-on-surface transition-colors">DAOs</span>
+<span class="bg-surface-container text-on-surface-variant border border-outline-variant px-sm py-xs rounded text-[11px] font-label-caps cursor-pointer hover:border-on-surface transition-colors">+2</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Project Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg" id="project-container">
+<!-- Project Card 1 -->
+<article class="bg-surface-container-low border border-outline-variant p-lg rounded-xl hover:border-primary transition-all group cursor-pointer relative overflow-hidden">
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 bg-white/5 rounded flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">architecture</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-primary flex items-center gap-xs">
+                                Arrakis Core
+                                <span class="material-symbols-outlined text-primary text-[16px]" style="font-variation-settings: 'FILL' 1;" title="Verified">verified</span>
+</h3>
+<p class="font-mono text-[12px] text-on-surface-variant">github.com/arrakis/core</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-caps text-label-caps text-primary leading-none">942</p>
+<p class="font-mono text-[10px] text-on-surface-variant">REPO SCORE</p>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-lg line-clamp-2">High-performance L2 execution engine built for sub-millisecond settlement and atomic swaps.</p>
+<div class="flex flex-wrap gap-xs mb-xl">
+<span class="font-mono text-[11px] bg-surface-variant text-on-surface px-2 py-0.5 rounded">Rust</span>
+<span class="font-mono text-[11px] bg-surface-variant text-on-surface px-2 py-0.5 rounded">gRPC</span>
+<span class="font-mono text-[11px] bg-surface-variant text-on-surface px-2 py-0.5 rounded">Zero Knowledge</span>
+</div>
+<!-- Opportunity Section -->
+<div class="pt-md border-t border-outline-variant/30">
+<div class="flex justify-between items-center">
+<div class="flex -space-x-2">
+<span class="w-6 h-6 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center text-[12px] font-bold">FE</span>
+<span class="w-6 h-6 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center text-[12px] font-bold">BE</span>
+<span class="w-6 h-6 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center text-[12px] font-bold text-primary">+2</span>
+</div>
+<span class="font-label-caps text-[11px] text-primary">4 Open Roles</span>
+</div>
+</div>
+</article>
+<!-- Project Card 2 -->
+<article class="bg-surface-container-low border border-outline-variant p-lg rounded-xl hover:border-primary transition-all group cursor-pointer relative overflow-hidden">
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 bg-white/5 rounded flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">dataset</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-primary flex items-center gap-xs">
+                                VectorDB Pro
+                                <span class="material-symbols-outlined text-primary text-[16px]" style="font-variation-settings: 'FILL' 1;" title="Verified">verified</span>
+</h3>
+<p class="font-mono text-[12px] text-on-surface-variant">github.com/vectordb/engine</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-caps text-label-caps text-primary leading-none">885</p>
+<p class="font-mono text-[10px] text-on-surface-variant">REPO SCORE</p>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-lg line-clamp-2">Optimized vector search engine for real-time LLM context injection and semantic search.</p>
+<div class="flex flex-wrap gap-xs mb-xl">
+<span class="font-mono text-[11px] bg-surface-variant text-on-surface px-2 py-0.5 rounded">C++</span>
+<span class="font-mono text-[11px] bg-surface-variant text-on-surface px-2 py-0.5 rounded">Python</span>
+<span class="font-mono text-[11px] bg-surface-variant text-on-surface px-2 py-0.5 rounded">SIMD</span>
+</div>
+<div class="pt-md border-t border-outline-variant/30">
+<div class="flex justify-between items-center">
+<div class="flex -space-x-2">
+<span class="w-6 h-6 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center text-[12px] font-bold">ML</span>
+</div>
+<span class="font-label-caps text-[11px] text-primary">1 Open Role</span>
+</div>
+</div>
+</article>
+<!-- Project Card 3 -->
+<article class="bg-surface-container-low border border-outline-variant p-lg rounded-xl hover:border-primary transition-all group cursor-pointer relative overflow-hidden">
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 bg-white/5 rounded flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">router</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-primary flex items-center gap-xs">
+                                MeshMesh
+                            </h3>
+<p class="font-mono text-[12px] text-on-surface-variant">github.com/mesh/mesh</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-caps text-label-caps text-primary leading-none">720</p>
+<p class="font-mono text-[10px] text-on-surface-variant">REPO SCORE</p>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-lg line-clamp-2">Decentralized wireless mesh networking protocol for community-led internet infrastructure.</p>
+<div class="flex flex-wrap gap-xs mb-xl">
+<span class="font-mono text-[11px] bg-surface-variant text-on-surface px-2 py-0.5 rounded">Go</span>
+<span class="font-mono text-[11px] bg-surface-variant text-on-surface px-2 py-0.5 rounded">libp2p</span>
+</div>
+<div class="pt-md border-t border-outline-variant/30 opacity-50">
+<div class="flex justify-between items-center">
+<span class="font-label-caps text-[11px] text-on-surface-variant italic">No open roles currently</span>
+</div>
+</div>
+</article>
+<!-- Project Card 4 -->
+<article class="bg-surface-container-low border border-outline-variant p-lg rounded-xl hover:border-primary transition-all group cursor-pointer relative overflow-hidden">
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 bg-white/5 rounded flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-primary flex items-center gap-xs">
+                                Sentinel Audit
+                                <span class="material-symbols-outlined text-primary text-[16px]" style="font-variation-settings: 'FILL' 1;" title="Verified">verified</span>
+</h3>
+<p class="font-mono text-[12px] text-on-surface-variant">github.com/sentinel/analyzer</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-caps text-label-caps text-primary leading-none">991</p>
+<p class="font-mono text-[10px] text-on-surface-variant">REPO SCORE</p>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-lg line-clamp-2">Static analysis toolset for identifying formal verification gaps in complex smart contract systems.</p>
+<div class="flex flex-wrap gap-xs mb-xl">
+<span class="font-mono text-[11px] bg-surface-variant text-on-surface px-2 py-0.5 rounded">TypeScript</span>
+<span class="font-mono text-[11px] bg-surface-variant text-on-surface px-2 py-0.5 rounded">Solidity</span>
+</div>
+<div class="pt-md border-t border-outline-variant/30">
+<div class="flex justify-between items-center">
+<div class="flex -space-x-2">
+<span class="w-6 h-6 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center text-[12px] font-bold">SEC</span>
+<span class="w-6 h-6 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center text-[12px] font-bold">QA</span>
+</div>
+<span class="font-label-caps text-[11px] text-primary">2 Open Roles</span>
+</div>
+</div>
+</article>
+<!-- Project Card 5 -->
+<article class="bg-surface-container-low border border-outline-variant p-lg rounded-xl hover:border-primary transition-all group cursor-pointer relative overflow-hidden">
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 bg-white/5 rounded flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">terminal</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-primary flex items-center gap-xs">
+                                ShellGenius
+                            </h3>
+<p class="font-mono text-[12px] text-on-surface-variant">github.com/ai/shell-genius</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-caps text-label-caps text-primary leading-none">812</p>
+<p class="font-mono text-[10px] text-on-surface-variant">REPO SCORE</p>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-lg line-clamp-2">AI-driven terminal assistant that learns developer patterns and automates complex CI/CD pipelines.</p>
+<div class="flex flex-wrap gap-xs mb-xl">
+<span class="font-mono text-[11px] bg-surface-variant text-on-surface px-2 py-0.5 rounded">Rust</span>
+<span class="font-mono text-[11px] bg-surface-variant text-on-surface px-2 py-0.5 rounded">OpenAI SDK</span>
+</div>
+<div class="pt-md border-t border-outline-variant/30">
+<div class="flex justify-between items-center">
+<div class="flex -space-x-2">
+<span class="w-6 h-6 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center text-[12px] font-bold">OPS</span>
+</div>
+<span class="font-label-caps text-[11px] text-primary">3 Open Roles</span>
+</div>
+</div>
+</article>
+<!-- Project Card 6 -->
+<article class="bg-surface-container-low border border-outline-variant p-lg rounded-xl hover:border-primary transition-all group cursor-pointer relative overflow-hidden">
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 bg-white/5 rounded flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">payments</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-primary flex items-center gap-xs">
+                                Flux Protocol
+                                <span class="material-symbols-outlined text-primary text-[16px]" style="font-variation-settings: 'FILL' 1;" title="Verified">verified</span>
+</h3>
+<p class="font-mono text-[12px] text-on-surface-variant">github.com/flux/protocol</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-caps text-label-caps text-primary leading-none">955</p>
+<p class="font-mono text-[10px] text-on-surface-variant">REPO SCORE</p>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-lg line-clamp-2">Institutional-grade liquidity aggregator for multi-chain asset swapping with zero slippage.</p>
+<div class="flex flex-wrap gap-xs mb-xl">
+<span class="font-mono text-[11px] bg-surface-variant text-on-surface px-2 py-0.5 rounded">Solidity</span>
+<span class="font-mono text-[11px] bg-surface-variant text-on-surface px-2 py-0.5 rounded">Ethers.js</span>
+<span class="font-mono text-[11px] bg-surface-variant text-on-surface px-2 py-0.5 rounded">DeFi</span>
+</div>
+<div class="pt-md border-t border-outline-variant/30">
+<div class="flex justify-between items-center">
+<div class="flex -space-x-2">
+<span class="w-6 h-6 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center text-[12px] font-bold">SC</span>
+<span class="w-6 h-6 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center text-[12px] font-bold">QT</span>
+</div>
+<span class="font-label-caps text-[11px] text-primary">5 Open Roles</span>
+</div>
+</div>
+</article>
+</div>
+<!-- Pagination / Footer -->
+<div class="mt-2xl flex justify-between items-center pt-xl border-t border-outline-variant">
+<p class="font-body-sm text-body-sm text-on-surface-variant">Showing <span class="text-primary font-mono">12</span> of <span class="text-primary font-mono">148</span> vetted projects</p>
+<div class="flex items-center gap-md">
+<button class="flex items-center gap-xs px-md py-sm bg-surface-container border border-outline-variant rounded hover:border-primary transition-all text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+<span class="font-label-caps text-label-caps">Prev</span>
+</button>
+<button class="flex items-center gap-xs px-md py-sm bg-surface-container border border-outline-variant rounded hover:border-primary transition-all text-on-surface-variant hover:text-primary">
+<span class="font-label-caps text-label-caps">Next</span>
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</main>
+<script>
+        // Simple View Switching Logic
+        const gridBtn = document.getElementById('grid-view-btn');
+        const listBtn = document.getElementById('list-view-btn');
+        const projectContainer = document.getElementById('project-container');
+
+        gridBtn.addEventListener('click', () => {
+            projectContainer.classList.remove('grid-cols-1');
+            projectContainer.classList.add('grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3');
+            gridBtn.classList.add('bg-surface-container-highest', 'text-primary');
+            gridBtn.classList.remove('text-on-surface-variant');
+            listBtn.classList.remove('bg-surface-container-highest', 'text-primary');
+            listBtn.classList.add('text-on-surface-variant');
+        });
+
+        listBtn.addEventListener('click', () => {
+            projectContainer.classList.remove('md:grid-cols-2', 'lg:grid-cols-3');
+            projectContainer.classList.add('grid-cols-1');
+            listBtn.classList.add('bg-surface-container-highest', 'text-primary');
+            listBtn.classList.remove('text-on-surface-variant');
+            gridBtn.classList.remove('bg-surface-container-highest', 'text-primary');
+            gridBtn.classList.add('text-on-surface-variant');
+        });
+
+        // Hover animations for cards
+        const cards = document.querySelectorAll('article');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-2px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body></html>

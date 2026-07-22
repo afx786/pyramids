@@ -22,6 +22,13 @@ class Team(Base):
         index=True
     )
 
+    public_id = Column(
+        String(20),
+        unique=True,
+        nullable=False,
+        index=True
+    )
+
     name = Column(
         String,
         nullable=False

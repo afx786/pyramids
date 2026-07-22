@@ -1,4 +1,5 @@
 import { api } from './api.js';
+import { buildEntityUrl } from '../utils/resolveEntity.js';
 
 export const projectService = {
   listProjects() {
@@ -6,10 +7,10 @@ export const projectService = {
   },
 
   getProject(id) {
-    return api.get(`/projects/${id}`);
+    return api.get(buildEntityUrl('/projects', id));
   },
 
-  createProject({ title, domain, description, skills, technologies = [] }) {
+  createProject({ title, domain, description, skills, technologies = [], github_url }) {
     return api.post('/projects', {
       title,
       domain,
@@ -18,6 +19,7 @@ export const projectService = {
       status: 'building',
       skills,
       technologies,
+      ...(github_url ? { github_url } : {}),
     });
   },
 
@@ -27,5 +29,21 @@ export const projectService = {
 
   deleteProject(id) {
     return api.delete(`/projects/${id}`);
+  },
+
+  listMembers(projectId) {
+    return api.get(`/projects/${projectId}/members`);
+  },
+
+  listInvitations(projectId) {
+    return api.get(`/projects/${projectId}/invitations`);
+  },
+
+  inviteUser(projectId, userId) {
+    return api.post(`/projects/${projectId}/invitations`, { user_id: userId });
+  },
+
+  verifyRepository(projectId, githubUrl) {
+    return api.post(`/projects/${projectId}/verify`, { github_url: githubUrl });
   },
 };

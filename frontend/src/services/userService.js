@@ -1,4 +1,5 @@
 import { api } from './api.js';
+import { buildEntityUrl } from '../utils/resolveEntity.js';
 
 export const userService = {
   getMe() {
@@ -6,10 +7,14 @@ export const userService = {
   },
 
   getProfile(userId) {
-    return api.get(`/profile/${userId}`);
+    return api.get(buildEntityUrl('/profile', userId));
   },
 
   getRank(userId) {
     return api.get(`/ranks/user/${userId}`);
+  },
+
+  updateProfile(data) {
+    return api.put('/users/me', data);
   },
 };

@@ -16,6 +16,8 @@ from app.schemas.admin import (
     PlatformReport,
     ModerationResponse
 )
+from app.schemas.hackathon import HackathonResponse
+from app.schemas.organization import OrganizationResponse
 
 from app.services.admin_service import (
     get_dashboard_stats,
@@ -32,6 +34,16 @@ from app.services.admin_service import (
     get_recent_projects,
     get_recent_hackathons,
     get_recent_notifications
+)
+from app.services.hackathon_service import (
+    approve_hackathon as approve_hackathon_svc,
+    reject_hackathon as reject_hackathon_svc,
+    request_changes_hackathon,
+    get_pending_hackathons,
+)
+from app.services.organization_service import (
+    approve_organization as approve_org_svc,
+    get_pending_organizations,
 )
 
 router = APIRouter(
@@ -242,3 +254,62 @@ def recent_notifications(
         db,
         limit
     )
+
+
+# ── Admin: Hackathon Review ──
+
+@router.get("/hackathons/pending", response_model=list[HackathonResponse])
+def admin_pending_hackathons(db: Session = Depends(get_db)):
+    return get_pending_hackathons(db)
+
+
+@router.post("/hackathons/{hackathon_id}/approve", response_model=HackathonResponse)
+def admin_approve_hackathon(hackathon_id: int, feedback: str | None = None,
+                             db: Session = Depends(get_db)):
+    result = approve_hackathon_svc(db, hackathon_id, feedback)
+    if result == "not_found":
+        from fastapi import HTTPException
+        raise HTTPException(404, "Hackathon not found")
+    if result == "invalid_status":
+        raise HTTPException(400, "Not in submitted status")
+    return result
+
+
+@router.post("/hackathons/{hackathon_id}/reject", response_model=HackathonResponse)
+def admin_reject_hackathon(hackathon_id: int, feedback: str | None = None,
+                            db: Session = Depends(get_db)):
+    result = reject_hackathon_svc(db, hackathon_id, feedback)
+    if result == "not_found":
+        from fastapi import HTTPException
+        raise HTTPException(404, "Hackathon not found")
+    if result == "invalid_status":
+        raise HTTPException(400, "Not in submitted status")
+    return result
+
+
+@router.post("/hackathons/{hackathon_id}/request-changes", response_model=HackathonResponse)
+def admin_request_hackathon_changes(hackathon_id: int, feedback: str | None = None,
+                                     db: Session = Depends(get_db)):
+    result = request_changes_hackathon(db, hackathon_id, feedback)
+    if result == "not_found":
+        from fastapi import HTTPException
+        raise HTTPException(404, "Hackathon not found")
+    if result == "invalid_status":
+        raise HTTPException(400, "Not in submitted status")
+    return result
+
+
+# ── Admin: Organization Review ──
+
+@router.get("/organizations/pending", response_model=list[OrganizationResponse])
+def admin_pending_organizations(db: Session = Depends(get_db)):
+    return get_pending_organizations(db)
+
+
+@router.post("/organizations/{org_id}/verify", response_model=OrganizationResponse)
+def admin_verify_organization(org_id: int, db: Session = Depends(get_db)):
+    result = approve_org_svc(db, org_id, None)
+    if result == "not_found":
+        from fastapi import HTTPException
+        raise HTTPException(404, "Organization not found")
+    return result

@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, field_validator
 
 
 class UserSignup(BaseModel):
@@ -6,6 +6,32 @@ class UserSignup(BaseModel):
     email: EmailStr
     password: str
     program: str | None = None
+    joining_year: int | None = None
+    graduating_year: int | None = None
+
+    @field_validator('name')
+    @classmethod
+    def name_not_empty(cls, v):
+        if not v or not v.strip():
+            raise ValueError('Name cannot be empty')
+        return v.strip()
+
+    @field_validator('joining_year')
+    @classmethod
+    def validate_joining_year(cls, v):
+        if v is not None and (v < 2020 or v > 2040):
+            raise ValueError('Joining year must be between 2020 and 2040')
+        return v
+
+    @field_validator('graduating_year')
+    @classmethod
+    def validate_graduating_year(cls, v, info):
+        if v is not None and (v < 2020 or v > 2040):
+            raise ValueError('Graduating year must be between 2020 and 2040')
+        joining = info.data.get('joining_year')
+        if v is not None and joining is not None and v < joining:
+            raise ValueError('Graduating year cannot be earlier than joining year')
+        return v
 
 
 class UserLogin(BaseModel):
@@ -15,9 +41,44 @@ class UserLogin(BaseModel):
 
 class UserResponse(BaseModel):
     id: int
+    public_id: str
     name: str
     email: str
     program: str | None = None
+    joining_year: int | None = None
+    graduating_year: int | None = None
 
     class Config:
         from_attributes = True
+
+
+class UserUpdate(BaseModel):
+    name: str | None = None
+    email: str | None = None
+    bio: str | None = None
+    joining_year: int | None = None
+    graduating_year: int | None = None
+
+    @field_validator('name')
+    @classmethod
+    def name_not_empty(cls, v):
+        if v is not None and not v.strip():
+            raise ValueError('Name cannot be empty')
+        return v.strip() if v else v
+
+    @field_validator('joining_year')
+    @classmethod
+    def validate_joining_year(cls, v):
+        if v is not None and (v < 2020 or v > 2040):
+            raise ValueError('Joining year must be between 2020 and 2040')
+        return v
+
+    @field_validator('graduating_year')
+    @classmethod
+    def validate_graduating_year(cls, v, info):
+        if v is not None and (v < 2020 or v > 2040):
+            raise ValueError('Graduating year must be between 2020 and 2040')
+        joining = info.data.get('joining_year')
+        if v is not None and joining is not None and v < joining:
+            raise ValueError('Graduating year cannot be earlier than joining year')
+        return v

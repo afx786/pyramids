@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Teams - Builder Hub | Pyramids</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Instrument+Serif&amp;family=Geist:wght@600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface": "#e5e1e4",
+                    "on-primary-fixed": "#1a1c1c",
+                    "primary-container": "#e2e2e2",
+                    "on-primary-fixed-variant": "#454747",
+                    "surface-container": "#201f22",
+                    "outline": "#8e9192",
+                    "surface-variant": "#353437",
+                    "secondary": "#c6c6cf",
+                    "secondary-fixed-dim": "#c6c6cf",
+                    "on-error-container": "#ffdad6",
+                    "surface-tint": "#c6c6c6",
+                    "inverse-primary": "#5d5f5f",
+                    "inverse-on-surface": "#313032",
+                    "primary-fixed": "#e2e2e2",
+                    "primary": "#ffffff",
+                    "inverse-surface": "#e5e1e4",
+                    "background": "#131315",
+                    "on-secondary-fixed-variant": "#45464e",
+                    "surface-container-lowest": "#0e0e10",
+                    "surface-container-high": "#2a2a2c",
+                    "surface-bright": "#39393b",
+                    "outline-variant": "#444748",
+                    "secondary-container": "#45464e",
+                    "on-tertiary-fixed-variant": "#4b4543",
+                    "surface-container-low": "#1c1b1d",
+                    "on-primary": "#2f3131",
+                    "on-tertiary-fixed": "#1f1b19",
+                    "error-container": "#93000a",
+                    "surface-container-highest": "#353437",
+                    "surface-dim": "#131315",
+                    "on-tertiary": "#342f2d",
+                    "error": "#ffb4ab",
+                    "on-surface-variant": "#c4c7c8",
+                    "on-secondary": "#2f3037",
+                    "secondary-fixed": "#e2e1eb",
+                    "on-error": "#690005",
+                    "tertiary": "#fffeff",
+                    "on-background": "#e5e1e4",
+                    "tertiary-fixed-dim": "#cec4c2",
+                    "tertiary-fixed": "#eae0dd",
+                    "on-primary-container": "#636465",
+                    "on-tertiary-container": "#696360",
+                    "on-secondary-fixed": "#1a1b22",
+                    "tertiary-container": "#eae0dd",
+                    "surface": "#131315",
+                    "primary-fixed-dim": "#c6c6c6",
+                    "on-secondary-container": "#b4b4bd"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "xl": "32px",
+                    "3xl": "64px",
+                    "xs": "4px",
+                    "sm": "8px",
+                    "2xl": "48px",
+                    "md": "16px",
+                    "unit": "8px",
+                    "lg": "24px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "label-caps": ["Geist"],
+                    "mono": ["JetBrains Mono"],
+                    "headline-lg-mobile": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "display-serif": ["Instrument Serif"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "mono": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.025em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "display-serif": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "400"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #131315;
+            color: #e5e1e4;
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+            font-size: 20px;
+        }
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            background-color: rgba(19, 19, 21, 0.8);
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+        .custom-shadow {
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar Shell -->
+<nav class="w-[240px] h-screen fixed left-0 top-0 flex flex-col py-lg px-md bg-surface-container-low dark:bg-surface-container-low backdrop-blur-md opacity-95 z-50">
+<div class="mb-3xl">
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface">Pyramids</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Builder Workspace</p>
+</div>
+<div class="flex flex-col gap-sm flex-grow">
+<!-- Navigation Items -->
+<a class="flex items-center gap-md p-sm rounded hover:bg-surface-container-high transition-colors text-on-surface-variant font-medium" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-sm text-body-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-md p-sm rounded hover:bg-surface-container-high transition-colors text-on-surface-variant font-medium" href="#">
+<span class="material-symbols-outlined">account_tree</span>
+<span class="font-body-sm text-body-sm">Projects</span>
+</a>
+<a class="flex items-center gap-md p-sm rounded bg-surface-container-highest text-primary font-bold border-l-2 border-primary" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-body-sm text-body-sm">Teams</span>
+</a>
+<a class="flex items-center gap-md p-sm rounded hover:bg-surface-container-high transition-colors text-on-surface-variant font-medium" href="#">
+<span class="material-symbols-outlined">military_tech</span>
+<span class="font-body-sm text-body-sm">Rank</span>
+</a>
+</div>
+<button class="mt-auto w-full bg-primary text-on-primary py-sm font-label-caps text-label-caps rounded active:scale-[0.98] duration-150">
+            New Project
+        </button>
+</nav>
+<!-- TopAppBar Shell -->
+<header class="flex justify-between items-center w-full px-lg py-sm h-16 ml-[240px] max-w-[calc(100%-240px)] sticky top-0 z-40 bg-surface-container-low/80 backdrop-blur-md border-b border-outline-variant">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+<input class="bg-transparent border-none focus:ring-0 font-body-lg text-body-lg w-64 placeholder:text-on-surface-variant" placeholder="Search builders or skills..." type="text"/>
+</div>
+<div class="flex items-center gap-lg">
+<div class="flex gap-md">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">workspace_premium</span>
+</div>
+<div class="flex items-center gap-sm">
+<div class="text-right">
+<p class="font-label-caps text-label-caps text-on-surface">ARCHITECT</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Alex Rivera</p>
+</div>
+<div class="w-10 h-10 rounded-full border border-outline-variant bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a software architect in a high-end minimalist setting. The lighting is soft and directional, highlighting clean facial features. The background is a dark, sophisticated workspace with subtle hints of glowing hardware. The overall aesthetic is monochromatic and authoritative, reflecting a senior technical leader's profile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9letS_BnGmLwE6q1XhUiGgzpe0F740Pi7XvwKZMbwsWk3JSWBJ_ZYJmTSjlWdDDm3aM2ChNayHqiYH-74h4pv2MAKAfyF91IapuvAf7V7I6o6Cn9lZakE2JgE14iUf_xHxVs7PDBvKGWJwpEZE43j1BU_p-_hKPDwBSM1QgR_bszAFzYsa7MLVm8J62yTFEfVUs73lvhFXzZWWeChtv9aaeTSptOMXT68bFgR2xVz2F0jNJz8hSGD"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-[240px] p-xl max-w-7xl">
+<div class="mb-xl">
+<h2 class="font-headline-lg text-headline-lg text-primary">Teams - Builder Hub</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Data-driven collaboration and discovery.</p>
+</div>
+<div class="grid grid-cols-12 gap-lg">
+<!-- Left Column: Primary Content -->
+<div class="col-span-12 lg:col-span-8 flex flex-col gap-xl">
+<!-- Section 1: Active Collaborations -->
+<section>
+<div class="flex items-center justify-between mb-md">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">account_tree</span>
+                            Active Collaborations
+                        </h3>
+</div>
+<div class="flex flex-col gap-md">
+<!-- Project Container -->
+<div class="bg-surface-container-low border border-outline-variant p-lg rounded-lg">
+<div class="flex justify-between items-start mb-lg">
+<div>
+<h4 class="font-headline-md text-headline-md font-bold">Neural Engine Core</h4>
+<p class="font-mono text-mono text-on-surface-variant">github.com/pyramids/neural-v2</p>
+</div>
+<span class="bg-primary/10 text-primary px-sm py-xs border border-primary/20 font-label-caps text-label-caps">STABLE</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<!-- Contributor Card 1 -->
+<div class="bg-surface-container border border-outline-variant p-md rounded hover:border-primary transition-colors flex gap-md items-center">
+<div class="w-12 h-12 bg-surface-container-highest rounded border border-outline-variant flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A macro close-up of a minimalist builder avatar. The image features clean lines and a grayscale palette. The background is a soft, out-of-focus technical drawing. The subject has a professional, focused demeanor, fitting for a verified lead engineer. High-end lighting creates sharp definition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFMRxmGgmcSxYTetX3Dw5llumbdJ88Cknh5astWWIUGAkCR2eC69CM_Ug1iVyr2GTrv9hspndqhRB5U1H-mLLNxGOi-iDJo7jAAvDBqrd463d_E-nndV-z5Q3Nxn8IFZzZ1MPZXQU5wD5qbL-hnoEEfyvFMje25gVQupBsOOiExLQGvYpC1RKzO9T5oqP5RVt_zaiNXYGkqwyUZfz6ACng1FyMm2wF95-tRbpuvIyqXEneE06itu7A"/>
+</div>
+<div class="flex-grow">
+<div class="flex items-center justify-between">
+<p class="font-body-lg text-body-lg font-bold">Sarah Chen</p>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Lead Architect • Rust, CUDA</p>
+<div class="flex gap-xs mt-xs">
+<span class="px-xs py-[2px] bg-surface-variant text-[10px] font-mono border border-outline-variant rounded">VERIFIED</span>
+<span class="px-xs py-[2px] bg-surface-variant text-[10px] font-mono border border-outline-variant rounded">98% IMPACT</span>
+</div>
+</div>
+</div>
+<!-- Contributor Card 2 -->
+<div class="bg-surface-container border border-outline-variant p-md rounded hover:border-primary transition-colors flex gap-md items-center">
+<div class="w-12 h-12 bg-surface-container-highest rounded border border-outline-variant flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A portrait of a male software engineer with a minimalist aesthetic. The lighting is cold and precise, using a blue-tinted fill. He wears a dark, textured hoodie. The background is a blurred server room with amber lights. The mood is highly technical and expert-level." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqsdI7KlNEL6WZSZJbuaIOJIX3uwf_CkbeAjqHYOKch55hCVUQkW5RxLz_zKxOlvjFcgkpyFMwXbKykaidG2nhFxnNC6QgqbVss0KrGPY2j-w08SZjVwSqOoRXbcglLPfOyCXispR30GPtjCHW7yXo4O3JVSzRBaxNb6hsqm5VoHJgT-Dn8BPk4Vd2_8Qe1W5DoU9v6RCZAwkv2Z6Kjz7tCJ8mf0I520Ef9_bX2ixry2BdUNGdKL71"/>
+</div>
+<div class="flex-grow">
+<div class="flex items-center justify-between">
+<p class="font-body-lg text-body-lg font-bold">Marcus Thorne</p>
+<span class="material-symbols-outlined text-on-surface-variant">military_tech</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Builder • C++, WebGPU</p>
+<div class="flex gap-xs mt-xs">
+<span class="px-xs py-[2px] bg-surface-variant text-[10px] font-mono border border-outline-variant rounded">VERIFIED</span>
+<span class="px-xs py-[2px] bg-surface-variant text-[10px] font-mono border border-outline-variant rounded">92% IMPACT</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Builder Discovery -->
+<section>
+<div class="flex items-center justify-between mb-md">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">person_search</span>
+                            Builder Discovery
+                        </h3>
+<a class="font-label-caps text-label-caps text-primary hover:underline" href="#">FILTER STACKS</a>
+</div>
+<div class="grid grid-cols-1 gap-md">
+<!-- Discovery Card 1 -->
+<div class="bg-surface-container-low border border-outline-variant p-lg rounded-lg flex flex-col md:flex-row gap-lg items-center relative overflow-hidden group">
+<div class="absolute inset-0 opacity-5 pointer-events-none transition-opacity group-hover:opacity-10">
+
+</div>
+<div class="w-24 h-24 rounded border border-outline-variant bg-surface-container-high overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="A portrait of a female developer with a bright, professional look. The style is editorial minimalist, featuring high-contrast black and white photography with a subtle warm tint. The background is a clean white wall with soft shadows. Her expression is confident and friendly, ideal for a collaborative team member." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvWQJ265R83amyz4Nt5LUS2PAksKcIOWfbJabe-2YRkZX5uQ2zB3ysT37s6hSazozckjRRIgOaEYDvmbJJbuANBpgjlIDUAhCHuHgdP2f0BLNtCtDfqIgDKm1CaO76cKcwWN_HiyuNz-chTttBZex_ihIo_-g-OlPAw83npO32CxNPieUSHlv8mCsy0CNpSfqkWFT-mzYiYbqlMC-d_EdvAzOyfT3RdmFPIIpXMiz9lo97-qHyJUpX"/>
+</div>
+<div class="flex-grow">
+<div class="flex items-center gap-sm mb-xs">
+<h4 class="font-headline-md text-headline-md font-bold">Elena Vance</h4>
+<span class="px-sm py-xs bg-surface-container-highest border border-outline-variant font-label-caps text-[10px] text-on-surface">INNOVATOR</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-md max-w-md">Expert in distributed systems and consensus protocols. High compatibility with your <strong>Neural Engine</strong> stack (Rust, p2p).</p>
+<div class="flex flex-wrap gap-sm">
+<span class="font-mono text-body-sm text-primary bg-primary/5 px-sm py-1 border border-primary/20">DistSys</span>
+<span class="font-mono text-body-sm text-primary bg-primary/5 px-sm py-1 border border-primary/20">Go</span>
+<span class="font-mono text-body-sm text-primary bg-primary/5 px-sm py-1 border border-primary/20">libp2p</span>
+</div>
+</div>
+<div class="shrink-0 flex flex-col gap-sm">
+<button class="bg-primary text-on-primary font-label-caps text-label-caps px-lg py-sm rounded">INVITE</button>
+<button class="border border-outline-variant text-on-surface font-label-caps text-label-caps px-lg py-sm rounded hover:bg-surface-container-highest">VIEW LOGS</button>
+</div>
+</div>
+<!-- Discovery Card 2 -->
+<div class="bg-surface-container-low border border-outline-variant p-lg rounded-lg flex flex-col md:flex-row gap-lg items-center relative overflow-hidden group">
+<div class="w-24 h-24 rounded border border-outline-variant bg-surface-container-high overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="A male developer with glasses, looking thoughtfully into the distance. The lighting is dramatic, coming from the side and creating deep shadows. The background is dark and features architectural details of a modern office building at night. The color palette is cool blues and deep grays, projecting an aura of deep focus and structural expertise." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5wX1y7UFnR31gAW9gZHZxuvkHoTGb1L93UlwZu6CbBs8-KGb_Z5k8WeCpUK5JXHUbP8JynPb4actg0Kmu4LhjqD5nvNZDZnkVkks5aAjZu1nZxgC32aJrOza4J-Iup2xey5nBK49Lz3Vs8MtbGlfqBqdFkE-UUEGSEL1ZiIdibELcCft8_XWMY9Iiuv7EL7ClcMoMK-o8PXIDMeyWuQF-pGPO0sUnBvwLdJvFulwNzKytvgYvliXT"/>
+</div>
+<div class="flex-grow">
+<div class="flex items-center gap-sm mb-xs">
+<h4 class="font-headline-md text-headline-md font-bold">Jordan Key</h4>
+<span class="px-sm py-xs bg-surface-container-highest border border-outline-variant font-label-caps text-[10px] text-on-surface">BUILDER</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-md max-w-md">Focused on low-level optimization and kernel development. Recommended for your <strong>Memory Manager</strong> module.</p>
+<div class="flex flex-wrap gap-sm">
+<span class="font-mono text-body-sm text-primary bg-primary/5 px-sm py-1 border border-primary/20">Assembly</span>
+<span class="font-mono text-body-sm text-primary bg-primary/5 px-sm py-1 border border-primary/20">Zig</span>
+<span class="font-mono text-body-sm text-primary bg-primary/5 px-sm py-1 border border-primary/20">Linux</span>
+</div>
+</div>
+<div class="shrink-0 flex flex-col gap-sm">
+<button class="bg-primary text-on-primary font-label-caps text-label-caps px-lg py-sm rounded">INVITE</button>
+<button class="border border-outline-variant text-on-surface font-label-caps text-label-caps px-lg py-sm rounded hover:bg-surface-container-highest">VIEW LOGS</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Open Roles Dashboard -->
+<section>
+<div class="flex items-center justify-between mb-md">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">work</span>
+                            Open Roles Dashboard
+                        </h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<!-- Opportunity Card 1 -->
+<div class="bg-surface-container border border-outline-variant p-lg rounded hover:bg-surface-container-high transition-all">
+<div class="flex justify-between items-start mb-md">
+<h5 class="font-headline-md text-headline-md">Shaders Lead</h5>
+<span class="material-symbols-outlined text-on-surface-variant">open_in_new</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-lg">Core Graphics Engine Project. Focus on GLSL optimization and fluid simulation.</p>
+<div class="flex justify-between items-center border-t border-outline-variant pt-md">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">groups</span>
+<span class="font-mono text-mono">2 / 5 Filled</span>
+</div>
+<span class="font-label-caps text-[10px] text-primary">URGENT</span>
+</div>
+</div>
+<!-- Opportunity Card 2 -->
+<div class="bg-surface-container border border-outline-variant p-lg rounded hover:bg-surface-container-high transition-all">
+<div class="flex justify-between items-start mb-md">
+<h5 class="font-headline-md text-headline-md">Database Architect</h5>
+<span class="material-symbols-outlined text-on-surface-variant">open_in_new</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-lg">Temporal Storage Project. Designing immutable time-series primitives.</p>
+<div class="flex justify-between items-center border-t border-outline-variant pt-md">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">groups</span>
+<span class="font-mono text-mono">0 / 1 Filled</span>
+</div>
+<span class="font-label-caps text-[10px] text-on-surface-variant">MEDIUM</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Team Health Sidebar -->
+<aside class="col-span-12 lg:col-span-4 flex flex-col gap-lg">
+<div class="sticky top-24">
+<div class="bg-surface-container-low border border-outline-variant p-lg rounded-lg">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-lg flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">analytics</span>
+                            Team Health
+                        </h3>
+<!-- Metric: Contribution Frequency -->
+<div class="mb-xl">
+<div class="flex justify-between items-center mb-xs">
+<span class="font-label-caps text-label-caps text-on-surface-variant">CONTRIBUTION FREQUENCY</span>
+<span class="font-mono text-mono text-primary">High (84%)</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 84%"></div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-sm">Averaging 4.2 commits/day across active repos.</p>
+</div>
+<!-- Metric: Verification Status -->
+<div class="mb-xl">
+<div class="flex justify-between items-center mb-xs">
+<span class="font-label-caps text-label-caps text-on-surface-variant">VERIFICATION STATUS</span>
+<span class="font-mono text-mono text-primary">Verified</span>
+</div>
+<div class="flex gap-1 mt-sm">
+<div class="h-1 flex-grow bg-primary"></div>
+<div class="h-1 flex-grow bg-primary"></div>
+<div class="h-1 flex-grow bg-primary"></div>
+<div class="h-1 flex-grow bg-primary"></div>
+<div class="h-1 flex-grow bg-primary"></div>
+<div class="h-1 flex-grow bg-surface-variant"></div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-sm">5/6 core repos have passed 3rd-party audit.</p>
+</div>
+<!-- Metric: Skill Coverage -->
+<div>
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-md block">SKILL COVERAGE</span>
+<div class="space-y-md">
+<div class="flex items-center justify-between">
+<span class="font-body-sm text-body-sm">Frontend/UI</span>
+<div class="flex gap-xs">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-surface-variant"></div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-body-sm text-body-sm">Backend/Logic</span>
+<div class="flex gap-xs">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-body-sm text-body-sm">DevOps/Infra</span>
+<div class="flex gap-xs">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-surface-variant"></div>
+<div class="w-2 h-2 rounded-full bg-surface-variant"></div>
+</div>
+</div>
+</div>
+<button class="w-full mt-xl py-sm border border-outline text-on-surface font-label-caps text-label-caps rounded hover:border-primary transition-colors">
+                                OPTIMIZE SQUAD
+                            </button>
+</div>
+</div>
+<!-- Rank Visual Placeholder -->
+<div class="mt-lg p-lg border border-outline-variant rounded-lg bg-surface-container-lowest flex items-center justify-between group overflow-hidden relative">
+<div class="absolute inset-0 pointer-events-none">
+
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-primary">CURRENT SQUAD RANK</p>
+<h4 class="font-headline-md text-headline-md font-bold">ARCHITECT SQUAD</h4>
+</div>
+<span class="material-symbols-outlined text-4xl text-primary" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<script>
+        // Micro-interactions for active states
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('scale-[0.98]');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('scale-[0.98]');
+            });
+            button.addEventListener('mouseleave', () => {
+                button.classList.remove('scale-[0.98]');
+            });
+        });
+
+        // Simple smooth scroll behavior for the feed
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('shadow-lg');
+            } else {
+                header.classList.remove('shadow-lg');
+            }
+        });
+    </script>
+</body></html>

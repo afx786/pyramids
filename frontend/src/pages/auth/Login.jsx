@@ -44,32 +44,32 @@ function Login() {
 
   return (
     <main className="grid min-h-screen bg-app text-primary lg:grid-cols-[1.05fr_0.95fr]">
-      <section className="relative overflow-hidden bg-sidebar px-6 py-10 text-white sm:px-10 lg:px-14">
+      <section className="relative overflow-hidden bg-auth-hero-bg px-6 py-10 text-auth-hero sm:px-10 lg:px-14">
         <div className="relative z-10 flex min-h-[calc(100vh-5rem)] flex-col justify-between">
           <div className="flex items-center justify-between">
-            <Link className="text-base font-extrabold text-white" to="/login">Pyramids</Link>
-            <span className="font-mono-label text-xs text-white/45">Verified builder network</span>
+            <Link className="text-base font-extrabold text-auth-hero" to="/login">Pyramids</Link>
+            <span className="font-mono-label text-xs text-auth-hero/45">Verified builder network</span>
           </div>
           <div>
-            <p className="font-mono-label text-xs text-white/45">Login / continue building</p>
-            <h1 className="mt-6 max-w-4xl text-4xl font-semibold leading-tight tracking-[-0.025em] text-white sm:text-5xl">
+            <p className="font-mono-label text-xs text-auth-hero/45">Login / continue building</p>
+            <h1 className="mt-6 max-w-4xl text-4xl font-semibold leading-tight tracking-[-0.025em] text-auth-hero sm:text-5xl">
               Your proof of work belongs in motion.
             </h1>
-            <p className="mt-7 max-w-xl text-base font-semibold leading-7 text-white/62">
+            <p className="mt-7 max-w-xl text-base font-semibold leading-7 text-auth-hero/62">
               Sign in to verify projects, discover collaborators, manage requests, and keep climbing toward Pyramidion.
             </p>
           </div>
-          <div className="grid grid-cols-3 border border-white/15 text-white/70">
+          <div className="grid grid-cols-3 border border-auth-hero-border/15 text-auth-hero/70">
             {['Projects', 'Skills', 'Teams'].map((item, index) => (
-              <div className="border-r border-white/15 p-4 last:border-r-0" key={item}>
-                <p className="font-mono-label text-[11px] text-white/38">0{index + 1}</p>
+              <div className="border-r border-auth-hero-border/15 p-4 last:border-r-0" key={item}>
+                <p className="font-mono-label text-[11px] text-auth-hero/38">0{index + 1}</p>
                 <p className="mt-3 text-sm font-extrabold">{item}</p>
               </div>
             ))}
           </div>
         </div>
-        <div className="pointer-events-none absolute right-[-18%] top-[16%] h-[520px] w-[520px] rounded-full border border-white/10" />
-        <div className="pointer-events-none absolute bottom-[-20%] right-[10%] h-[420px] w-[420px] rounded-full bg-white/10 blur-3xl" />
+        <div className="pointer-events-none absolute right-[-18%] top-[16%] h-[520px] w-[520px] rounded-full border border-auth-hero-border/10" />
+        <div className="pointer-events-none absolute bottom-[-20%] right-[10%] h-[420px] w-[420px] rounded-full bg-auth-hero/10 blur-3xl" />
       </section>
 
       <section className="flex items-center justify-center px-6 py-12 sm:px-10">
@@ -79,7 +79,7 @@ function Login() {
           <p className="mt-4 text-sm font-semibold leading-6 text-secondary">Enter your credentials to continue to your Pyramids workspace.</p>
 
           {apiError && (
-            <p className="mt-5 border border-red-300 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">{apiError}</p>
+            <p className="mt-5 px-4 py-3 text-sm font-semibold rounded-lg" style={{ background: 'rgb(var(--color-error-container))', color: 'rgb(var(--color-on-error-container))' }}>{apiError}</p>
           )}
 
           <form className="mt-8 space-y-5" onSubmit={handleSubmit}>

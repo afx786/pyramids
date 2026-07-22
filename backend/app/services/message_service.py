@@ -140,11 +140,8 @@ def send_message(
     )
 
     for participant in participants:
-
-        if participant.user_id != sender_id:
-
-            participant.is_deleted = False
-            participant.deleted_at = None
+        participant.is_deleted = False
+        participant.deleted_at = None
 
     db.commit()
 
@@ -327,10 +324,12 @@ def get_user_conversations(
 
         })
 
+    from datetime import datetime as dt
+
     conversations.sort(
         key=lambda x: (
             x["last_message_time"]
-            or 0
+            or dt.min
         ),
         reverse=True
     )

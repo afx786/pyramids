@@ -1,18 +1,34 @@
+import { formatShortBatch } from '../../utils/batch.js';
 import Avatar from '../ui/Avatar.jsx';
 
 function ConversationListItem({ conversation, active, onClick }) {
   return (
     <button
-      className={`flex w-full items-center gap-3 rounded-lg p-3 text-left transition ${
-        active ? 'bg-surface text-primary' : 'hover:bg-surface/70'
-      }`}
+      className="flex w-full items-center gap-md rounded-lg p-md text-left transition-all duration-150 btn-press"
       type="button"
       onClick={onClick}
+      style={
+        active
+          ? {
+              background: 'rgb(var(--color-surface-container-highest))',
+              borderLeft: '2px solid rgb(var(--color-primary))',
+            }
+          : {
+              background: 'transparent',
+              borderLeft: '2px solid transparent',
+            }
+      }
     >
       <Avatar src={conversation.avatar} alt={conversation.user} size="sm" />
       <div className="min-w-0">
-        <p className="font-black text-primary">{conversation.user}</p>
-        <p className="truncate text-sm font-medium text-secondary">{conversation.preview}</p>
+        <p className="font-body-sm font-semibold" style={{ color: 'rgb(var(--color-on-surface))' }}>
+          {conversation.user}
+          {(() => {
+            const batch = formatShortBatch(conversation.joining_year, conversation.graduating_year);
+            return batch ? <span className="font-mono text-[10px] ml-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>({batch})</span> : null;
+          })()}
+        </p>
+        <p className="truncate font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{conversation.preview}</p>
       </div>
     </button>
   );

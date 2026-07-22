@@ -1,8 +1,11 @@
+import re
 from fastapi import APIRouter, Depends
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.deps import get_db
 from app.core.auth import get_current_user
+from app.models.team import Team
 
 from app.schemas.team import (
     TeamCreate,
@@ -30,6 +33,16 @@ from app.schemas.team import (
 )
 
 from fastapi import HTTPException
+
+
+def _resolve_public_id(db, model, identifier):
+    if re.match(r'^PYR-[A-Z]+-[A-Z0-9]{6}$', str(identifier).upper()):
+        return db.query(model).filter(func.upper(model.public_id) == str(identifier).upper()).first()
+    try:
+        return db.query(model).get(int(identifier))
+    except (ValueError, TypeError):
+        return None
+
 
 router = APIRouter(
     prefix="/teams",
@@ -78,13 +91,21 @@ def create_new_team(
     response_model=TeamJoinRequestResponse
 )
 def join_existing_team(
-    team_id: int,
+    team_id: str,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
+    from app.models.team import Team
+    team = _resolve_public_id(db, Team, team_id)
+    if not team:
+        raise HTTPException(
+            status_code=404,
+            detail="Team not found"
+        )
+
     result = create_join_request(
         db=db,
-        team_id=team_id,
+        team_id=team.id,
         user_id=current_user.id
     )
 
@@ -138,13 +159,10 @@ def list_teams(
     response_model=TeamDetailResponse
 )
 def single_team(
-    team_id: int,
+    team_id: str,
     db: Session = Depends(get_db)
 ):
-    team = get_team(
-        db,
-        team_id
-    )
+    team = _resolve_public_id(db, Team, team_id)
 
     if not team:
         raise HTTPException(
@@ -152,19 +170,26 @@ def single_team(
             detail="Team not found"
         )
 
-    return team
+    return get_team(db, team.id)
 
 @router.post(
     "/{team_id}/leave"
 )
 def leave_existing_team(
-    team_id: int,
+    team_id: str,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
+    team = _resolve_public_id(db, Team, team_id)
+    if not team:
+        raise HTTPException(
+            status_code=404,
+            detail="Team not found"
+        )
+
     result = leave_team(
         db,
-        team_id,
+        team.id,
         current_user.id
     )
 
@@ -188,14 +213,21 @@ def leave_existing_team(
     "/{team_id}/transfer-ownership"
 )
 def transfer_ownership(
-    team_id: int,
+    team_id: str,
     data: TransferOwnershipRequest,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
+    team = _resolve_public_id(db, Team, team_id)
+    if not team:
+        raise HTTPException(
+            status_code=404,
+            detail="Team not found"
+        )
+
     result = transfer_team_ownership(
         db=db,
-        team_id=team_id,
+        team_id=team.id,
         current_user_id=current_user.id,
         new_owner_id=data.new_owner_id
     )
@@ -226,13 +258,20 @@ def transfer_ownership(
     "/{team_id}"
 )
 def remove_team(
-    team_id: int,
+    team_id: str,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
+    team = _resolve_public_id(db, Team, team_id)
+    if not team:
+        raise HTTPException(
+            status_code=404,
+            detail="Team not found"
+        )
+
     result = delete_team(
         db=db,
-        team_id=team_id,
+        team_id=team.id,
         current_user_id=current_user.id
     )
 
@@ -259,13 +298,20 @@ def remove_team(
     response_model=list[TeamJoinRequestResponse]
 )
 def list_team_requests(
-    team_id: int,
+    team_id: str,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
+    team = _resolve_public_id(db, Team, team_id)
+    if not team:
+        raise HTTPException(
+            status_code=404,
+            detail="Team not found"
+        )
+
     result = get_team_requests(
         db=db,
-        team_id=team_id,
+        team_id=team.id,
         current_user_id=current_user.id
     )
 
@@ -356,14 +402,18 @@ def reject_request(
     "/{team_id}/members"
 )
 def invite_member(
-    team_id: int,
+    team_id: str,
     data: TeamMemberInviteRequest,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
+    team = _resolve_public_id(db, Team, team_id)
+    if not team:
+        raise HTTPException(status_code=404, detail="Team not found")
+
     result = add_team_member(
         db=db,
-        team_id=team_id,
+        team_id=team.id,
         current_user_id=current_user.id,
         user_id=data.user_id,
         role=data.role
@@ -393,14 +443,18 @@ def invite_member(
     "/{team_id}/members/{user_id}"
 )
 def remove_member(
-    team_id: int,
+    team_id: str,
     user_id: int,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
+    team = _resolve_public_id(db, Team, team_id)
+    if not team:
+        raise HTTPException(status_code=404, detail="Team not found")
+
     result = remove_team_member(
         db=db,
-        team_id=team_id,
+        team_id=team.id,
         current_user_id=current_user.id,
         user_id=user_id
     )
@@ -426,15 +480,19 @@ def remove_member(
     "/{team_id}/members/{user_id}/role"
 )
 def update_member_role(
-    team_id: int,
+    team_id: str,
     user_id: int,
     data: TeamMemberRoleUpdate,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
+    team = _resolve_public_id(db, Team, team_id)
+    if not team:
+        raise HTTPException(status_code=404, detail="Team not found")
+
     result = change_team_member_role(
         db=db,
-        team_id=team_id,
+        team_id=team.id,
         current_user_id=current_user.id,
         user_id=user_id,
         role=data.role

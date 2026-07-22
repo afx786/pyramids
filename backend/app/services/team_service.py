@@ -5,6 +5,7 @@ from app.models.team_member import TeamMember
 from app.models.hackathon_team import HackathonTeam
 from app.models.user import User
 from app.services.notification_service import create_notification
+from app.services.id_service import generate_public_id
 
 def create_team(
     db: Session,
@@ -13,6 +14,7 @@ def create_team(
     owner_id: int
 ):
     team = Team(
+        public_id=generate_public_id('TEAM', db=db, model=Team),
         name=name,
         description=description,
         owner_id=owner_id
@@ -95,6 +97,7 @@ def get_all_teams(
     for team in teams:
         results.append({
             "id": team.id,
+            "public_id": team.public_id,
             "name": team.name,
             "description": team.description,
             "owner": {
@@ -131,6 +134,7 @@ def get_team(
 
     return {
         "id": team.id,
+        "public_id": team.public_id,
         "name": team.name,
         "description": team.description,
         "owner": {

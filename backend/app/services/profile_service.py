@@ -50,9 +50,11 @@ def get_user_profile(
     projects = [
         {
             "id": project.id,
+            "public_id": project.public_id,
             "title": project.title,
             "domain": project.domain,
-            "status": project.status
+            "status": project.status,
+            "member_count": len(project.members)
         }
         for project in user.projects
     ]
@@ -64,6 +66,7 @@ def get_user_profile(
     research = [
         {
             "id": research.id,
+            "public_id": research.public_id,
             "title": research.title,
             "domain": research.domain,
             "status": research.status
@@ -89,6 +92,7 @@ def get_user_profile(
         if membership.team:
             teams.append({
                 "id": membership.team.id,
+                "public_id": membership.team.public_id,
                 "name": membership.team.name,
                 "role": membership.role
             })
@@ -108,6 +112,7 @@ def get_user_profile(
     hackathon_data = [
         {
             "id": hackathon.id,
+            "public_id": hackathon.public_id,
             "title": hackathon.title,
             "status": hackathon.status
         }
@@ -136,12 +141,15 @@ def get_user_profile(
     return {
         "user": {
             "id": user.id,
+            "public_id": user.public_id,
             "name": user.name,
             "email": user.email,
             "handle": user.handle,
             "bio": user.bio,
             "program": user.program,
             "role": user.role,
+            "joining_year": user.joining_year,
+            "graduating_year": user.graduating_year,
             "created_at": user.created_at
         },
 

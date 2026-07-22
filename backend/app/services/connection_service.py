@@ -54,11 +54,17 @@ def send_request(
         db.query(ConnectionRequest)
         .filter(
             (
-                ConnectionRequest.sender_id == sender_id
-            )
-            &
-            (
-                ConnectionRequest.receiver_id == receiver_id
+                (
+                    (ConnectionRequest.sender_id == sender_id)
+                    &
+                    (ConnectionRequest.receiver_id == receiver_id)
+                )
+                |
+                (
+                    (ConnectionRequest.sender_id == receiver_id)
+                    &
+                    (ConnectionRequest.receiver_id == sender_id)
+                )
             )
             &
             (
@@ -81,6 +87,8 @@ def send_request(
 
     )
 
+    sender = db.query(User).filter(User.id == sender_id).first()
+
     db.add(request)
 
     db.commit()
@@ -95,7 +103,7 @@ def send_request(
 
         title="Connection Request",
 
-        message="You received a new connection request.",
+        message=f"{sender.name} sent you a connection request.",
 
         notification_type="connection"
 
@@ -125,6 +133,8 @@ def accept_request(
     if request.status != "pending":
         return "already_processed"
 
+    accepter = db.query(User).filter(User.id == current_user_id).first()
+
     request.status = "accepted"
 
     connection = Connection(
@@ -145,7 +155,7 @@ def accept_request(
 
         title="Connection Accepted",
 
-        message="Your connection request has been accepted.",
+        message=f"Your connection request has been accepted by {accepter.name}.",
 
         notification_type="connection"
 
@@ -237,7 +247,12 @@ def get_connections(
 
                 "id": connection.id,
 
-                "user": user,
+                "user": {
+                    "id": user.id,
+                    "name": user.name,
+                    "headline": getattr(user, "headline", None),
+                    "profile_picture": getattr(user, "profile_picture", None),
+                },
 
                 "connected_at": connection.created_at
 

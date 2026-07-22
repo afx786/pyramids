@@ -32,7 +32,7 @@ function Pyramidion() {
         description="A builder rank based on project work, verified skills, and meaningful collaborations."
       />
 
-      <section className="mt-10 grid grid-cols-[360px_1fr] gap-8">
+      <section className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[360px_1fr]">
         <Card className="p-8">
           <p className="text-sm font-black uppercase tracking-[0.18em] text-secondary">Current Rank</p>
           <h2 className="mt-4 text-5xl font-black text-primary">{rank}</h2>
