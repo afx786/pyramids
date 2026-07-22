@@ -1,10 +1,12 @@
-import { Bell, Search, Award } from 'lucide-react';
+import { Bell, Search, Award, Moon, Sun } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { useTheme } from '../../context/ThemeContext.jsx';
 
 function Topbar() {
   const navigate = useNavigate();
   const { rankData } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <header
@@ -39,6 +41,14 @@ function Topbar() {
 
       {/* Right actions */}
       <div className="flex items-center gap-lg">
+        <button
+          className="transition-opacity hover:opacity-80"
+          style={{ color: 'rgb(var(--color-on-surface-variant))' }}
+          onClick={toggleTheme}
+          aria-label="Toggle theme"
+        >
+          {theme === 'dark' ? <Sun className="h-5 w-5" strokeWidth={1.5} /> : <Moon className="h-5 w-5" strokeWidth={1.5} />}
+        </button>
         <div className="flex items-center gap-md">
           <button
             className="relative transition-opacity hover:opacity-80"

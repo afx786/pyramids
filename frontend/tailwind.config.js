@@ -32,6 +32,13 @@ export default {
         success: 'rgb(var(--color-success) / <alpha-value>)',
         warning: 'rgb(var(--color-warning) / <alpha-value>)',
 
+        /* Auth hero — consistently dark across themes */
+        'auth-hero': {
+          bg: 'rgb(var(--auth-hero-bg) / <alpha-value>)',
+          DEFAULT: 'rgb(var(--auth-hero-text) / <alpha-value>)',
+          border: 'rgb(var(--auth-hero-border) / <alpha-value>)',
+        },
+
         /* Legacy aliases (backward compat) */
         app: 'rgb(var(--color-app) / <alpha-value>)',
         sidebar: 'rgb(var(--color-sidebar) / <alpha-value>)',

@@ -7,7 +7,7 @@
 :root {
   color-scheme: dark;
 
-  /* Stitch Design Tokens */
+  /* Stitch Design Tokens — Dark */
   --color-surface: 19 19 21;
   --color-surface-dim: 19 19 21;
   --color-surface-bright: 57 57 59;
@@ -47,6 +47,59 @@
   --color-accent-soft: 42 42 44;
   --color-accent-glow: 255 255 255 / 0.08;
   --color-danger: 255 80 80;
+
+  /* Auth hero — dark theme defaults (white-on-dark) */
+  --auth-hero-bg: 28 27 29;
+  --auth-hero-text: 255 255 255;
+  --auth-hero-border: 255 255 255;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  --color-surface: 255 255 255;
+  --color-surface-dim: 216 217 218;
+  --color-surface-bright: 255 255 255;
+  --color-surface-container-lowest: 255 255 255;
+  --color-surface-container-low: 242 242 243;
+  --color-surface-container: 236 236 237;
+  --color-surface-container-high: 226 226 228;
+  --color-surface-container-highest: 216 216 218;
+  --color-surface-variant: 216 216 218;
+  --color-on-surface: 28 28 30;
+  --color-on-surface-variant: 68 71 72;
+  --color-outline: 115 117 119;
+  --color-outline-variant: 200 201 202;
+  --color-primary: 0 0 0;
+  --color-on-primary: 255 255 255;
+  --color-primary-container: 30 30 32;
+  --color-on-primary-container: 200 201 202;
+  --color-secondary: 99 100 106;
+  --color-on-secondary: 255 255 255;
+  --color-secondary-container: 200 201 208;
+  --color-on-secondary-container: 30 31 37;
+  --color-error: 179 38 30;
+  --color-on-error: 255 255 255;
+  --color-error-container: 249 189 185;
+  --color-on-error-container: 65 14 11;
+  --color-success: 22 163 74;
+  --color-warning: 202 138 4;
+
+  --color-app: 255 255 255;
+  --color-sidebar: 242 242 243;
+  --color-elevated: 236 236 237;
+  --color-text-primary: 28 28 30;
+  --color-text-secondary: 68 71 72;
+  --color-border-subtle: 200 201 202;
+  --color-accent: 0 0 0;
+  --color-accent-soft: 226 226 228;
+  --color-accent-glow: 0 0 0 / 0.06;
+  --color-danger: 220 38 38;
+
+  /* Auth hero — light theme (same white-on-dark appearance) */
+  --auth-hero-bg: 28 27 29;
+  --auth-hero-text: 255 255 255;
+  --auth-hero-border: 255 255 255;
 }
 
 * {
