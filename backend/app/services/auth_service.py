@@ -5,7 +5,7 @@ from app.core.security import hash_password, verify_password
 from app.core.auth import create_access_token
 
 
-def signup_user(db: Session, name: str, email: str, password: str, program: str | None = None):
+def signup_user(db: Session, name: str, email: str, password: str, program: str | None = None, joining_year: int | None = None, graduating_year: int | None = None):
     existing_user = db.query(User).filter(User.email == email).first()
 
     if existing_user:
@@ -15,7 +15,9 @@ def signup_user(db: Session, name: str, email: str, password: str, program: str 
         name=name,
         email=email,
         password_hash=hash_password(password),
-        program=program
+        program=program,
+        joining_year=joining_year,
+        graduating_year=graduating_year
     )
 
     db.add(new_user)
