@@ -1,0 +1,1 @@
+import{j as e}from"./index-Q_scY88D.js";function c({children:r,className:o="",hover:a=!1}){return e.jsx("section",{className:`rounded-xl p-lg card-border ${a?"card-hover":""} ${o}`,style:{background:"rgb(var(--color-surface-container-low))"},children:r})}export{c as C};
