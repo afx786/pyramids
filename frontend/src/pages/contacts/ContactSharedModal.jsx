@@ -2,6 +2,16 @@ import { useState } from 'react';
 import { X, Mail, Smartphone, Copy, CheckCircle } from 'lucide-react';
 import Button from '../../components/ui/Button.jsx';
 
+function formatApprovedDate(raw) {
+  try {
+    const d = new Date(raw);
+    if (isNaN(d.getTime())) return null;
+    return d.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+  } catch {
+    return null;
+  }
+}
+
 function CopyButton({ text }) {
   const [copied, setCopied] = useState(false);
 
@@ -19,9 +29,10 @@ function CopyButton({ text }) {
     <button
       type="button"
       onClick={handleCopy}
-      className="p-xs rounded-lg transition-all shrink-0 hover:opacity-80"
+      className="p-xs rounded-lg transition-all shrink-0 hover:bg-[rgb(var(--color-surface-container))] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgb(var(--color-primary))]"
       style={{ color: 'rgb(var(--color-on-surface-variant))' }}
-      aria-label="Copy to clipboard"
+      aria-label={copied ? 'Copied' : 'Copy to clipboard'}
+      aria-live="polite"
     >
       {copied ? <CheckCircle size={16} style={{ color: 'rgb(var(--color-success))' }} /> : <Copy size={16} />}
     </button>
@@ -33,6 +44,7 @@ function ContactSharedModal({ isOpen, onClose, contactInfo }) {
 
   const hasEmail = Boolean(contactInfo.contact_email);
   const hasPhone = Boolean(contactInfo.whatsapp_number);
+  const approvedDate = contactInfo.approved_at ? formatApprovedDate(contactInfo.approved_at) : null;
 
   return (
     <div
@@ -41,7 +53,7 @@ function ContactSharedModal({ isOpen, onClose, contactInfo }) {
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
       role="dialog"
       aria-modal="true"
-      aria-label="Contact information shared"
+      aria-labelledby="contact-shared-title"
     >
       <div
         className="w-full max-w-md rounded-xl p-xl"
@@ -50,10 +62,17 @@ function ContactSharedModal({ isOpen, onClose, contactInfo }) {
           border: '1px solid rgb(var(--color-outline-variant))',
         }}
       >
-        <div className="flex items-center justify-between mb-lg">
-          <h3 className="font-headline-md text-headline-md font-semibold" style={{ color: 'rgb(var(--color-on-surface))' }}>
-            Contact Information Shared
-          </h3>
+        <div className="flex items-start justify-between mb-lg">
+          <div>
+            <h3 id="contact-shared-title" className="font-headline-md text-headline-md font-semibold" style={{ color: 'rgb(var(--color-on-surface))' }}>
+              Contact Information
+            </h3>
+            {approvedDate ? (
+              <p className="mt-1 font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                Approved on {approvedDate}
+              </p>
+            ) : null}
+          </div>
           <button type="button" onClick={onClose} className="p-xs rounded-lg hover:opacity-80" aria-label="Close">
             <X size={18} style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
           </button>

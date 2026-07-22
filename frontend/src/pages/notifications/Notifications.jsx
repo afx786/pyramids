@@ -1,4 +1,4 @@
-import { Check, Bell, Eye, ThumbsUp, ThumbsDown, Mail, Smartphone } from 'lucide-react';
+import { Check, Bell, Eye, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import EmptyState from '../../components/common/EmptyState.jsx';
 import Button from '../../components/ui/Button.jsx';
@@ -84,7 +84,11 @@ function Notifications() {
     try {
       const status = await contactService.getRequestStatus(targetId);
       if (status?.contact_email || status?.whatsapp_number) {
-        setSharedContactInfo({ contact_email: status.contact_email, whatsapp_number: status.whatsapp_number });
+        setSharedContactInfo({
+          contact_email: status.contact_email,
+          whatsapp_number: status.whatsapp_number,
+          approved_at: status.approved_at,
+        });
         setShowContactShared(true);
       }
     } catch (err) {

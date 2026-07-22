@@ -250,7 +250,8 @@ def get_contact_request_status(
 
     result = {
         "status": req.status,
-        "request_id": req.id
+        "request_id": req.id,
+        "approved_at": req.approved_at.isoformat() if req.approved_at else None
     }
 
     if req.status == "approved":

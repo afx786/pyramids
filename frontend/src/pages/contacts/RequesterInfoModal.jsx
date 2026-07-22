@@ -28,14 +28,18 @@ function RequesterInfoModal({ isOpen, onClose }) {
     }
   }
 
+  function handleNotNow() {
+    onClose(false);
+  }
+
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center p-lg"
       style={{ background: 'rgb(0 0 0 / 0.5)' }}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(false); }}
+      onClick={(e) => { if (e.target === e.currentTarget) handleNotNow(); }}
       role="dialog"
       aria-modal="true"
-      aria-label="Connect Beyond Pyramids"
+      aria-labelledby="requester-info-title"
     >
       <div
         className="w-full max-w-md rounded-xl p-xl"
@@ -45,10 +49,10 @@ function RequesterInfoModal({ isOpen, onClose }) {
         }}
       >
         <div className="flex items-center justify-between mb-lg">
-          <h3 className="font-headline-md text-headline-md font-semibold" style={{ color: 'rgb(var(--color-on-surface))' }}>
+          <h3 id="requester-info-title" className="font-headline-md text-headline-md font-semibold" style={{ color: 'rgb(var(--color-on-surface))' }}>
             Connect Beyond Pyramids
           </h3>
-          <button type="button" onClick={() => onClose(false)} className="p-xs rounded-lg hover:opacity-80" aria-label="Close">
+          <button type="button" onClick={handleNotNow} className="p-xs rounded-lg hover:opacity-80" aria-label="Close">
             <X size={18} style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
           </button>
         </div>
@@ -100,9 +104,9 @@ function RequesterInfoModal({ isOpen, onClose }) {
         </div>
 
         <div className="flex gap-md justify-end">
-          <Button variant="secondary" onClick={() => onClose(false)}>Cancel</Button>
+          <Button variant="secondary" onClick={handleNotNow}>Not Now</Button>
           <Button variant="primary" onClick={handleSave} disabled={saving}>
-            {saving ? 'Saving...' : 'Save & Send Request'}
+            {saving ? 'Saving...' : 'Save & Continue'}
           </Button>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { Contact, UserPlus, X } from 'lucide-react';
+import Toast from '../../components/ui/Toast.jsx';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ConnectionCard from '../../components/common/ConnectionCard.jsx';
@@ -31,6 +32,7 @@ function Connections() {
   const [pendingRequestTarget, setPendingRequestTarget] = useState(null);
   const [showContactShared, setShowContactShared] = useState(false);
   const [sharedContactInfo, setSharedContactInfo] = useState(null);
+  const [toast, setToast] = useState('');
 
   useEffect(() => {
     connectionService.listConnections().then((data) => { setConnected(data); setLoadingTabs((p) => ({ ...p, connected: false })); }).catch((err) => { setError(err.message); setLoadingTabs((p) => ({ ...p, connected: false })); });
@@ -144,6 +146,8 @@ function Connections() {
     setShowRequesterInfo(false);
     if (hasSaved && pendingRequestTarget) {
       await doSendRequest(pendingRequestTarget);
+    } else if (!hasSaved && pendingRequestTarget) {
+      setToast('You need to add at least one contact method before requesting another builder\'s contact.');
     }
     setPendingRequestTarget(null);
   }
@@ -152,7 +156,11 @@ function Connections() {
     const userId = person._userId || person.id;
     const status = contactStatuses[userId];
     if (status?.contact_email || status?.whatsapp_number) {
-      setSharedContactInfo({ contact_email: status.contact_email, whatsapp_number: status.whatsapp_number });
+      setSharedContactInfo({
+        contact_email: status.contact_email,
+        whatsapp_number: status.whatsapp_number,
+        approved_at: status.approved_at,
+      });
       setShowContactShared(true);
     }
   }
@@ -302,6 +310,8 @@ function Connections() {
         onClose={() => setShowContactShared(false)}
         contactInfo={sharedContactInfo}
       />
+
+      {toast ? <Toast message={toast} type="info" onClose={() => setToast('')} /> : null}
     </div>
   );
 }
