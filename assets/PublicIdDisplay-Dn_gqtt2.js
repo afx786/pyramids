@@ -1,6 +1,0 @@
-import{c as o,r as n,j as e}from"./index-BYu6BHsP.js";import{C as i}from"./check-BZQdMoBq.js";/**
- * @license lucide-react v1.24.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */const l=[["rect",{width:"14",height:"14",x:"8",y:"8",rx:"2",ry:"2",key:"17jyea"}],["path",{d:"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2",key:"zix9uf"}]],p=o("copy",l);function y({publicId:t,label:s}){const[a,r]=n.useState(!1);if(!t)return null;async function c(){try{await navigator.clipboard.writeText(t),r(!0),setTimeout(()=>r(!1),2e3)}catch{}}return e.jsxs("div",{className:"inline-flex items-center gap-2",children:[e.jsxs("span",{className:"font-mono text-[11px] tracking-tight",style:{color:"rgb(var(--color-on-surface-variant))"},children:[s?e.jsx("span",{className:"font-label-caps text-[10px] uppercase tracking-wider mr-1.5",children:s}):null,t]}),e.jsx("button",{type:"button",onClick:c,className:"flex items-center justify-center w-7 h-7 rounded-md transition-all active:scale-90 hover:opacity-70",style:{color:a?"rgb(var(--color-success))":"rgb(var(--color-on-surface-variant))"},"aria-label":a?"Copied":`Copy ${t}`,title:a?"Copied":"Copy ID",children:a?e.jsx(i,{className:"h-3.5 w-3.5"}):e.jsx(p,{className:"h-3.5 w-3.5"})})]})}export{y as P};
