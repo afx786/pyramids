@@ -1,8 +1,10 @@
-import { Check, Bell } from 'lucide-react';
+import { Check, Bell, Eye, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import EmptyState from '../../components/common/EmptyState.jsx';
 import Button from '../../components/ui/Button.jsx';
 import { notificationService } from '../../services/notificationService.js';
+import { contactService } from '../../services/contactService.js';
+import ContactSharedModal from '../contacts/ContactSharedModal.jsx';
 
 function formatDate(raw) {
   try {
@@ -22,11 +24,17 @@ function normalizeNotifications(data) {
 
 function Notifications() {
   const [notifications, setNotifications] = useState([]);
+  const [receivedRequests, setReceivedRequests] = useState([]);
+  const [showContactShared, setShowContactShared] = useState(false);
+  const [sharedContactInfo, setSharedContactInfo] = useState(null);
 
   useEffect(() => {
     notificationService.listNotifications()
       .then((data) => setNotifications(normalizeNotifications(data)))
       .catch((err) => console.warn('[notifications] list failed:', err));
+    contactService.getReceivedRequests()
+      .then((data) => setReceivedRequests(Array.isArray(data) ? data : []))
+      .catch(() => {});
   }, []);
 
   async function handleMarkRead(id) {
@@ -35,6 +43,52 @@ function Notifications() {
       setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)));
     } catch (err) {
       console.warn('[notifications] mark read failed:', err);
+    }
+  }
+
+  function findRequestIdForNotification(n) {
+    const received = receivedRequests.find((r) => {
+      const senderName = r.sender?.name || '';
+      return n.message?.includes(senderName) || n.title?.includes('Contact Request');
+    });
+    return received?.id || null;
+  }
+
+  async function handleApprove(n) {
+    const requestId = findRequestIdForNotification(n);
+    if (!requestId) return;
+    try {
+      await contactService.approveRequest(requestId);
+      setReceivedRequests((prev) => prev.filter((r) => r.id !== requestId));
+      setNotifications((prev) => prev.map((item) => (item.id === n.id ? { ...item, is_read: true } : item)));
+    } catch (err) {
+      console.warn('[notifications] approve failed:', err);
+    }
+  }
+
+  async function handleDecline(n) {
+    const requestId = findRequestIdForNotification(n);
+    if (!requestId) return;
+    try {
+      await contactService.declineRequest(requestId);
+      setReceivedRequests((prev) => prev.filter((r) => r.id !== requestId));
+      setNotifications((prev) => prev.map((item) => (item.id === n.id ? { ...item, is_read: true } : item)));
+    } catch (err) {
+      console.warn('[notifications] decline failed:', err);
+    }
+  }
+
+  async function handleViewContact() {
+    try {
+      const myInfo = await contactService.getMyInfo();
+      if (myInfo.contact_email || myInfo.whatsapp_number) {
+        setSharedContactInfo({ contact_email: myInfo.contact_email, whatsapp_number: myInfo.whatsapp_number });
+      } else {
+        return;
+      }
+      setShowContactShared(true);
+    } catch (err) {
+      console.warn('[notifications] fetch contact failed:', err);
     }
   }
 
@@ -86,6 +140,23 @@ function Notifications() {
                 <p className="mt-sm font-body-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
                   {formatDate(n.created_at)}
                 </p>
+                {n.type === 'CONTACT_REQUEST' ? (
+                  <div className="flex gap-md mt-md">
+                    <Button variant="primary" onClick={() => handleApprove(n)} disabled={n.is_read}>
+                      <ThumbsUp size={14} /> Approve
+                    </Button>
+                    <Button variant="secondary" onClick={() => handleDecline(n)} disabled={n.is_read}>
+                      <ThumbsDown size={14} /> Decline
+                    </Button>
+                  </div>
+                ) : null}
+                {n.type === 'CONTACT_APPROVED' ? (
+                  <div className="mt-md">
+                    <Button variant="primary" onClick={handleViewContact}>
+                      <Eye size={14} /> View Contact
+                    </Button>
+                  </div>
+                ) : null}
               </div>
               {!n.is_read ? (
                 <Button variant="ghost" onClick={() => handleMarkRead(n.id)} className="shrink-0">
@@ -102,6 +173,12 @@ function Notifications() {
           />
         )}
       </section>
+
+      <ContactSharedModal
+        isOpen={showContactShared}
+        onClose={() => setShowContactShared(false)}
+        contactInfo={sharedContactInfo}
+      />
     </div>
   );
 }

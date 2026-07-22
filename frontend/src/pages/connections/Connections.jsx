@@ -1,11 +1,14 @@
-import { UserPlus } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Contact, UserPlus, X } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ConnectionCard from '../../components/common/ConnectionCard.jsx';
 import EmptyState from '../../components/common/EmptyState.jsx';
 import Skeleton from '../../components/ui/Skeleton.jsx';
 import { connectionService } from '../../services/connectionService.js';
+import { contactService } from '../../services/contactService.js';
 import { messageService } from '../../services/messageService.js';
+import ContactSharedModal from '../contacts/ContactSharedModal.jsx';
+import RequesterInfoModal from '../contacts/RequesterInfoModal.jsx';
 
 const tabs = [
   { id: 'connected', label: 'Connected' },
@@ -22,11 +25,34 @@ function Connections() {
   const [loadingTabs, setLoadingTabs] = useState({ connected: true, pending: true, sent: true });
   const [error, setError] = useState('');
 
+  const [contactStatuses, setContactStatuses] = useState({});
+  const [contactStatusLoading, setContactStatusLoading] = useState({});
+  const [showRequesterInfo, setShowRequesterInfo] = useState(false);
+  const [pendingRequestTarget, setPendingRequestTarget] = useState(null);
+  const [showContactShared, setShowContactShared] = useState(false);
+  const [sharedContactInfo, setSharedContactInfo] = useState(null);
+
   useEffect(() => {
     connectionService.listConnections().then((data) => { setConnected(data); setLoadingTabs((p) => ({ ...p, connected: false })); }).catch((err) => { setError(err.message); setLoadingTabs((p) => ({ ...p, connected: false })); });
     connectionService.listIncomingRequests().then((data) => { setPending(data); setLoadingTabs((p) => ({ ...p, pending: false })); }).catch((err) => { setError(err.message); setLoadingTabs((p) => ({ ...p, pending: false })); });
     connectionService.listOutgoingRequests().then((data) => { setSent(data); setLoadingTabs((p) => ({ ...p, sent: false })); }).catch((err) => { setError(err.message); setLoadingTabs((p) => ({ ...p, sent: false })); });
   }, []);
+
+  useEffect(() => {
+    if (activeTab !== 'connected') return;
+    connected.forEach((conn) => {
+      const userId = (conn.user || conn).id;
+      if (contactStatuses[userId] !== undefined || contactStatusLoading[userId]) return;
+      setContactStatusLoading((prev) => ({ ...prev, [userId]: true }));
+      contactService.getRequestStatus(userId).then((data) => {
+        setContactStatuses((prev) => ({ ...prev, [userId]: data }));
+      }).catch(() => {
+        setContactStatuses((prev) => ({ ...prev, [userId]: null }));
+      }).finally(() => {
+        setContactStatusLoading((prev) => ({ ...prev, [userId]: false }));
+      });
+    });
+  }, [activeTab, connected, contactStatuses, contactStatusLoading]);
 
   function mapConnected(conn) {
     const user = conn.user || conn;
@@ -90,6 +116,49 @@ function Connections() {
     messageService.startConversation(person._userId || person.id).catch(() => {});
   }
 
+  async function handleRequestContact(person) {
+    const userId = person._userId || person.id;
+    try {
+      const myInfo = await contactService.getMyInfo();
+      if (!myInfo.contact_email && !myInfo.whatsapp_number) {
+        setPendingRequestTarget(userId);
+        setShowRequesterInfo(true);
+        return;
+      }
+      await doSendRequest(userId);
+    } catch (err) {
+      setError(err.message || 'Failed to check contact info');
+    }
+  }
+
+  async function doSendRequest(userId) {
+    try {
+      await contactService.sendRequest(userId);
+      setContactStatuses((prev) => ({ ...prev, [userId]: { status: 'pending' } }));
+    } catch (err) {
+      setError(err.message || 'Failed to send request');
+    }
+  }
+
+  async function handleRequesterClose(hasSaved) {
+    setShowRequesterInfo(false);
+    if (hasSaved && pendingRequestTarget) {
+      await doSendRequest(pendingRequestTarget);
+    } else if (!hasSaved && pendingRequestTarget) {
+      setError('You need to provide contact information before requesting someone else\'s.');
+    }
+    setPendingRequestTarget(null);
+  }
+
+  function handleViewContact(person) {
+    const userId = person._userId || person.id;
+    const status = contactStatuses[userId];
+    if (status?.contact_info) {
+      setSharedContactInfo(status.contact_info);
+      setShowContactShared(true);
+    }
+  }
+
   return (
     <div className="p-xl max-w-6xl mx-auto">
       <header className="mb-xl">
@@ -147,25 +216,55 @@ function Connections() {
             </div>
           ))
         ) : people.length > 0 ? (
-          people.map((person) => (
-            <div key={person.id}>
-              <ConnectionCard
-                person={person}
-                primaryAction={
-                  activeTab === 'pending' ? 'Accept' : activeTab === 'sent' ? 'Cancel' : 'Message'
-                }
-                secondaryAction={
-                  activeTab === 'pending' ? 'Ignore' : undefined
-                }
-                onPrimary={
-                  activeTab === 'pending' ? () => handleAccept(person) :
-                  activeTab === 'sent' ? () => handleCancel(person) :
-                  activeTab === 'connected' ? () => handleMessage(person) : undefined
-                }
-                onSecondary={activeTab === 'pending' ? () => handleReject(person) : undefined}
-              />
-            </div>
-          ))
+          people.map((person) => {
+            if (activeTab === 'connected') {
+              const userId = person._userId || person.id;
+              const status = contactStatuses[userId];
+              const isLoading = contactStatusLoading[userId];
+              return (
+                <div key={person.id}>
+                  <ConnectionCard
+                    person={person}
+                    primaryAction={
+                      isLoading ? 'Loading...' :
+                      status?.status === 'approved' ? 'View Contact' :
+                      status?.status === 'pending' ? 'Pending' :
+                      status?.status === 'declined' ? 'Declined' :
+                      'Request Contact Details'
+                    }
+                    secondaryAction="Message"
+                    onPrimary={
+                      isLoading ? undefined :
+                      status?.status === 'approved' ? () => handleViewContact(person) :
+                      status?.status === 'pending' ? undefined :
+                      status?.status === 'declined' ? undefined :
+                      () => handleRequestContact(person)
+                    }
+                    onSecondary={() => handleMessage(person)}
+                  />
+                </div>
+              );
+            }
+            return (
+              <div key={person.id}>
+                <ConnectionCard
+                  person={person}
+                  primaryAction={
+                    activeTab === 'pending' ? 'Accept' : activeTab === 'sent' ? 'Cancel' : 'Message'
+                  }
+                  secondaryAction={
+                    activeTab === 'pending' ? 'Ignore' : undefined
+                  }
+                  onPrimary={
+                    activeTab === 'pending' ? () => handleAccept(person) :
+                    activeTab === 'sent' ? () => handleCancel(person) :
+                    activeTab === 'connected' ? () => handleMessage(person) : undefined
+                  }
+                  onSecondary={activeTab === 'pending' ? () => handleReject(person) : undefined}
+                />
+              </div>
+            );
+          })
         ) : (
           <div className="col-span-full">
             <EmptyState
@@ -176,6 +275,17 @@ function Connections() {
           </div>
         )}
       </section>
+
+      <RequesterInfoModal
+        isOpen={showRequesterInfo}
+        onClose={handleRequesterClose}
+      />
+
+      <ContactSharedModal
+        isOpen={showContactShared}
+        onClose={() => setShowContactShared(false)}
+        contactInfo={sharedContactInfo}
+      />
     </div>
   );
 }

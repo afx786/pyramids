@@ -1,10 +1,11 @@
-import { Bell, ShieldCheck, User } from 'lucide-react';
-import { useState } from 'react';
+import { Bell, Mail, ShieldCheck, Smartphone, User } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import Card from '../../components/ui/Card.jsx';
 import Button from '../../components/ui/Button.jsx';
 import PublicIdDisplay from '../../components/ui/PublicIdDisplay.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { userService } from '../../services/userService.js';
+import { contactService } from '../../services/contactService.js';
 
 const YEAR_OPTIONS = Array.from({ length: 21 }, (_, i) => 2020 + i);
 
@@ -18,6 +19,30 @@ function Settings() {
   const [saveError, setSaveError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [contactEmail, setContactEmail] = useState(user?.contact_email || '');
+  const [whatsappNumber, setWhatsappNumber] = useState(user?.whatsapp_number || '');
+  const [contactSaving, setContactSaving] = useState(false);
+  const [contactSaved, setContactSaved] = useState(false);
+
+  useEffect(() => {
+    contactService.getMyInfo().then((data) => {
+      setContactEmail(data.contact_email || '');
+      setWhatsappNumber(data.whatsapp_number || '');
+    }).catch(() => {});
+  }, []);
+
+  async function handleSaveContact() {
+    setContactSaving(true);
+    try {
+      await contactService.updateMyInfo({ contact_email: contactEmail, whatsapp_number: whatsappNumber });
+      setContactSaved(true);
+      setTimeout(() => setContactSaved(false), 2000);
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setContactSaving(false);
+    }
+  }
 
   async function handleSave() {
     const nextErrors = {};
@@ -232,6 +257,60 @@ function Settings() {
                   style={{ background: 'rgb(var(--color-primary))' }}
                 />
               </label>
+            </div>
+          </div>
+        </div>
+
+        <div
+          className="p-lg rounded-xl"
+          style={{
+            background: 'rgb(var(--color-surface-container-low))',
+            border: '1px solid rgb(var(--color-outline-variant))',
+          }}
+        >
+          <div className="flex items-center gap-md mb-lg">
+            <Smartphone size={20} style={{ color: 'rgb(var(--color-primary))' }} />
+            <h3 className="font-headline-md text-headline-md" style={{ color: 'rgb(var(--color-primary))' }}>Contact Information</h3>
+          </div>
+          <p className="font-body-sm mb-lg" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+            Your contact information remains private until you approve a request from another connected builder.
+          </p>
+          <div className="space-y-lg">
+            {contactSaved ? (
+              <p className="rounded-lg px-lg py-sm font-body-sm" style={{ background: 'rgb(var(--color-success) / 0.15)', color: 'rgb(var(--color-success))' }}>Contact information saved.</p>
+            ) : null}
+            <div>
+              <label className="font-label-caps text-label-caps block mb-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Email</label>
+              <input
+                className="w-full rounded-lg py-sm px-md font-body-sm"
+                style={{
+                  background: 'rgb(var(--color-surface-container))',
+                  border: '1px solid rgb(var(--color-outline-variant))',
+                  color: 'rgb(var(--color-on-surface))',
+                }}
+                placeholder="you@example.com"
+                value={contactEmail}
+                onChange={(e) => setContactEmail(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="font-label-caps text-label-caps block mb-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>WhatsApp Number</label>
+              <input
+                className="w-full rounded-lg py-sm px-md font-body-sm"
+                style={{
+                  background: 'rgb(var(--color-surface-container))',
+                  border: '1px solid rgb(var(--color-outline-variant))',
+                  color: 'rgb(var(--color-on-surface))',
+                }}
+                placeholder="+1 555 123 4567"
+                value={whatsappNumber}
+                onChange={(e) => setWhatsappNumber(e.target.value)}
+              />
+            </div>
+            <div className="flex justify-end">
+              <Button variant="primary" onClick={handleSaveContact} disabled={contactSaving}>
+                {contactSaving ? 'Saving...' : 'Save Contact Info'}
+              </Button>
             </div>
           </div>
         </div>

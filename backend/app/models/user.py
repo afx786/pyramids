@@ -149,6 +149,20 @@ class User(Base):
     messages = relationship(
         "Message"
     )
+
+    # -----------------------------
+    # Contact Info
+    # -----------------------------
+    contact_email = Column(
+        String,
+        nullable=True
+    )
+
+    whatsapp_number = Column(
+        String,
+        nullable=True
+    )
+
     username = Column(
         String,
         unique=True,

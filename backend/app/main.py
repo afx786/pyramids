@@ -111,6 +111,10 @@ from app.routes.ws import (
 from app.routes.organizations import (
     router as organizations_router
 )
+from app.models.contact_request import ContactRequest
+from app.routes.contact_requests import (
+    router as contact_requests_router
+)
 app = FastAPI(title="Pyramids API")
 
 
@@ -210,4 +214,7 @@ app.include_router(
 )
 app.include_router(
     organizations_router
+)
+app.include_router(
+    contact_requests_router
 )
