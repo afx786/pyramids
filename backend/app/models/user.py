@@ -164,6 +164,16 @@ class User(Base):
     created_hackathons = relationship(
         "Hackathon"
     )
+    joining_year = Column(
+        Integer,
+        nullable=True
+    )
+
+    graduating_year = Column(
+        Integer,
+        nullable=True
+    )
+
     is_admin = Column(
     Boolean,
     default=False,
