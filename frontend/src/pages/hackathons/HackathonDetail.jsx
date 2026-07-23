@@ -34,12 +34,21 @@ function HackathonDetail() {
 
   function formatDate(dateStr) {
     if (!dateStr) return '—';
-    return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    if (/\w{3}\s+\d{1,2}\s*[-–]\s*\w{3}\s+\d{1,2},\s*\d{4}/.test(dateStr) || dateStr.includes('–') || dateStr.includes(' - ')) return dateStr;
+    try {
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return dateStr;
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    } catch { return dateStr; }
   }
 
   function formatDateTime(dateStr) {
     if (!dateStr) return '—';
-    return new Date(dateStr).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+    try {
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return dateStr;
+      return d.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+    } catch { return dateStr; }
   }
 
   if (loading) return <LoadingState label="Loading hackathon..." />;
@@ -77,12 +86,21 @@ function HackathonDetail() {
       </header>
 
       <div className="grid gap-lg sm:grid-cols-2 lg:grid-cols-4 mb-xl">
-        <div className="p-lg rounded-xl" style={{ background: 'rgb(var(--color-surface-container-low))', border: '1px solid rgb(var(--color-outline-variant))' }}>
-          <p className="font-label-caps text-label-caps" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>REGISTRATION</p>
-          <p className="font-body-sm mt-sm" style={{ color: 'rgb(var(--color-on-surface))' }}>
-            {formatDateTime(hackathon.registration_opens)} – {formatDateTime(hackathon.registration_closes)}
-          </p>
-        </div>
+        {hackathon.registration_opens || hackathon.registration_closes ? (
+          <div className="p-lg rounded-xl" style={{ background: 'rgb(var(--color-surface-container-low))', border: '1px solid rgb(var(--color-outline-variant))' }}>
+            <p className="font-label-caps text-label-caps" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>REGISTRATION</p>
+            <p className="font-body-sm mt-sm" style={{ color: 'rgb(var(--color-on-surface))' }}>
+              {formatDateTime(hackathon.registration_opens)} – {formatDateTime(hackathon.registration_closes)}
+            </p>
+          </div>
+        ) : (
+          <div className="p-lg rounded-xl" style={{ background: 'rgb(var(--color-surface-container-low))', border: '1px solid rgb(var(--color-outline-variant))' }}>
+            <p className="font-label-caps text-label-caps" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>EVENT DATES</p>
+            <p className="font-body-sm mt-sm" style={{ color: 'rgb(var(--color-on-surface))' }}>
+              {formatDate(hackathon.start_date)} – {formatDate(hackathon.end_date)}
+            </p>
+          </div>
+        )}
         <div className="p-lg rounded-xl" style={{ background: 'rgb(var(--color-surface-container-low))', border: '1px solid rgb(var(--color-outline-variant))' }}>
           <p className="font-label-caps text-label-caps" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>EVENT DATES</p>
           <p className="font-body-sm mt-sm" style={{ color: 'rgb(var(--color-on-surface))' }}>
@@ -107,23 +125,18 @@ function HackathonDetail() {
 
       <div className="grid gap-xl lg:grid-cols-[1fr_360px] mb-xl">
         <div className="space-y-xl">
-          <Card className="p-lg">
-            <h2 className="font-label-caps text-label-caps mb-md" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>THEME</h2>
-            <p className="font-body-lg text-body-lg leading-6" style={{ color: 'rgb(var(--color-on-surface))' }}>
-              {hackathon.theme || 'No theme specified.'}
-            </p>
-          </Card>
-
-          <Card className="p-lg">
-            <h2 className="font-label-caps text-label-caps mb-md" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>DESCRIPTION</h2>
-            <p className="font-body-sm leading-6 whitespace-pre-line" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
-              {hackathon.description || 'No description provided.'}
-            </p>
-          </Card>
+          {hackathon.description ? (
+            <Card className="p-lg">
+              <h2 className="font-label-caps text-label-caps mb-md" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>DESCRIPTION</h2>
+              <p className="font-body-sm leading-6 whitespace-pre-line" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                {hackathon.description}
+              </p>
+            </Card>
+          ) : null}
 
           {domains.length > 0 ? (
             <Card className="p-lg">
-              <h2 className="font-label-caps text-label-caps mb-md" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>DOMAINS</h2>
+              <h2 className="font-label-caps text-label-caps mb-md" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>THEME / DOMAINS</h2>
               <div className="flex flex-wrap gap-sm">
                 {domains.map((d) => (
                   <span key={d} className="px-md py-xs rounded font-mono text-[11px]" style={{ background: 'rgb(var(--color-surface-container-high))', border: '1px solid rgb(var(--color-outline-variant))', color: 'rgb(var(--color-primary))' }}>

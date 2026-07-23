@@ -22,7 +22,12 @@ function Hackathons() {
 
   function formatDate(dateStr) {
     if (!dateStr) return '—';
-    return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    if (/\w{3}\s+\d{1,2}\s*[-–]\s*\w{3}\s+\d{1,2},\s*\d{4}/.test(dateStr) || dateStr.includes('–') || dateStr.includes(' - ')) return dateStr;
+    try {
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return dateStr;
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    } catch { return dateStr; }
   }
 
   if (loading) return <LoadingState label="Loading hackathons..." />;

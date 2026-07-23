@@ -4,11 +4,13 @@ Filters out past events — only currently active or upcoming hackathons are inc
 Auto-commits and pushes when data changes.
 """
 
+import html
 import json
 import os
 import re
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from typing import Any
 
@@ -64,12 +66,36 @@ def is_upcoming(end_date_str: str | None) -> bool:
     return dt >= NOW
 
 
+def _parse_devpost_detail(url: str, timeout: int = 10) -> dict[str, Any]:
+    try:
+        resp = requests.get(url, timeout=timeout)
+        resp.raise_for_status()
+        soup = BeautifulSoup(resp.text, "html.parser")
+        ld = soup.select_one("script#challenge-json-ld[type='application/ld+json']")
+        if ld:
+            meta = json.loads(ld.string)
+            raw = html.unescape(meta.get("description", ""))
+            desc = re.sub(r"<[^>]+>", "", raw).strip()
+            desc = re.sub(r"\s+", " ", desc)[:2000]
+            return {
+                "description": desc,
+                "start_date": meta.get("startDate"),
+                "end_date": meta.get("endDate"),
+            }
+        meta_desc = soup.select_one("meta[name='description']")
+        if meta_desc and meta_desc.get("content"):
+            return {"description": html.unescape(meta_desc["content"]).strip()[:2000]}
+    except Exception:
+        pass
+    return {}
+
+
 def fetch_devpost() -> list[dict[str, Any]]:
     try:
         resp = requests.get(SOURCES[0], timeout=15)
         resp.raise_for_status()
         data = resp.json()
-        results = []
+        base_items = []
         for raw in data.get("hackathons", []):
             end_str = raw.get("end_date") or raw.get("submission_period_dates")
             if not is_upcoming(end_str):
@@ -80,7 +106,7 @@ def fetch_devpost() -> list[dict[str, Any]]:
             prize = raw.get("prize_amount")
             if prize:
                 prize = re.sub(r"<[^>]+>", "", prize).strip()
-            results.append({
+            base_items.append({
                 "title": raw.get("title"),
                 "description": raw.get("description", ""),
                 "organizer": raw.get("organization_name") or "Devpost",
@@ -95,8 +121,24 @@ def fetch_devpost() -> list[dict[str, Any]]:
                 "prize_pool": prize,
                 "status": "open" if raw.get("open_state") == "open" else "upcoming",
             })
-        print(f"  [devpost] {len(results)} hackathons", file=sys.stderr)
-        return results
+
+        enriched: list[dict[str, Any]] = list(base_items)
+        urls = [(i, item.get("official_website") or item.get("registration_link")) for i, item in enumerate(base_items) if item.get("official_website") or item.get("registration_link")]
+        if urls:
+            with ThreadPoolExecutor(max_workers=8) as pool:
+                fut_map = {pool.submit(_parse_devpost_detail, url): idx for idx, url in urls}
+                for fut in as_completed(fut_map):
+                    idx = fut_map[fut]
+                    detail = fut.result()
+                    if detail:
+                        if detail.get("description"):
+                            enriched[idx]["description"] = detail["description"]
+                        if detail.get("start_date"):
+                            enriched[idx]["start_date"] = detail["start_date"]
+                        if detail.get("end_date"):
+                            enriched[idx]["end_date"] = detail["end_date"]
+        print(f"  [devpost] {len(enriched)} hackathons", file=sys.stderr)
+        return enriched
     except Exception as exc:
         print(f"  [devpost] error: {exc}", file=sys.stderr)
         return []
