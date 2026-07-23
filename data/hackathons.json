@@ -10,21 +10,12 @@
     "registration_link": "https://xprize.devpost.com/",
     "official_website": "https://xprize.devpost.com/",
     "domains": [
-      {
-        "id": 6,
-        "name": "Machine Learning/AI"
-      },
-      {
-        "id": 19,
-        "name": "Education"
-      },
-      {
-        "id": 11,
-        "name": "Productivity"
-      }
+      "Machine Learning/AI",
+      "Education",
+      "Productivity"
     ],
     "technologies": [],
-    "prize_pool": "$<span data-currency-value>2,000,000</span>",
+    "prize_pool": "$2,000,000",
     "status": "open",
     "id": 1
   },
@@ -39,21 +30,12 @@
     "registration_link": "https://cockroachdb-ai.devpost.com/",
     "official_website": "https://cockroachdb-ai.devpost.com/",
     "domains": [
-      {
-        "id": 6,
-        "name": "Machine Learning/AI"
-      },
-      {
-        "id": 28,
-        "name": "Databases"
-      },
-      {
-        "id": 2,
-        "name": "DevOps"
-      }
+      "Machine Learning/AI",
+      "Databases",
+      "DevOps"
     ],
     "technologies": [],
-    "prize_pool": "$<span data-currency-value>8,750</span>",
+    "prize_pool": "$8,750",
     "status": "open",
     "id": 2
   },
@@ -68,21 +50,12 @@
     "registration_link": "https://datahub.devpost.com/",
     "official_website": "https://datahub.devpost.com/",
     "domains": [
-      {
-        "id": 6,
-        "name": "Machine Learning/AI"
-      },
-      {
-        "id": 2,
-        "name": "DevOps"
-      },
-      {
-        "id": 22,
-        "name": "Open Ended"
-      }
+      "Machine Learning/AI",
+      "DevOps",
+      "Open Ended"
     ],
     "technologies": [],
-    "prize_pool": "$<span data-currency-value>20,500</span>",
+    "prize_pool": "$20,500",
     "status": "open",
     "id": 3
   },
@@ -97,13 +70,10 @@
     "registration_link": "https://arm-ai-optimization-challenge.devpost.com/",
     "official_website": "https://arm-ai-optimization-challenge.devpost.com/",
     "domains": [
-      {
-        "id": 6,
-        "name": "Machine Learning/AI"
-      }
+      "Machine Learning/AI"
     ],
     "technologies": [],
-    "prize_pool": "$<span data-currency-value>8,000</span>",
+    "prize_pool": "$8,000",
     "status": "open",
     "id": 4
   },
@@ -118,21 +88,12 @@
     "registration_link": "https://backblaze-generative-media.devpost.com/",
     "official_website": "https://backblaze-generative-media.devpost.com/",
     "domains": [
-      {
-        "id": 6,
-        "name": "Machine Learning/AI"
-      },
-      {
-        "id": 15,
-        "name": "Music/Art"
-      },
-      {
-        "id": 8,
-        "name": "Voice skills"
-      }
+      "Machine Learning/AI",
+      "Music/Art",
+      "Voice skills"
     ],
     "technologies": [],
-    "prize_pool": "$<span data-currency-value>10,000</span>",
+    "prize_pool": "$10,000",
     "status": "open",
     "id": 5
   },
@@ -147,17 +108,11 @@
     "registration_link": "https://adtc-2026.devpost.com/",
     "official_website": "https://adtc-2026.devpost.com/",
     "domains": [
-      {
-        "id": 6,
-        "name": "Machine Learning/AI"
-      },
-      {
-        "id": 11,
-        "name": "Productivity"
-      }
+      "Machine Learning/AI",
+      "Productivity"
     ],
     "technologies": [],
-    "prize_pool": "$<span data-currency-value>16,500</span>",
+    "prize_pool": "$16,500",
     "status": "open",
     "id": 6
   },
@@ -172,21 +127,12 @@
     "registration_link": "https://youcam-api.devpost.com/",
     "official_website": "https://youcam-api.devpost.com/",
     "domains": [
-      {
-        "id": 6,
-        "name": "Machine Learning/AI"
-      },
-      {
-        "id": 5,
-        "name": "AR/VR"
-      },
-      {
-        "id": 20,
-        "name": "E-commerce/Retail"
-      }
+      "Machine Learning/AI",
+      "AR/VR",
+      "E-commerce/Retail"
     ],
     "technologies": [],
-    "prize_pool": "$<span data-currency-value>6,000</span>",
+    "prize_pool": "$6,000",
     "status": "open",
     "id": 7
   },
@@ -201,21 +147,12 @@
     "registration_link": "https://volthacks.devpost.com/",
     "official_website": "https://volthacks.devpost.com/",
     "domains": [
-      {
-        "id": 7,
-        "name": "IoT"
-      },
-      {
-        "id": 6,
-        "name": "Machine Learning/AI"
-      },
-      {
-        "id": 23,
-        "name": "Beginner Friendly"
-      }
+      "IoT",
+      "Machine Learning/AI",
+      "Beginner Friendly"
     ],
     "technologies": [],
-    "prize_pool": "$<span data-currency-value>32,585</span>",
+    "prize_pool": "$32,585",
     "status": "open",
     "id": 8
   },
@@ -230,21 +167,12 @@
     "registration_link": "https://3d-websites-hackathon.devpost.com/",
     "official_website": "https://3d-websites-hackathon.devpost.com/",
     "domains": [
-      {
-        "id": 18,
-        "name": "Design"
-      },
-      {
-        "id": 25,
-        "name": "Web"
-      },
-      {
-        "id": 23,
-        "name": "Beginner Friendly"
-      }
+      "Design",
+      "Web",
+      "Beginner Friendly"
     ],
     "technologies": [],
-    "prize_pool": "$<span data-currency-value>55</span>",
+    "prize_pool": "$55",
     "status": "open",
     "id": 9
   },
