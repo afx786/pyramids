@@ -1,111 +1,267 @@
 [
   {
-    "id": 1,
-    "title": "Pyramids Hackathon 2026",
-    "description": "Build the next generation of collaborative tools for student builders. Open to all domains — web, mobile, AI, dev tools, and more.",
-    "theme": "Collaboration & Community",
-    "organizer": "Pyramids Team",
+    "title": "Build with Gemini XPRIZE",
+    "description": "",
+    "organizer": "XPRIZE",
     "mode": "Online",
     "type": "hackathon",
-    "status": "upcoming",
-    "start_date": "2026-08-15T00:00:00Z",
-    "end_date": "2026-08-17T23:59:59Z",
-    "registration_opens": "2026-06-01T00:00:00Z",
-    "registration_closes": "2026-08-10T23:59:59Z",
-    "venue": null,
-    "city": null,
-    "country": null,
-    "prize_pool": "$5,000",
-    "team_size_min": 2,
-    "team_size_max": 4,
-    "eligibility": "Open to all university students",
-    "rules": "All code must be written during the event. Use of open source libraries is allowed.",
-    "domains": ["Web", "Mobile", "AI/ML", "DevTools"],
-    "technologies": ["Python", "JavaScript", "React", "FastAPI"],
-    "official_website": "https://pyramids.app",
-    "registration_link": "https://pyramids.app/hackathons/register",
-    "contact_info": "hackathons@pyramids.app",
-    "sponsors": [],
-    "judges": [],
-    "faqs": [
-      {"question": "Who can participate?", "answer": "Any university student with a valid .edu email."},
-      {"question": "Is it team-based?", "answer": "Yes, teams of 2–4 members."}
+    "start_date": "May 19 - Aug 17, 2026",
+    "end_date": null,
+    "registration_link": "https://xprize.devpost.com/",
+    "official_website": "https://xprize.devpost.com/",
+    "domains": [
+      {
+        "id": 6,
+        "name": "Machine Learning/AI"
+      },
+      {
+        "id": 19,
+        "name": "Education"
+      },
+      {
+        "id": 11,
+        "name": "Productivity"
+      }
     ],
-    "links": [],
-    "teams": []
+    "technologies": [],
+    "prize_pool": "$<span data-currency-value>2,000,000</span>",
+    "status": "open",
+    "id": 1
   },
   {
-    "id": 2,
-    "title": "MLH Hackathon 2026",
-    "description": "Major League Hacking's flagship hackathon event. Build innovative projects and compete for prizes.",
-    "theme": "Open Innovation",
-    "organizer": "MLH",
-    "mode": "In-Person",
+    "title": "CockroachDB × AWS Hackathon - Build with Agentic Memory",
+    "description": "",
+    "organizer": "Cockroach Labs",
+    "mode": "Online",
     "type": "hackathon",
-    "status": "upcoming",
-    "start_date": "2026-04-05T09:00:00Z",
-    "end_date": "2026-04-07T18:00:00Z",
-    "registration_opens": "2026-02-01T00:00:00Z",
-    "registration_closes": "2026-03-30T23:59:59Z",
-    "venue": "Convention Center",
-    "city": "San Francisco",
-    "country": "USA",
-    "prize_pool": "$10,000",
-    "team_size_min": 2,
-    "team_size_max": 4,
-    "eligibility": "Open to all",
-    "rules": "Standard MLH code of conduct applies.",
-    "domains": ["Web", "Mobile", "Hardware", "AI"],
-    "technologies": ["Python", "JavaScript", "Arduino", "React"],
-    "official_website": "https://mlh.io",
-    "registration_link": "https://mlh.io/events",
-    "contact_info": "hi@mlh.io",
-    "sponsors": [],
-    "judges": [],
-    "faqs": [
-      {"question": "Do I need a team?", "answer": "You can join solo and we will help you find a team."}
+    "start_date": "Jun 30 - Aug 18, 2026",
+    "end_date": null,
+    "registration_link": "https://cockroachdb-ai.devpost.com/",
+    "official_website": "https://cockroachdb-ai.devpost.com/",
+    "domains": [
+      {
+        "id": 6,
+        "name": "Machine Learning/AI"
+      },
+      {
+        "id": 28,
+        "name": "Databases"
+      },
+      {
+        "id": 2,
+        "name": "DevOps"
+      }
     ],
-    "links": [],
-    "teams": []
+    "technologies": [],
+    "prize_pool": "$<span data-currency-value>8,750</span>",
+    "status": "open",
+    "id": 2
   },
   {
-    "id": 3,
-    "title": "AI for Good Hackathon",
-    "description": "Build AI-powered solutions for social impact. Topics include healthcare, education, environment, and accessibility.",
-    "theme": "AI for Social Impact",
-    "organizer": "AI4Good Foundation",
-    "mode": "Hybrid",
+    "title": "Build with DataHub: The Agent Hackathon",
+    "description": "",
+    "organizer": "DataHub",
+    "mode": "Online",
     "type": "hackathon",
-    "status": "upcoming",
-    "start_date": "2026-05-20T00:00:00Z",
-    "end_date": "2026-05-22T23:59:59Z",
-    "registration_opens": "2026-03-01T00:00:00Z",
-    "registration_closes": "2026-05-15T23:59:59Z",
-    "venue": "Tech Park",
-    "city": "New York",
-    "country": "USA",
-    "prize_pool": "$7,500",
-    "team_size_min": 1,
-    "team_size_max": 5,
-    "eligibility": "Students and professionals welcome",
-    "rules": "Projects must use AI/ML in some capacity.",
-    "domains": ["AI/ML", "Healthcare", "Education", "Environment"],
-    "technologies": ["Python", "TensorFlow", "PyTorch", "Hugging Face"],
-    "official_website": "https://ai4good.dev",
-    "registration_link": "https://ai4good.dev/register",
-    "contact_info": "team@ai4good.dev",
-    "sponsors": [
-      {"name": "Google AI", "website": "https://ai.google"},
-      {"name": "Hugging Face", "website": "https://huggingface.co"}
+    "start_date": "Jul 06 - Aug 10, 2026",
+    "end_date": null,
+    "registration_link": "https://datahub.devpost.com/",
+    "official_website": "https://datahub.devpost.com/",
+    "domains": [
+      {
+        "id": 6,
+        "name": "Machine Learning/AI"
+      },
+      {
+        "id": 2,
+        "name": "DevOps"
+      },
+      {
+        "id": 22,
+        "name": "Open Ended"
+      }
     ],
-    "judges": [
-      {"name": "Dr. Sarah Chen", "title": "AI Research Lead", "organization": "Google"},
-      {"name": "Alex Rivera", "title": "ML Engineer", "organization": "Hugging Face"}
+    "technologies": [],
+    "prize_pool": "$<span data-currency-value>20,500</span>",
+    "status": "open",
+    "id": 3
+  },
+  {
+    "title": "Arm Create: AI Optimization Challenge",
+    "description": "",
+    "organizer": "arm",
+    "mode": "Online",
+    "type": "hackathon",
+    "start_date": "Jun 04 - Aug 14, 2026",
+    "end_date": null,
+    "registration_link": "https://arm-ai-optimization-challenge.devpost.com/",
+    "official_website": "https://arm-ai-optimization-challenge.devpost.com/",
+    "domains": [
+      {
+        "id": 6,
+        "name": "Machine Learning/AI"
+      }
     ],
-    "faqs": [
-      {"question": "Can I participate remotely?", "answer": "Yes, the event is hybrid. Online participants will get access to our Discord and livestream."}
+    "technologies": [],
+    "prize_pool": "$<span data-currency-value>8,000</span>",
+    "status": "open",
+    "id": 4
+  },
+  {
+    "title": "Backblaze Generative Media Hackathon: Build with Genblaze on B2",
+    "description": "",
+    "organizer": "Backblaze",
+    "mode": "Online",
+    "type": "hackathon",
+    "start_date": "Jun 22 - Aug 03, 2026",
+    "end_date": null,
+    "registration_link": "https://backblaze-generative-media.devpost.com/",
+    "official_website": "https://backblaze-generative-media.devpost.com/",
+    "domains": [
+      {
+        "id": 6,
+        "name": "Machine Learning/AI"
+      },
+      {
+        "id": 15,
+        "name": "Music/Art"
+      },
+      {
+        "id": 8,
+        "name": "Voice skills"
+      }
     ],
-    "links": [],
-    "teams": []
+    "technologies": [],
+    "prize_pool": "$<span data-currency-value>10,000</span>",
+    "status": "open",
+    "id": 5
+  },
+  {
+    "title": "Africa Deep Tech Challenge 2026",
+    "description": "",
+    "organizer": "Africa Deep Tech Foundation",
+    "mode": "Online",
+    "type": "hackathon",
+    "start_date": "Jun 17 - Aug 25, 2026",
+    "end_date": null,
+    "registration_link": "https://adtc-2026.devpost.com/",
+    "official_website": "https://adtc-2026.devpost.com/",
+    "domains": [
+      {
+        "id": 6,
+        "name": "Machine Learning/AI"
+      },
+      {
+        "id": 11,
+        "name": "Productivity"
+      }
+    ],
+    "technologies": [],
+    "prize_pool": "$<span data-currency-value>16,500</span>",
+    "status": "open",
+    "id": 6
+  },
+  {
+    "title": "YouCam API Skin AI & Apparel VTO Hackathon ",
+    "description": "",
+    "organizer": "Perfect Corp",
+    "mode": "Online",
+    "type": "hackathon",
+    "start_date": "Jul 06 - Aug 17, 2026",
+    "end_date": null,
+    "registration_link": "https://youcam-api.devpost.com/",
+    "official_website": "https://youcam-api.devpost.com/",
+    "domains": [
+      {
+        "id": 6,
+        "name": "Machine Learning/AI"
+      },
+      {
+        "id": 5,
+        "name": "AR/VR"
+      },
+      {
+        "id": 20,
+        "name": "E-commerce/Retail"
+      }
+    ],
+    "technologies": [],
+    "prize_pool": "$<span data-currency-value>6,000</span>",
+    "status": "open",
+    "id": 7
+  },
+  {
+    "title": "VoltHacks",
+    "description": "",
+    "organizer": "Dialogate",
+    "mode": "Online",
+    "type": "hackathon",
+    "start_date": "May 22 - Sep 05, 2026",
+    "end_date": null,
+    "registration_link": "https://volthacks.devpost.com/",
+    "official_website": "https://volthacks.devpost.com/",
+    "domains": [
+      {
+        "id": 7,
+        "name": "IoT"
+      },
+      {
+        "id": 6,
+        "name": "Machine Learning/AI"
+      },
+      {
+        "id": 23,
+        "name": "Beginner Friendly"
+      }
+    ],
+    "technologies": [],
+    "prize_pool": "$<span data-currency-value>32,585</span>",
+    "status": "open",
+    "id": 8
+  },
+  {
+    "title": "3D Websites Hackathon",
+    "description": "",
+    "organizer": "high school",
+    "mode": "Online",
+    "type": "hackathon",
+    "start_date": "Jun 22 - Jul 31, 2026",
+    "end_date": null,
+    "registration_link": "https://3d-websites-hackathon.devpost.com/",
+    "official_website": "https://3d-websites-hackathon.devpost.com/",
+    "domains": [
+      {
+        "id": 18,
+        "name": "Design"
+      },
+      {
+        "id": 25,
+        "name": "Web"
+      },
+      {
+        "id": 23,
+        "name": "Beginner Friendly"
+      }
+    ],
+    "technologies": [],
+    "prize_pool": "$<span data-currency-value>55</span>",
+    "status": "open",
+    "id": 9
+  },
+  {
+    "title": "Host your own hackathon",
+    "description": "For organizations Host your own hackathon Source top engineering talent and surface bold ideas with branded, best-in-class coding events. Custom branded Global talent Learn more",
+    "organizer": "HackerEarth",
+    "mode": "Online",
+    "type": "hackathon",
+    "start_date": null,
+    "end_date": "For organizations",
+    "registration_link": "https://www.hackerearth.comhttps://www.hackerearth.com/recruit/hackathons/",
+    "official_website": null,
+    "domains": [],
+    "technologies": [],
+    "prize_pool": null,
+    "status": "open",
+    "id": 10
   }
 ]
