@@ -103,12 +103,6 @@ def create_contact_request(
             detail="Contact information already shared."
         )
 
-    if result == "requester_no_contact":
-        raise HTTPException(
-            status_code=400,
-            detail="You need to add at least one contact method before requesting someone else's contact information."
-        )
-
     return result
 
 

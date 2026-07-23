@@ -273,7 +273,7 @@ function Settings() {
             <h3 className="font-headline-md text-headline-md" style={{ color: 'rgb(var(--color-primary))' }}>Contact Information</h3>
           </div>
           <p className="font-body-sm mb-lg" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
-            Your contact details stay private. Only connected builders you approve can see them.
+            These details remain private and are only shared when you approve a contact request.
           </p>
           <div className="space-y-lg">
             {contactSaved ? (

@@ -5,6 +5,7 @@ class UserSignup(BaseModel):
     name: str
     email: EmailStr
     password: str
+    phone_number: str
     program: str | None = None
     joining_year: int | None = None
     graduating_year: int | None = None
@@ -15,6 +16,16 @@ class UserSignup(BaseModel):
         if not v or not v.strip():
             raise ValueError('Name cannot be empty')
         return v.strip()
+
+    @field_validator('phone_number')
+    @classmethod
+    def validate_phone_number(cls, v):
+        if not v or not v.strip():
+            raise ValueError('Phone number is required')
+        stripped = v.strip()
+        if len(stripped) < 4 or len(stripped) > 20:
+            raise ValueError('Phone number must be between 4 and 20 characters')
+        return stripped
 
     @field_validator('joining_year')
     @classmethod
@@ -44,6 +55,8 @@ class UserResponse(BaseModel):
     public_id: str
     name: str
     email: str
+    contact_email: str | None = None
+    whatsapp_number: str | None = None
     program: str | None = None
     joining_year: int | None = None
     graduating_year: int | None = None

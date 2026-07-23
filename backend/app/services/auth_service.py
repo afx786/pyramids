@@ -6,7 +6,7 @@ from app.core.auth import create_access_token
 from app.services.id_service import generate_public_id
 
 
-def signup_user(db: Session, name: str, email: str, password: str, program: str | None = None, joining_year: int | None = None, graduating_year: int | None = None):
+def signup_user(db: Session, name: str, email: str, password: str, phone_number: str, program: str | None = None, joining_year: int | None = None, graduating_year: int | None = None):
     existing_user = db.query(User).filter(User.email == email).first()
 
     if existing_user:
@@ -16,6 +16,8 @@ def signup_user(db: Session, name: str, email: str, password: str, program: str 
         public_id=generate_public_id('USER', db=db, model=User),
         name=name,
         email=email,
+        contact_email=email,
+        whatsapp_number=phone_number,
         password_hash=hash_password(password),
         program=program,
         joining_year=joining_year,

@@ -74,15 +74,6 @@ def send_contact_request(
     if approved:
         return "already_approved"
 
-    requester = (
-        db.query(User)
-        .filter(User.id == requester_id)
-        .first()
-    )
-
-    if not requester.contact_email and not requester.whatsapp_number:
-        return "requester_no_contact"
-
     request = ContactRequest(
         requester_id=requester_id,
         target_id=target_id,

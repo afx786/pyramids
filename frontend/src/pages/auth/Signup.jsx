@@ -14,7 +14,7 @@ function Signup() {
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({ name: '', program: '', email: '', password: '', joining_year: '', graduating_year: '' });
+  const [form, setForm] = useState({ name: '', program: '', email: '', phone: '', password: '', confirmPassword: '', joining_year: '', graduating_year: '' });
 
   function updateField(field, value) {
     setForm((current) => ({ ...current, [field]: value }));
@@ -29,7 +29,11 @@ function Signup() {
     if (form.name.trim().length < 2) nextErrors.name = 'Enter your name.';
     if (!form.program) nextErrors.program = 'Select your course.';
     if (!form.email.includes('@')) nextErrors.email = 'Enter a valid email address.';
+    if (!form.phone.trim()) nextErrors.phone = 'Enter your phone number.';
+    else if (form.phone.trim().length < 4 || form.phone.trim().length > 20) nextErrors.phone = 'Phone number must be between 4 and 20 characters.';
     if (form.password.length < 6) nextErrors.password = 'Password should be at least 6 characters.';
+    if (!form.confirmPassword) nextErrors.confirmPassword = 'Confirm your password.';
+    else if (form.password !== form.confirmPassword) nextErrors.confirmPassword = 'Passwords do not match.';
     if (!form.joining_year) nextErrors.joining_year = 'Select your joining year.';
     if (!form.graduating_year) nextErrors.graduating_year = 'Select your graduating year.';
     if (form.joining_year && form.graduating_year && Number(form.graduating_year) < Number(form.joining_year)) {
@@ -42,7 +46,11 @@ function Signup() {
     setLoading(true);
     try {
       await signup({
-        ...form,
+        name: form.name.trim(),
+        email: form.email.trim(),
+        phone_number: form.phone.trim(),
+        password: form.password,
+        program: form.program,
         joining_year: form.joining_year ? Number(form.joining_year) : null,
         graduating_year: form.graduating_year ? Number(form.graduating_year) : null,
       });
@@ -70,7 +78,7 @@ function Signup() {
 
           <form className="mt-8 grid gap-5 sm:grid-cols-2" onSubmit={handleSubmit}>
             <label className="space-y-2">
-              <span className="font-mono-label text-xs text-secondary">Name</span>
+              <span className="font-mono-label text-xs text-secondary">Full Name</span>
               <Input placeholder="Aarav Mehta" value={form.name} onChange={(event) => updateField('name', event.target.value)} />
               <FieldError>{errors.name}</FieldError>
             </label>
@@ -131,6 +139,19 @@ function Signup() {
               <FieldError>{errors.email}</FieldError>
             </label>
             <label className="space-y-2 sm:col-span-2">
+              <span className="font-mono-label text-xs text-secondary">Phone Number</span>
+              <Input
+                type="tel"
+                placeholder="+1 555 123 4567"
+                value={form.phone}
+                onChange={(event) => updateField('phone', event.target.value)}
+              />
+              <p className="font-body-sm text-xs" style={{ color: 'rgb(var(--color-on-surface-variant) / 0.7)' }}>
+                Used to connect with collaborators after you approve a contact request.
+              </p>
+              <FieldError>{errors.phone}</FieldError>
+            </label>
+            <label className="space-y-2 sm:col-span-2">
               <span className="font-mono-label text-xs text-secondary">Password</span>
               <Input
                 type="password"
@@ -140,6 +161,19 @@ function Signup() {
               />
               <FieldError>{errors.password}</FieldError>
             </label>
+            <label className="space-y-2 sm:col-span-2">
+              <span className="font-mono-label text-xs text-secondary">Confirm Password</span>
+              <Input
+                type="password"
+                placeholder="Confirm password"
+                value={form.confirmPassword}
+                onChange={(event) => updateField('confirmPassword', event.target.value)}
+              />
+              <FieldError>{errors.confirmPassword}</FieldError>
+            </label>
+            <p className="sm:col-span-2 font-body-sm text-xs" style={{ color: 'rgb(var(--color-on-surface-variant) / 0.7)' }}>
+              Your phone number remains private and is only shared with builders after you approve a contact request.
+            </p>
             <Button className="w-full sm:col-span-2" type="submit" disabled={loading}>
               {loading ? 'Creating account...' : 'Create Account'}
             </Button>

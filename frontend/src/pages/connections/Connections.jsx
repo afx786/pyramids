@@ -1,6 +1,5 @@
 import { Contact, UserPlus, X } from 'lucide-react';
-import Toast from '../../components/ui/Toast.jsx';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ConnectionCard from '../../components/common/ConnectionCard.jsx';
 import EmptyState from '../../components/common/EmptyState.jsx';
@@ -9,7 +8,6 @@ import { connectionService } from '../../services/connectionService.js';
 import { contactService } from '../../services/contactService.js';
 import { messageService } from '../../services/messageService.js';
 import ContactSharedModal from '../contacts/ContactSharedModal.jsx';
-import RequesterInfoModal from '../contacts/RequesterInfoModal.jsx';
 
 const tabs = [
   { id: 'connected', label: 'Connected' },
@@ -28,11 +26,8 @@ function Connections() {
 
   const [contactStatuses, setContactStatuses] = useState({});
   const [contactStatusLoading, setContactStatusLoading] = useState({});
-  const [showRequesterInfo, setShowRequesterInfo] = useState(false);
-  const [pendingRequestTarget, setPendingRequestTarget] = useState(null);
   const [showContactShared, setShowContactShared] = useState(false);
   const [sharedContactInfo, setSharedContactInfo] = useState(null);
-  const [toast, setToast] = useState('');
 
   useEffect(() => {
     connectionService.listConnections().then((data) => { setConnected(data); setLoadingTabs((p) => ({ ...p, connected: false })); }).catch((err) => { setError(err.message); setLoadingTabs((p) => ({ ...p, connected: false })); });
@@ -121,35 +116,11 @@ function Connections() {
   async function handleRequestContact(person) {
     const userId = person._userId || person.id;
     try {
-      const myInfo = await contactService.getMyInfo();
-      if (!myInfo.contact_email && !myInfo.whatsapp_number) {
-        setPendingRequestTarget(userId);
-        setShowRequesterInfo(true);
-        return;
-      }
-      await doSendRequest(userId);
-    } catch (err) {
-      setError(err.message || 'Failed to check contact info');
-    }
-  }
-
-  async function doSendRequest(userId) {
-    try {
       await contactService.sendRequest(userId);
       setContactStatuses((prev) => ({ ...prev, [userId]: { status: 'pending' } }));
     } catch (err) {
       setError(err.message || 'Failed to send request');
     }
-  }
-
-  async function handleRequesterClose(hasSaved) {
-    setShowRequesterInfo(false);
-    if (hasSaved && pendingRequestTarget) {
-      await doSendRequest(pendingRequestTarget);
-    } else if (!hasSaved && pendingRequestTarget) {
-      setToast('You need to add at least one contact method before requesting another builder\'s contact.');
-    }
-    setPendingRequestTarget(null);
   }
 
   function handleViewContact(person) {
@@ -300,18 +271,11 @@ function Connections() {
         )}
       </section>
 
-      <RequesterInfoModal
-        isOpen={showRequesterInfo}
-        onClose={handleRequesterClose}
-      />
-
       <ContactSharedModal
         isOpen={showContactShared}
         onClose={() => setShowContactShared(false)}
         contactInfo={sharedContactInfo}
       />
-
-      {toast ? <Toast message={toast} type="info" onClose={() => setToast('')} /> : null}
     </div>
   );
 }
