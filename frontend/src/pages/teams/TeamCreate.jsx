@@ -6,7 +6,7 @@ import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import Input from '../../components/ui/Input.jsx';
 import { teamService } from '../../services/teamService.js';
-import { hackathonService } from '../../services/hackathonService.js';
+
 
 function TeamCreate() {
   const navigate = useNavigate();
@@ -22,11 +22,17 @@ function TeamCreate() {
 
   useEffect(() => {
     if (purpose === 'hackathon') {
-      hackathonService.listPublished({ status: 'published' })
+      fetch('/data/hackathons.json')
+        .then((res) => res.json())
         .then((data) => {
-          const list = Array.isArray(data) ? data : data?.items || [];
+          const list = Array.isArray(data) ? data : data.hackathons || [];
           const now = new Date();
-          setHackathons(list.filter((h) => h.status === 'published' && (!h.registration_closes || new Date(h.registration_closes) > now)));
+          setHackathons(list.filter((h) => {
+            const endStr = h.end_date;
+            if (!endStr) return true;
+            const endDate = new Date(endStr);
+            return !isNaN(endDate.getTime()) && endDate > now;
+          }));
         })
         .catch(() => {});
     }
