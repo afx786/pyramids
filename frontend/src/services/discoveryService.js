@@ -5,6 +5,10 @@ export const discoveryService = {
     return api.get('/teams');
   },
 
+  listHackathons() {
+    return api.get('/hackathons');
+  },
+
   getFeed(type = 'all') {
     return api.get(`/feed?type=${type}`);
   },

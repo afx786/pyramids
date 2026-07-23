@@ -39,12 +39,15 @@ const Updates = lazy(() => import('./pages/updates/Updates.jsx'));
 const ResearchHub = lazy(() => import('./pages/research/ResearchHub.jsx'));
 const ResearchCreate = lazy(() => import('./pages/research/ResearchCreate.jsx'));
 const ResearchDetail = lazy(() => import('./pages/research/ResearchDetail.jsx'));
+const HostDashboard = lazy(() => import('./pages/hackathons/HostDashboard.jsx'));
+const HackathonCreate = lazy(() => import('./pages/hackathons/HackathonCreate.jsx'));
 const HackathonDetail = lazy(() => import('./pages/hackathons/HackathonDetail.jsx'));
 const Organizations = lazy(() => import('./pages/organizations/Organizations.jsx'));
 const OrganizationCreate = lazy(() => import('./pages/organizations/OrganizationCreate.jsx'));
 const OrganizationDetail = lazy(() => import('./pages/organizations/OrganizationDetail.jsx'));
 const OrganizationDashboard = lazy(() => import('./pages/organizations/OrganizationDashboard.jsx'));
 const Admin = lazy(() => import('./pages/admin/Admin.jsx'));
+const AdminHackathonReview = lazy(() => import('./pages/admin/AdminHackathonReview.jsx'));
 const AdminOrganizationReview = lazy(() => import('./pages/admin/AdminOrganizationReview.jsx'));
 
 function PageLoading() {
@@ -86,6 +89,9 @@ function App() {
             <Route path="teams/new" element={<Suspense fallback={<PageLoading />}><TeamCreate /></Suspense>} />
             <Route path="teams/:id" element={<Suspense fallback={<PageLoading />}><TeamDetail /></Suspense>} />
             <Route path="hackathons" element={<Suspense fallback={<PageLoading />}><Hackathons /></Suspense>} />
+            <Route path="hackathons/host" element={<Suspense fallback={<PageLoading />}><HostDashboard /></Suspense>} />
+            <Route path="hackathons/new" element={<Suspense fallback={<PageLoading />}><HackathonCreate /></Suspense>} />
+            <Route path="hackathons/:id/edit" element={<Suspense fallback={<PageLoading />}><HackathonCreate /></Suspense>} />
             <Route path="hackathons/:id" element={<Suspense fallback={<PageLoading />}><HackathonDetail /></Suspense>} />
             <Route path="messages" element={<Suspense fallback={<PageLoading />}><Messages /></Suspense>} />
             <Route path="connections" element={<Suspense fallback={<PageLoading />}><Connections /></Suspense>} />
@@ -107,6 +113,7 @@ function App() {
             <Route path="organizations/:id/dashboard" element={<Suspense fallback={<PageLoading />}><OrganizationDashboard /></Suspense>} />
             <Route path="organizations/:id" element={<Suspense fallback={<PageLoading />}><OrganizationDetail /></Suspense>} />
             <Route path="admin" element={<Suspense fallback={<PageLoading />}><Admin /></Suspense>} />
+            <Route path="admin/hackathons" element={<Suspense fallback={<PageLoading />}><AdminHackathonReview /></Suspense>} />
             <Route path="admin/organizations" element={<Suspense fallback={<PageLoading />}><AdminOrganizationReview /></Suspense>} />
             <Route path="pyramidion" element={<Suspense fallback={<PageLoading />}><Pyramidion /></Suspense>} />
             <Route path="profile" element={<Suspense fallback={<PageLoading />}><Profile /></Suspense>} />

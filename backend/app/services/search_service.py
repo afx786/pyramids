@@ -9,6 +9,7 @@ from app.services.rank_service import get_user_rank
 from app.models.project import Project
 from app.models.team import Team
 from app.models.research_project import ResearchProject
+from app.models.hackathon import Hackathon
 from app.models.organization import Organization
 
 def search_users_by_skill(
@@ -140,6 +141,7 @@ def unified_search(
         project = db.query(Project).filter(func.upper(Project.public_id) == pid_upper).first()
         team = db.query(Team).filter(func.upper(Team.public_id) == pid_upper).first()
         research = db.query(ResearchProject).filter(func.upper(ResearchProject.public_id) == pid_upper).first()
+        hackathon = db.query(Hackathon).filter(func.upper(Hackathon.public_id) == pid_upper).first()
         org = db.query(Organization).filter(func.upper(Organization.public_id) == pid_upper).first()
 
         return {
@@ -147,6 +149,7 @@ def unified_search(
             "projects": [{"id": project.id, "title": project.title, "public_id": project.public_id}] if project else [],
             "teams": [{"id": team.id, "name": team.name, "public_id": team.public_id}] if team else [],
             "research": [{"id": research.id, "title": research.title, "public_id": research.public_id}] if research else [],
+            "hackathons": [{"id": hackathon.id, "title": hackathon.title, "public_id": hackathon.public_id}] if hackathon else [],
             "organizations": [{"id": org.id, "name": org.name, "public_id": org.public_id}] if org else [],
         }
 
@@ -182,6 +185,15 @@ def unified_search(
             (ResearchProject.title.ilike(f"%{q}%")) |
             (ResearchProject.description.ilike(f"%{q}%")) |
             (ResearchProject.domain.ilike(f"%{q}%"))
+        )
+        .all()
+    )
+
+    hackathons = (
+        db.query(Hackathon)
+        .filter(
+            (Hackathon.title.ilike(f"%{q}%")) |
+            (Hackathon.description.ilike(f"%{q}%"))
         )
         .all()
     )
@@ -230,6 +242,15 @@ def unified_search(
                 "description": research_project.description
             }
             for research_project in research
+        ],
+
+        "hackathons": [
+            {
+                "id": hackathon.id,
+                "title": hackathon.title,
+                "description": hackathon.description
+            }
+            for hackathon in hackathons
         ],
 
         "organizations": [

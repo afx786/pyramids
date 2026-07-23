@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 
 from app.models.team import Team
 from app.models.team_member import TeamMember
+from app.models.hackathon_team import HackathonTeam
 from app.models.user import User
 from app.services.notification_service import create_notification
 from app.services.id_service import generate_public_id
@@ -267,6 +268,17 @@ def delete_team(
 
     for member in members:
         db.delete(member)
+
+    hackathon_registrations = (
+        db.query(HackathonTeam)
+        .filter(
+            HackathonTeam.team_id == team_id
+        )
+        .all()
+    )
+
+    for registration in hackathon_registrations:
+        db.delete(registration)
 
     db.delete(team)
 

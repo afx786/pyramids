@@ -43,6 +43,14 @@ from app.routes.skill_analytics import (
 from app.routes.teams import (
     router as teams_router
 )
+from app.models.hackathon import Hackathon
+from app.models.hackathon_invitation import HackathonInvitation
+
+from app.routes.hackathons import (
+    router as hackathon_router
+)
+
+from app.models.hackathon_team import HackathonTeam
 from app.routes.opportunities import (
     router as opportunity_router
 )
@@ -64,6 +72,8 @@ from app.models.notification import Notification
 from app.routes.notifications import (
     router as notifications_router
 )
+from app.models.hackathon_submission import HackathonSubmission
+from app.models.hackathon_announcement import HackathonAnnouncement
 from app.models.organization import Organization, OrganizationMember
 from app.models.research_milestone import ResearchMilestone
 from app.models.research_update import ResearchUpdate
@@ -151,6 +161,10 @@ app.include_router(
 
 app.include_router(
     teams_router
+)
+
+app.include_router(
+    hackathon_router
 )
 
 @app.get("/")

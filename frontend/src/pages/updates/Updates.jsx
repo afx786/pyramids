@@ -6,7 +6,7 @@ import SkillTag from '../../components/ui/SkillTag.jsx';
 import { discoveryService } from '../../services/discoveryService.js';
 
 function Updates() {
-  const [feed, setFeed] = useState({ projects: [], research: [] });
+  const [feed, setFeed] = useState({ projects: [], research: [], hackathons: [] });
 
   useEffect(() => {
     discoveryService.getFeed('all').then(setFeed).catch((err) => console.warn('[updates] feed failed:', err));
@@ -15,6 +15,7 @@ function Updates() {
   const allItems = [
     ...(feed.projects || []).map((p) => ({ ...p, _type: 'Project' })),
     ...(feed.research || []).map((r) => ({ ...r, _type: 'Research' })),
+    ...(feed.hackathons || []).map((h) => ({ ...h, _type: 'Hackathon' })),
   ];
 
   return (
@@ -22,7 +23,7 @@ function Updates() {
       <PageHeader
         eyebrow="Activity"
         title="Feed"
-        description="Recent projects and research across the platform."
+        description="Recent projects, research, and hackathons across the platform."
       />
 
       <section className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_340px]">

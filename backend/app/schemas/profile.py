@@ -8,4 +8,5 @@ class ProfileResponse(BaseModel):
     projects: list[dict]
     research: list[dict]
     teams: list[dict]
+    hackathons: list[dict]
     statistics: dict

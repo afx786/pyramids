@@ -7,29 +7,35 @@ import LoadingState from '../../components/common/LoadingState.jsx';
 import Avatar from '../../components/ui/Avatar.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
+import PublicIdDisplay from '../../components/ui/PublicIdDisplay.jsx';
 import StatusBadge from '../../components/ui/StatusBadge.jsx';
+import { hackathonService } from '../../services/hackathonService.js';
 
 function HackathonDetail() {
   const { id } = useParams();
   const [hackathon, setHackathon] = useState(null);
+  const [teams, setTeams] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
+  const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openFaq, setOpenFaq] = useState(null);
 
   useEffect(() => {
     setLoading(true);
-    fetch('/data/hackathons.json')
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to load hackathons');
-        return res.json();
+    Promise.all([
+      hackathonService.get(id),
+      hackathonService.getTeams(id).catch(() => []),
+      hackathonService.getAnnouncements(id).catch(() => []),
+      hackathonService.getSubmissions(id).catch(() => []),
+    ])
+      .then(([h, t, a, s]) => {
+        setHackathon(h);
+        setTeams(Array.isArray(t) ? t : []);
+        setAnnouncements(Array.isArray(a) ? a : []);
+        setSubmissions(Array.isArray(s) ? s : []);
       })
-      .then((data) => {
-        const list = Array.isArray(data) ? data : data.hackathons || [];
-        const found = list.find((h) => String(h.id || h.title) === id);
-        if (!found) throw new Error('Hackathon not found');
-        setHackathon(found);
-      })
-      .catch((err) => setError(err.message))
+      .catch((err) => setError(err.message || 'Failed to load hackathon'))
       .finally(() => setLoading(false));
   }, [id]);
 
@@ -52,7 +58,6 @@ function HackathonDetail() {
   const sponsors = hackathon.sponsors || [];
   const judges = hackathon.judges || [];
   const faqs = hackathon.faqs || [];
-  const teams = hackathon.teams || [];
 
   return (
     <div className="animate-fade-in p-xl max-w-6xl mx-auto">
@@ -63,17 +68,20 @@ function HackathonDetail() {
 
       <header className="mb-xl">
         <div className="flex items-center gap-sm mb-sm flex-wrap">
-          {hackathon.status ? <StatusBadge status={hackathon.status} /> : null}
+          <StatusBadge status={hackathon.status} />
           <span className="inline-flex items-center gap-1 font-mono text-[11px] px-sm py-xs rounded" style={{ background: 'rgb(var(--color-surface-variant))', color: 'rgb(var(--color-on-surface))' }}>
             <Globe size={11} />
-            {hackathon.mode || hackathon.type || 'Online'}
+            {hackathon.mode || 'Online'}
           </span>
         </div>
         <h1 className="font-display-serif text-display-serif leading-tight" style={{ color: 'rgb(var(--color-primary))' }}>
           {hackathon.title}
         </h1>
+        {hackathon.public_id ? (
+          <div className="mt-1"><PublicIdDisplay publicId={hackathon.public_id} label="Hackathon ID" /></div>
+        ) : null}
         <p className="font-body-lg text-body-lg mt-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
-          Organized by {hackathon.organizer || hackathon.org || '—'}
+          Organized by {hackathon.organizer || '—'}
         </p>
       </header>
 
@@ -139,7 +147,7 @@ function HackathonDetail() {
             <Card className="p-lg">
               <h2 className="font-label-caps text-label-caps mb-md" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>TECHNOLOGIES</h2>
               <div className="flex flex-wrap gap-sm">
-                {technologies.map((t) => (
+                {(Array.isArray(technologies) ? technologies : []).map((t) => (
                   <span key={t} className="px-md py-xs rounded font-mono text-[11px]" style={{ background: 'rgb(var(--color-surface-container-high))', border: '1px solid rgb(var(--color-outline-variant))', color: 'rgb(var(--color-primary))' }}>
                     {typeof t === 'string' ? t : t.name || t}
                   </span>
@@ -241,7 +249,7 @@ function HackathonDetail() {
             </Card>
           ) : null}
 
-          {hackathon.links?.length > 0 || hackathon.official_website || hackathon.registration_link ? (
+          {hackathon.links?.length > 0 ? (
             <Card className="p-lg">
               <h2 className="font-label-caps text-label-caps mb-md" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>LINKS</h2>
               <div className="flex flex-wrap gap-md">
@@ -264,16 +272,16 @@ function HackathonDetail() {
           ) : null}
         </div>
 
-        {teams.length > 0 ? (
-          <div className="space-y-xl">
-            <Card className="p-lg">
-              <div className="flex items-center gap-sm mb-md">
-                <Users size={18} style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
-                <h2 className="font-label-caps text-label-caps" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>TEAMS ({teams.length})</h2>
-              </div>
+        <div className="space-y-xl">
+          <Card className="p-lg">
+            <div className="flex items-center gap-sm mb-md">
+              <Users size={18} style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
+              <h2 className="font-label-caps text-label-caps" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>TEAMS ({teams.length})</h2>
+            </div>
+            {teams.length > 0 ? (
               <div className="space-y-sm">
-                {teams.map((team, i) => (
-                  <div key={i} className="flex items-center gap-md p-sm rounded-lg" style={{ background: 'rgb(var(--color-surface-container-high))' }}>
+                {teams.map((team) => (
+                  <div key={team.id} className="flex items-center gap-md p-sm rounded-lg" style={{ background: 'rgb(var(--color-surface-container-high))' }}>
                     <Avatar size="sm" src={team.logo_url} alt={team.name} />
                     <div>
                       <p className="font-body-sm font-bold" style={{ color: 'rgb(var(--color-primary))' }}>{team.name}</p>
@@ -284,9 +292,56 @@ function HackathonDetail() {
                   </div>
                 ))}
               </div>
-            </Card>
-          </div>
-        ) : null}
+            ) : (
+              <EmptyState title="No teams registered" description="Teams will appear once they register." />
+            )}
+          </Card>
+
+          <Card className="p-lg">
+            <h2 className="font-label-caps text-label-caps mb-md" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>ANNOUNCEMENTS ({announcements.length})</h2>
+            {announcements.length > 0 ? (
+              <div className="space-y-md">
+                {announcements.map((a) => (
+                  <div key={a.id} className="pb-md" style={{ borderBottom: '1px solid rgb(var(--color-outline-variant) / 0.3)' }}>
+                    <p className="font-body-sm font-bold" style={{ color: 'rgb(var(--color-primary))' }}>{a.title}</p>
+                    <p className="font-body-sm mt-xs" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{a.message || a.content}</p>
+                    <div className="flex items-center gap-sm mt-xs font-mono text-[10px]" style={{ color: 'rgb(var(--color-on-surface-variant) / 0.7)' }}>
+                      <span>By {a.author_name || a.author || '—'}</span>
+                      <span>·</span>
+                      <span>{formatDate(a.created_at)}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <EmptyState title="No announcements" description="Check back for updates." />
+            )}
+          </Card>
+
+          <Card className="p-lg">
+            <div className="flex items-center gap-sm mb-md">
+              <Trophy size={18} style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
+              <h2 className="font-label-caps text-label-caps" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>SUBMISSIONS ({submissions.length})</h2>
+            </div>
+            {submissions.length > 0 ? (
+              <div className="space-y-sm">
+                {submissions.map((sub) => (
+                  <div key={sub.id} className="flex items-center justify-between p-sm rounded-lg" style={{ background: 'rgb(var(--color-surface-container-high))' }}>
+                    <div>
+                      <p className="font-body-sm font-bold" style={{ color: 'rgb(var(--color-primary))' }}>{sub.title || sub.project_name || `Submission #${sub.id}`}</p>
+                      <p className="font-body-sm text-[11px]" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                        {sub.team_name || `Team #${sub.team_id}`}
+                      </p>
+                    </div>
+                    <StatusBadge status={sub.status || 'submitted'} size="sm" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <EmptyState title="No submissions yet" description="Submissions will appear once participants submit." />
+            )}
+          </Card>
+        </div>
       </div>
     </div>
   );
