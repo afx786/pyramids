@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "title": "Pyramids Hackathon 2026",
+    "description": "Build the next generation of collaborative tools for student builders. Open to all domains.",
+    "theme": "Collaboration & Community",
+    "organizer": "Pyramids Team",
+    "mode": "Online",
+    "type": "hackathon",
+    "status": "upcoming",
+    "start_date": "2026-08-15T00:00:00Z",
+    "end_date": "2026-08-17T23:59:59Z",
+    "registration_opens": "2026-06-01T00:00:00Z",
+    "registration_closes": "2026-08-10T23:59:59Z",
+    "venue": null,
+    "city": null,
+    "country": null,
+    "prize_pool": "$5,000",
+    "team_size_min": 2,
+    "team_size_max": 4,
+    "eligibility": "Open to all university students",
+    "rules": "All code must be written during the event. Use of open source libraries is allowed.",
+    "domains": ["Web", "Mobile", "AI/ML", "DevTools"],
+    "technologies": ["Python", "JavaScript", "React", "FastAPI"],
+    "official_website": "https://pyramids.app/hackathons",
+    "registration_link": "https://pyramids.app/hackathons/register",
+    "contact_info": "hackathons@pyramids.app",
+    "sponsors": [],
+    "judges": [],
+    "faqs": [
+      {"question": "Who can participate?", "answer": "Any university student with a valid .edu email."},
+      {"question": "Is it team-based?", "answer": "Yes, teams of 2–4 members."}
+    ],
+    "links": [],
+    "teams": []
+  }
+]

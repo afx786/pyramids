@@ -8,7 +8,6 @@ class DashboardStats(BaseModel):
     total_projects: int
     total_teams: int
     total_research_projects: int
-    total_hackathons: int
     total_messages: int
     total_notifications: int
     total_bookmarks: int
@@ -21,7 +20,6 @@ class GrowthAnalytics(BaseModel):
     projects: int
     teams: int
     research_projects: int
-    hackathons: int
 
 
 class SkillAnalytics(BaseModel):
@@ -82,8 +80,7 @@ class PlatformReport(BaseModel):
     open_research_projects: int
     closed_research_projects: int
 
-    approved_hackathons: int
-    pending_hackathons: int
+
 
 
 
@@ -105,16 +102,6 @@ class RecentProject(BaseModel):
         from_attributes = True
 
 
-class RecentHackathon(BaseModel):
-    id: int
-    title: str
-    status: str
-
-    class Config:
-        from_attributes = True
-
-
 class ModerationResponse(BaseModel):
     recent_users: list[RecentUser]
     recent_projects: list[RecentProject]
-    recent_hackathons: list[RecentHackathon]

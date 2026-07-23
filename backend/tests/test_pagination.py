@@ -36,18 +36,6 @@ class TestPagination:
         assert response.status_code == 200
         assert isinstance(response.json(), list)
 
-    def test_hackathons_pagination(self, client):
-        response = client.get("/hackathons?limit=5&offset=0")
-        assert response.status_code == 200
-        data = response.json()
-        assert "items" in data
-        assert "meta" in data
-
-    def test_hackathons_no_pagination(self, client):
-        response = client.get("/hackathons")
-        assert response.status_code == 200
-        assert isinstance(response.json(), list)
-
     def test_opportunities_pagination(self, client):
         response = client.get("/opportunities?limit=5&offset=0")
         assert response.status_code == 200

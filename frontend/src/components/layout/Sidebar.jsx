@@ -33,7 +33,6 @@ const navigation = [
   { label: 'Domains', to: '/domains', icon: Shapes },
   { label: 'Teams', to: '/teams', icon: UsersRound },
   { label: 'Hackathons', to: '/hackathons', icon: Trophy },
-  { label: 'My Hackathons', to: '/hackathons/host', icon: Trophy },
   { label: 'Research', to: '/research', icon: Star },
   { label: 'Organizations', to: '/organizations', icon: Building2 },
   { label: 'Messages', to: '/messages', icon: MessageSquare },

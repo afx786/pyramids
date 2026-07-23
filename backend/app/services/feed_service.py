@@ -2,7 +2,6 @@ from sqlalchemy import desc, asc
 
 from app.models.project import Project
 from app.models.research_project import ResearchProject
-from app.models.hackathon import Hackathon
 
 
 def get_feed(
@@ -40,15 +39,6 @@ def get_feed(
             .all()
         )
 
-    def hackathon_query():
-        return (
-            db.query(Hackathon)
-            .order_by(order(Hackathon.created_at))
-            .offset(offset)
-            .limit(limit)
-            .all()
-        )
-
     if feed_type == "projects":
         return {
             "projects": project_query()
@@ -59,13 +49,7 @@ def get_feed(
             "research": research_query()
         }
 
-    if feed_type == "hackathons":
-        return {
-            "hackathons": hackathon_query()
-        }
-
     return {
         "projects": project_query(),
-        "research": research_query(),
-        "hackathons": hackathon_query()
+        "research": research_query()
     }

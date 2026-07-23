@@ -4,7 +4,6 @@ from app.models.user import User
 from app.models.team_member import TeamMember
 from app.models.research_member import ResearchMember
 from app.models.bookmark import Bookmark
-from app.models.hackathon import Hackathon
 
 from app.services.rank_service import get_user_rank
 
@@ -98,28 +97,6 @@ def get_user_profile(
             })
 
     # -----------------------------
-    # Hackathons
-    # -----------------------------
-
-    hackathons = (
-        db.query(Hackathon)
-        .filter(
-            Hackathon.created_by == user.id
-        )
-        .all()
-    )
-
-    hackathon_data = [
-        {
-            "id": hackathon.id,
-            "public_id": hackathon.public_id,
-            "title": hackathon.title,
-            "status": hackathon.status
-        }
-        for hackathon in hackathons
-    ]
-
-    # -----------------------------
     # Statistics
     # -----------------------------
 
@@ -127,7 +104,6 @@ def get_user_profile(
         "projects": len(projects),
         "research": len(research),
         "teams": len(teams),
-        "hackathons": len(hackathon_data),
         "skills": len(skills),
         "bookmarks": (
             db.query(Bookmark)
@@ -165,8 +141,6 @@ def get_user_profile(
         "research": research,
 
         "teams": teams,
-
-        "hackathons": hackathon_data,
 
         "statistics": statistics
     }

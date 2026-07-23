@@ -7,7 +7,6 @@ from app.database.session import SessionLocal
 from app.models.user import User
 from app.models.project import Project
 from app.models.team import Team
-from app.models.hackathon import Hackathon
 from app.models.research_project import ResearchProject
 from app.models.organization import Organization
 from app.services.id_service import generate_public_id
@@ -16,7 +15,6 @@ MODELS = [
     (User, "USER"),
     (Project, "PROJ"),
     (Team, "TEAM"),
-    (Hackathon, "HACK"),
     (ResearchProject, "RES"),
     (Organization, "ORG"),
 ]

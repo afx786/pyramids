@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from app.models.bookmark import Bookmark
 from app.models.project import Project
 from app.models.research_project import ResearchProject
-from app.models.hackathon import Hackathon
 
 
 def create_bookmark(
@@ -14,8 +13,7 @@ def create_bookmark(
 ):
     valid_types = {
         "project": Project,
-        "research": ResearchProject,
-        "hackathon": Hackathon
+        "research": ResearchProject
     }
 
     if item_type not in valid_types:

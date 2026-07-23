@@ -5,7 +5,6 @@ from app.deps import get_db
 from app.models.user import User
 from app.models.project import Project
 from app.models.research_project import ResearchProject
-from app.models.hackathon import Hackathon
 from app.models.organization import Organization
 
 from app.schemas.stats import (
@@ -28,7 +27,6 @@ def get_public_stats(db: Session = Depends(get_db)):
         "builders": db.query(User).count(),
         "projects": db.query(Project).count(),
         "research": db.query(ResearchProject).count(),
-        "hackathons": db.query(Hackathon).count(),
         "organizations": db.query(Organization).count(),
     }
 

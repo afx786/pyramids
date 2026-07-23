@@ -5,7 +5,6 @@ from app.models.user import User
 from app.models.project import Project
 from app.models.team import Team
 from app.models.research_project import ResearchProject
-from app.models.hackathon import Hackathon
 from app.models.message import Message
 from app.models.notification import Notification
 from app.models.bookmark import Bookmark
@@ -47,11 +46,6 @@ def get_dashboard_stats(
 
         "total_research_projects": (
             db.query(ResearchProject)
-            .count()
-        ),
-
-        "total_hackathons": (
-            db.query(Hackathon)
             .count()
         ),
 
@@ -102,10 +96,6 @@ def get_platform_analytics(
             .count()
         ),
 
-        "hackathons": (
-            db.query(Hackathon)
-            .count()
-        )
     }
 
     top_skills = get_top_skills(db)
@@ -152,11 +142,6 @@ def get_dashboard_cards(
         {
             "title": "Research",
             "value": stats["total_research_projects"]
-        },
-
-        {
-            "title": "Hackathons",
-            "value": stats["total_hackathons"]
         },
 
         {
@@ -254,22 +239,6 @@ def get_platform_report(
         .count()
     )
 
-    approved_hackathons = (
-        db.query(Hackathon)
-        .filter(
-            Hackathon.status == "approved"
-        )
-        .count()
-    )
-
-    pending_hackathons = (
-        db.query(Hackathon)
-        .filter(
-            Hackathon.status == "pending"
-        )
-        .count()
-    )
-
     return {
 
         "active_users": active_users,
@@ -283,10 +252,6 @@ def get_platform_report(
         "open_research_projects": open_research_projects,
 
         "closed_research_projects": closed_research_projects,
-
-        "approved_hackathons": approved_hackathons,
-
-        "pending_hackathons": pending_hackathons
 
     }
 
@@ -315,10 +280,6 @@ def get_platform_statistics(
 
         "research_projects": (
             db.query(ResearchProject).count()
-        ),
-
-        "hackathons": (
-            db.query(Hackathon).count()
         ),
 
         "messages": (
@@ -367,7 +328,6 @@ def get_quick_insights(
         "total_content": (
             stats["projects"]
             + stats["research_projects"]
-            + stats["hackathons"]
         ),
 
         "total_collaboration_requests": (
@@ -406,22 +366,11 @@ def get_moderation_dashboard(
         .all()
     )
 
-    recent_hackathons = (
-        db.query(Hackathon)
-        .order_by(
-            Hackathon.created_at.desc()
-        )
-        .limit(10)
-        .all()
-    )
-
     return {
 
         "recent_users": recent_users,
 
-        "recent_projects": recent_projects,
-
-        "recent_hackathons": recent_hackathons
+        "recent_projects": recent_projects
 
     }
 
@@ -499,27 +448,6 @@ def get_recent_activity(
 
         })
 
-    hackathons = (
-        db.query(Hackathon)
-        .order_by(
-            Hackathon.created_at.desc()
-        )
-        .limit(5)
-        .all()
-    )
-
-    for hackathon in hackathons:
-
-        activities.append({
-
-            "type": "hackathon",
-
-            "title": f"Hackathon '{hackathon.title}' added",
-
-            "time": hackathon.created_at
-
-        })
-
     activities.sort(
         key=lambda x: x["time"],
         reverse=True
@@ -581,21 +509,6 @@ def get_recent_projects(
         db.query(Project)
         .order_by(
             Project.created_at.desc()
-        )
-        .limit(limit)
-        .all()
-    )
-
-
-def get_recent_hackathons(
-    db: Session,
-    limit: int = 10
-):
-
-    return (
-        db.query(Hackathon)
-        .order_by(
-            Hackathon.created_at.desc()
         )
         .limit(limit)
         .all()
