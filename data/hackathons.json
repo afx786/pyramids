@@ -1,12 +1,12 @@
 [
   {
     "title": "Build with Gemini XPRIZE",
-    "description": "",
+    "description": "&lt;h4 id=&quot;90-days-ideate-build-ship-grow&quot; class=&quot;h2-title&quot;&gt;90 days. Ideate. Build. Ship. Grow.&lt;/h4&gt; &lt;p&gt;Real product. Real revenue.&lt;strong&gt; A real business.&lt;/strong&gt;&lt;/p&gt; &lt;table class=&quot;responsive&quot;&gt; &lt;tbody&gt; &lt;tr&gt; &lt;td&gt; &lt;h5 id=&quot;01&quot;&gt;01&lt;/h5&gt; &lt;p&gt;&lt;strong&gt;Ideate&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;Pick a real problem worth solving. AI helps you scope it.&lt;/p&gt; &lt;/td&gt; &lt;td&gt; &lt;h5 id=&quot;02&quot;&gt;02&lt;/h5&gt; &lt;p&gt;&lt;strong&gt;Build&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;Build a working prototype using AI.&lt;/p&gt; &lt;/td&gt; &lt;td&gt; &lt;h5 id=&quot;03&quot;&gt;03&lt;/h5&gt; &lt;p&gt;&lt;strong&gt;Ship&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;Deploy a business that operates with AI. Real users in production.&lt;/p&gt; &lt;/td&gt; &lt;td&gt; &lt;h5 id=&quot;04&quot;&gt;04&lt;/h5&gt; &lt;p&gt;&lt;strong&gt;Sell&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;&lt;span&gt;Market it. Grow it. Show the revenue.&lt;/span&gt;&lt;/p&gt; &lt;/td&gt; &lt;/tr&gt; &lt;/tbody&gt; &lt;/table&gt; &lt;p&gt;AI is transforming everything, including what small teams can build. Operations that used to take entire engineering departments can now be written in plain English and executed by AI agents. By some estimates, the world’s 45 million software developers will grow to over a billion in the next few years. Everyone will be a developer, and we want to start now, with you. So show us: build a real business that makes real impact.&lt;/p&gt;",
     "organizer": "XPRIZE",
     "mode": "Online",
     "type": "hackathon",
-    "start_date": "May 19 - Aug 17, 2026",
-    "end_date": null,
+    "start_date": "2026-05-19T13:00:00.000-04:00",
+    "end_date": "2026-08-17T16:00:00.000-04:00",
     "registration_link": "https://xprize.devpost.com/",
     "official_website": "https://xprize.devpost.com/",
     "domains": [
@@ -21,12 +21,12 @@
   },
   {
     "title": "CockroachDB × AWS Hackathon - Build with Agentic Memory",
-    "description": "",
+    "description": "&lt;h5 id=&quot;cockroachdb-x-aws-hackathon&quot;&gt;🪳 CockroachDB × AWS Hackathon:&lt;/h5&gt; &lt;p&gt;&lt;span&gt;&lt;span&gt;CockroachDB and AWS invite developers, engineers, and AI builders to create the next generation of agentic applications. Harness CockroachDB&#39;s distributed AI capabilities, fully managed MCP Server, agent-ready ccloud CLI, open-source Agent Skills Repo, LangChain integrations and Claude/Cursor plugins - all on AWS - to build AI agents with production-grade, persistent memory.&lt;/span&gt;&lt;/span&gt;&lt;/p&gt; &lt;h5 id=&quot;why-agentic-memory-why-now&quot;&gt;Why Agentic Memory? Why Now?&lt;/h5&gt; &lt;p&gt;&lt;span style=&quot; text-decoration: none; &quot;&gt;AI agents are rapidly moving from experiments into real production workflows, like writing code, running pipelines, diagnosing incidents, and driving more application traffic than any human could. But here&#39;s the problem: agents need memory that never goes down.&lt;/span&gt;&lt;/p&gt; &lt;p&gt;&lt;span style=&quot; text-decoration: none; &quot;&gt;An agent whose memory goes offline doesn&#39;t degrade gracefully, it stops. Traditional databases were optimized for human-scale reads and writes. Agentic systems are different: they spawn autonomously, write constantly, and require memory that persists across regions, failures, and scale&amp;nbsp; (with zero data loss and no maintenance windows).&lt;/span&gt;&lt;/p&gt; &lt;p&gt;&lt;span style=&quot; text-decoration: none; &quot;&gt;CockroachDB was built for exactly this. It is the system of record for agentic memory: globally distributed, always-on, PostgreSQL-compatible, and now natively integrated into the agent toolchain through MCP, cloud, and an open-source skills ecosystem.&lt;/span&gt;&lt;/p&gt; &lt;p&gt;&lt;span style=&quot; text-decoration: none; &quot;&gt;This hackathon is your invitation to build on that foundation.&lt;/span&gt;&lt;/p&gt;",
     "organizer": "Cockroach Labs",
     "mode": "Online",
     "type": "hackathon",
-    "start_date": "Jun 30 - Aug 18, 2026",
-    "end_date": null,
+    "start_date": "2026-06-30T10:00:00.000-04:00",
+    "end_date": "2026-08-18T17:00:00.000-04:00",
     "registration_link": "https://cockroachdb-ai.devpost.com/",
     "official_website": "https://cockroachdb-ai.devpost.com/",
     "domains": [
@@ -41,12 +41,12 @@
   },
   {
     "title": "Build with DataHub: The Agent Hackathon",
-    "description": "",
+    "description": "&lt;h4 id=&quot;welcome-to-the-agent-hackathon&quot; class=&quot;h2-title&quot;&gt;Welcome to The Agent Hackathon!&amp;nbsp;&lt;/h4&gt; &lt;p&gt;Everyone&#39;s building AI agents, but the real magic happens when those agents have complete context to act on organizational data. Without reliable knowledge of schemas, lineage, ownership, ML metadata, and governance, agents hallucinate or get stuck on tasks any data engineer could finish in minutes.&lt;/p&gt; &lt;p&gt;That&#39;s where &lt;a href=&quot;https://github.com/datahub-project/datahub&quot;&gt;DataHub&lt;/a&gt; comes in.&lt;/p&gt; &lt;p&gt;DataHub is the open-source context platform that gives AI agents a complete understanding of your data stack — from raw tables to ML models. With an &lt;a href=&quot;https://docs.datahub.com/docs/features/feature-guides/mcp&quot;&gt;MCP Server&lt;/a&gt;, end-to-end ML lineage, and &lt;a href=&quot;https://docs.datahub.com/docs/dev-guides/agent-context/skills&quot;&gt;DataHub Skills&lt;/a&gt; that give agents direct access to catalog workflows, DataHub turns the modern data ecosystem into something agents can actually work with.&lt;/p&gt; &lt;p&gt;This hackathon is your invitation to build on that foundation. Whether you&#39;re shipping autonomous agents, generating production data code, protecting ML models, or building something entirely new — show us what&#39;s possible when agents have context.&lt;/p&gt; &lt;p&gt;DataHub powers data stacks at Apple, Pinterest, Netflix, and hundreds of other companies. The most adopted open-source metadata platform — and now the one agents need to do real work.&lt;/p&gt; &lt;p&gt;&lt;em&gt;Ready to build agents that actually ship?&lt;/em&gt;&lt;/p&gt; &lt;p&gt;Check out the &lt;a href=&quot;https://datahub.devpost.com/resources&quot;&gt;Resources&lt;/a&gt; tab for docs, SDKs, sample datasets, and starter kits. Then start building.&lt;/p&gt;",
     "organizer": "DataHub",
     "mode": "Online",
     "type": "hackathon",
-    "start_date": "Jul 06 - Aug 10, 2026",
-    "end_date": null,
+    "start_date": "2026-07-06T09:00:00.000-04:00",
+    "end_date": "2026-08-10T17:00:00.000-04:00",
     "registration_link": "https://datahub.devpost.com/",
     "official_website": "https://datahub.devpost.com/",
     "domains": [
@@ -61,12 +61,12 @@
   },
   {
     "title": "Arm Create: AI Optimization Challenge",
-    "description": "",
+    "description": "&lt;p&gt;&lt;span&gt;Welcome to the Arm AI Optimization Challenge 2026.&amp;nbsp;We’re&amp;nbsp;inviting developers to build and&amp;nbsp;submit&amp;nbsp;projects that show how AI can be&amp;nbsp;optimized&amp;nbsp;for Arm-powered platforms across three challenge tracks:&lt;/span&gt;&amp;nbsp;&lt;/p&gt; &lt;ul&gt; &lt;li&gt; &lt;a href=&quot;https://www.arm.com/markets/physical-ai?utm_source=devpost&amp;amp;utm_medium=referral&amp;amp;utm_content=landingpage&amp;amp;utm_campaign=mk24_developer_arm-create&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;&lt;span&gt;Physical AI&lt;/span&gt;&lt;/a&gt;&lt;span&gt;:&amp;nbsp;Optimize&amp;nbsp;AI for real-world systems, including robotics, embedded devices, sensors, simulation, autonomy, and edge environments.&lt;/span&gt; &lt;/li&gt; &lt;li&gt; &lt;a href=&quot;https://www.arm.com/markets/cloud-ai?utm_source=devpost&amp;amp;utm_medium=referral&amp;amp;utm_content=landingpage&amp;amp;utm_campaign=mk24_developer_arm-create&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;&lt;span&gt;Cloud AI&lt;/span&gt;&lt;/a&gt;&lt;span&gt;:&amp;nbsp;Optimize&amp;nbsp;AI for scalable infrastructure, including Arm64 cloud, inference performance, frameworks, agents, and production-ready developer workflows.&lt;/span&gt; &lt;/li&gt; &lt;li&gt; &lt;a href=&quot;https://www.arm.com/markets/edge-ai?utm_source=devpost&amp;amp;utm_medium=referral&amp;amp;utm_content=landingpage&amp;amp;utm_campaign=mk24_developer_arm-create&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;&lt;span&gt;Mobile AI&lt;/span&gt;&lt;/a&gt;&lt;span&gt;:&amp;nbsp;Optimize&amp;nbsp;AI for on-device constraints, including performance, privacy, latency, battery efficiency, and local AI experiences on Arm-powered phones, tablets, and laptops.&lt;/span&gt; &lt;/li&gt; &lt;/ul&gt; &lt;p&gt;&lt;span&gt;Across all tracks, submissions should show clear&amp;nbsp;optimization&amp;nbsp;work and measurable improvements where possible.&lt;/span&gt;&lt;",
     "organizer": "arm",
     "mode": "Online",
     "type": "hackathon",
-    "start_date": "Jun 04 - Aug 14, 2026",
-    "end_date": null,
+    "start_date": "2026-06-04T13:30:00.000-04:00",
+    "end_date": "2026-08-14T19:00:00.000-04:00",
     "registration_link": "https://arm-ai-optimization-challenge.devpost.com/",
     "official_website": "https://arm-ai-optimization-challenge.devpost.com/",
     "domains": [
@@ -79,12 +79,12 @@
   },
   {
     "title": "Backblaze Generative Media Hackathon: Build with Genblaze on B2",
-    "description": "",
+    "description": "&lt;h4 id=&quot;about-the-challenge&quot; class=&quot;h2-title&quot;&gt;About the challenge&lt;/h4&gt; &lt;p&gt;Create the next generation of AI media apps.&lt;/p&gt; &lt;p&gt;The Backblaze Generative AI Media Hackathon challenges developers to build apps for AI-generated video, images, audio, and multimodal media workflows using &lt;strong&gt;Backblaze B2 Cloud Storage&lt;/strong&gt; and &lt;strong&gt;Genblaze&lt;/strong&gt;.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Backblaze B2&lt;/strong&gt; is S3-compatible cloud object storage that helps generative media apps store and serve large volumes of generated assets, metadata, provenance records, thumbnails, logs, and application files as part of the media pipeline. Start building for free with 10GB of included B2 storage, then scale as your media workloads grow.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Genblaze&lt;/strong&gt; is an open source Python SDK from Backblaze for orchestrating generative media workflows across generative media providers such as &lt;span&gt;GMI Cloud, &lt;/span&gt;&lt;span&gt;OpenAI, Google, Decart, Runway, Luma, ElevenLabs, Stability Audio, NVIDIA NIM, and others.&lt;/span&gt;&lt;/p&gt; &lt;p&gt;&lt;strong&gt;GMI Cloud&lt;/strong&gt; gives developers easy access to open source generative AI models for image, video, audio, chat, reasoning, and multimodal workflows, making it easier to prototype and build AI media applications.&lt;/p&gt; &lt;p&gt;Build something useful, creative, and production-minded. Show how AI-generated media can move from prompt to pipeline to durable storage on Backblaze B2.&lt;/p&gt; &lt;h4 id=&quot;get-started&quot; class=&quot;h2-title&quot;&gt;Get started&lt;/h4&gt; &lt;ol&gt; &lt;li&gt;&lt;strong&gt;Create a Backblaze B2 account: &lt;a href=&quot;https://www.backblaze.com/cloud-storage?utm_source=github&amp;amp;utm_medium=referral&amp;amp;utm_campaign=genhackathon&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Backblaze B2 Signup&lt;/a&gt;&lt;/strong&gt;&lt;/li&gt; &lt",
     "organizer": "Backblaze",
     "mode": "Online",
     "type": "hackathon",
-    "start_date": "Jun 22 - Aug 03, 2026",
-    "end_date": null,
+    "start_date": "2026-06-22T12:30:00.000-04:00",
+    "end_date": "2026-08-03T17:00:00.000-04:00",
     "registration_link": "https://backblaze-generative-media.devpost.com/",
     "official_website": "https://backblaze-generative-media.devpost.com/",
     "domains": [
@@ -99,12 +99,12 @@
   },
   {
     "title": "Africa Deep Tech Challenge 2026",
-    "description": "",
+    "description": "&lt;h4 id=&quot;about-the-challenge&quot; class=&quot;h2-title&quot;&gt;About the challenge&lt;/h4&gt; &lt;p&gt;Africa is not excluded from the language model revolution. The bottleneck is no longer research or raw model availability - it is access economics. Cloud-hosted LLMs require API fees, stable fiber, and sustained electricity. For a university student in Lagos, an extension officer in Arusha, or a small-business owner in Dakar, these are not minor frictions - they are blockers.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Africa Deep Tech Challenge 2026&lt;/strong&gt; (inspired by&amp;nbsp;the &lt;a href=&quot;https://africaaixprize.org/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Africa AI XPrize&lt;/a&gt;) is an engineering-first competition to make useful language-model applications run well on the computers Africans already own: mid- and low-end commodity laptops. We are not building for exotic edge silicon. We are building for the 8 GB laptop with integrated graphics - the machine sitting on millions of desks, in classrooms, clinics, and corner shops across the continent.&lt;/p&gt; &lt;p&gt;You could be the one to democratize access to low cost inference for the continent.&lt;/p&gt; &lt;p&gt;This is an applied systems engineering contest. Hitting genuinely useful performance on commodity hardware requires optimization across the full stack: model selection and fine-tuning, quantization and compilation, memory and cache management, retrieval-augmented generation over local corpora, and application UX that makes such a model feel responsive.&lt;/p&gt; &lt;h4 id=&quot;get-started&quot; class=&quot;h2-title&quot;&gt; &lt;strong&gt;&lt;/strong&gt;Get started&lt;/h4&gt; &lt;ul&gt; &lt;li&gt; &lt;p&gt;Register on DevPost for the Africa Deep Tech Challenge 2026&lt;/p&gt; &lt;/li&gt; &lt;li&gt;Form or join a team of 1 to 3 people and pick your problem domain&lt;/li&gt; &lt;li&gt;Clone the &lt;a href=&quot;https://github.com/Africa-Deep-Tech-Foundation/adtc-2",
     "organizer": "Africa Deep Tech Foundation",
     "mode": "Online",
     "type": "hackathon",
-    "start_date": "Jun 17 - Aug 25, 2026",
-    "end_date": null,
+    "start_date": "2026-06-17T02:45:00.000-04:00",
+    "end_date": "2026-08-25T02:45:00.000-04:00",
     "registration_link": "https://adtc-2026.devpost.com/",
     "official_website": "https://adtc-2026.devpost.com/",
     "domains": [
@@ -118,12 +118,12 @@
   },
   {
     "title": "YouCam API Skin AI & Apparel VTO Hackathon ",
-    "description": "",
+    "description": "&lt;h4 id=&quot;showcase-your-innovations-and-shape-the-future-of-skincare-and-apparel-consumer-experience&quot; class=&quot;h2-title&quot;&gt;Showcase Your Innovations and Shape the Future of Skincare and Apparel Consumer Experience.&lt;/h4&gt; &lt;p&gt;Builders, developers, and visionaries: it’s time to design solutions that redefine the next generation of consumer experiences. The YouCam API Skin AI &amp;amp; Apparel VTO Hackathon is your launchpad. We’re opening our most advanced, field-tested AI/AR infrastructure so you can move beyond the sandbox and build real products, including agentic AI workflows.&lt;/p&gt; &lt;p&gt;We want you to push innovation to its limits by integrating YouCam APIs into your big idea, whether it’s a self-learning styling AI agent, a personalized skin diagnostic tool, or a solution to real user problems. Bring your boldest architectural concepts—and we’ll back them with serious prize money.&lt;/p&gt; &lt;p&gt;&lt;img src=&quot;https://bcw-media.s3.ap-northeast-1.amazonaws.com/strapi/assets/webp_API_Hackathon_Banner_devpost_2606_6ed4917bc9.jpg?updated_at=2026-06-29T07:40:03.449Z&quot; alt=&quot;&quot; width=&quot;760&quot; height=&quot;464&quot;&gt;&lt;/p&gt; &lt;p&gt;&amp;nbsp;&lt;/p&gt; &lt;h4 id=&quot;about-the-challenge&quot; class=&quot;h2-title&quot;&gt;About the challenge&lt;/h4&gt; &lt;p&gt;All solutions must integrate at least one YouCam API and demonstrate clear consumer or retail value. Your solution needs to clearly align with whichever topic you choose, both in how it&#39;s built and how it&#39;s described.&lt;/p&gt; &lt;p&gt;Pick the topic that best fits your project and submit:&lt;/p&gt; &lt;h5 id=&quot;skin-ai&quot;&gt;&lt;span style=&quot;text-decoration: underline;&quot;&gt;Skin AI&lt;/span&gt;&lt;/h5&gt; &lt;p&gt;People don&#39;t wonder about their skin in the abstract, they wonder right before a purchase, right after a bad breakout, right when they&#39;re standing in front of a mirror deciding whether something is w",
     "organizer": "Perfect Corp",
     "mode": "Online",
     "type": "hackathon",
-    "start_date": "Jul 06 - Aug 17, 2026",
-    "end_date": null,
+    "start_date": "2026-07-06T12:00:00.000-04:00",
+    "end_date": "2026-08-17T11:45:00.000-04:00",
     "registration_link": "https://youcam-api.devpost.com/",
     "official_website": "https://youcam-api.devpost.com/",
     "domains": [
@@ -138,12 +138,12 @@
   },
   {
     "title": "VoltHacks",
-    "description": "",
+    "description": "&lt;h4 id=&quot;about-the-challenge&quot; class=&quot;h2-title&quot;&gt;About the Challenge&lt;/h4&gt; &lt;p&gt;VoltHacks 2026 is a hackathon focused on building real world solutions using hardware, IoT, and AI. Participants are encouraged to go beyond traditional software projects and create systems that interact with the physical world through sensors, embedded systems, automation, and intelligent devices.&lt;/p&gt; &lt;p&gt;Whether you&#39;re interested in robotics, smart devices, sustainability, healthcare technology, or open innovation, VoltHacks is designed to push creativity and engineering skills toward solving meaningful problems.&lt;/p&gt; &lt;p&gt;Tracks could include:&lt;/p&gt; &lt;ul&gt; &lt;li&gt;Robotics &amp;amp; Embedded Systems&lt;/li&gt; &lt;li&gt;AI + Hardware Integration&lt;/li&gt; &lt;li&gt;Smart Health Technology&lt;/li&gt; &lt;li&gt;Sustainability &amp;amp; Smart Cities&lt;/li&gt; &lt;li&gt;Open Innovation&lt;/li&gt; &lt;li&gt;Anything Engineering based with Impact&lt;/li&gt; &lt;/ul&gt; &lt;p&gt;Participants will present their projects to a panel of judges, with awards recognizing innovation, technical complexity, and real world impact.&lt;/p&gt; &lt;h4 id=&quot;get-started&quot; class=&quot;h2-title&quot;&gt;Get Started&lt;/h4&gt; &lt;ol&gt; &lt;li&gt;Register individually or with a team&lt;/li&gt; &lt;li&gt;Brainstorm a project idea related to the challenge themes&lt;/li&gt; &lt;li&gt;Build your project during the hackathon period&lt;/li&gt; &lt;li&gt;Submit your final project on Devpost before the deadline&lt;/li&gt; &lt;/ol&gt; &lt;p&gt;All skill levels are welcome. Whether you&#39;re experienced with hardware or just getting started, VoltHacks is meant to be a place to learn, collaborate, and build something meaningful.&lt;/p&gt;",
     "organizer": "Dialogate",
     "mode": "Online",
     "type": "hackathon",
-    "start_date": "May 22 - Sep 05, 2026",
-    "end_date": null,
+    "start_date": "2026-05-22T00:00:00.000-04:00",
+    "end_date": "2026-09-05T17:00:00.000-04:00",
     "registration_link": "https://volthacks.devpost.com/",
     "official_website": "https://volthacks.devpost.com/",
     "domains": [
@@ -158,12 +158,12 @@
   },
   {
     "title": "3D Websites Hackathon",
-    "description": "",
+    "description": "3D Websites Hackathon &lt;p&gt;Welcome to the 3D Websites Hackathon.&lt;/p&gt; &lt;p&gt;This competition is all about creativity, aesthetics, and building unforgettable experiences on the web.&lt;/p&gt; &lt;p&gt;Your challenge is to create the most visually stunning, immersive, and imaginative 3D website possible. There are no restrictions on theme, industry, or purpose. Build a futuristic city, a digital art gallery, an interactive story, a sci-fi experience, a fantasy world, a product showcase, a game-like website, or something nobody has ever seen before.&lt;/p&gt; &lt;p&gt;This hackathon is beginner-friendly and open to anyone interested in web design, 3D graphics, digital art, UI/UX, creative coding, and interactive experiences.&lt;/p&gt; What Makes This Hackathon Different? &lt;p&gt;Most hackathons focus on solving problems.&lt;/p&gt; &lt;p&gt;This one focuses on creating wonder.&lt;/p&gt; &lt;p&gt;We are looking for projects that make people stop scrolling and say:&lt;/p&gt; &lt;p&gt;&quot;Wow.&quot;&lt;/p&gt; Freedom to Create &lt;p&gt;Participants may use:&lt;/p&gt; &lt;p&gt;• AI tools and assistants&lt;br&gt;• Online assets and models&lt;br&gt;• Open-source libraries&lt;br&gt;• Three.js, React Three Fiber, Babylon.js, WebGL, WebGPU, Spline, Blender, and other tools&lt;br&gt;• Tutorials and learning resources&lt;/p&gt; &lt;p&gt;The judging is based primarily on creativity, aesthetics, and overall experience.&lt;/p&gt; &lt;p&gt;Technical complexity is optional.&lt;/p&gt; &lt;p&gt;A beautiful and creative project can outperform a highly technical one.&lt;/p&gt; &amp;nbsp;",
     "organizer": "high school",
     "mode": "Online",
     "type": "hackathon",
-    "start_date": "Jun 22 - Jul 31, 2026",
-    "end_date": null,
+    "start_date": "2026-06-22T00:00:00.000-04:00",
+    "end_date": "2026-07-31T18:00:00.000-04:00",
     "registration_link": "https://3d-websites-hackathon.devpost.com/",
     "official_website": "https://3d-websites-hackathon.devpost.com/",
     "domains": [
