@@ -20,9 +20,9 @@ class ContactRequestResponse(BaseModel):
 
 class ContactInfoResponse(BaseModel):
     contact_email: str | None = None
-    whatsapp_number: str | None = None
+    phone_number: str | None = None
 
 
 class ContactInfoUpdate(BaseModel):
     contact_email: str | None = None
-    whatsapp_number: str | None = None
+    phone_number: str | None = None

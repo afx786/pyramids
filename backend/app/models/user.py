@@ -158,7 +158,7 @@ class User(Base):
         nullable=True
     )
 
-    whatsapp_number = Column(
+    phone_number = Column(
         String,
         nullable=True
     )

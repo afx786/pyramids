@@ -20,21 +20,21 @@ function Settings() {
   const [fieldErrors, setFieldErrors] = useState({});
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [contactEmail, setContactEmail] = useState(user?.contact_email || '');
-  const [whatsappNumber, setWhatsappNumber] = useState(user?.whatsapp_number || '');
+  const [phoneNumber, setPhoneNumber] = useState(user?.phone_number || '');
   const [contactSaving, setContactSaving] = useState(false);
   const [contactSaved, setContactSaved] = useState(false);
 
   useEffect(() => {
     contactService.getMyInfo().then((data) => {
       setContactEmail(data.contact_email || '');
-      setWhatsappNumber(data.whatsapp_number || '');
+      setPhoneNumber(data.phone_number || '');
     }).catch(() => {});
   }, []);
 
   async function handleSaveContact() {
     setContactSaving(true);
     try {
-      await contactService.updateMyInfo({ contact_email: contactEmail, whatsapp_number: whatsappNumber });
+      await contactService.updateMyInfo({ contact_email: contactEmail, phone_number: phoneNumber });
       setContactSaved(true);
       setTimeout(() => setContactSaved(false), 2000);
     } catch (err) {
@@ -300,7 +300,7 @@ function Settings() {
                 <Smartphone size={14} className="inline mr-1" /> Phone Number
               </label>
               <p className="font-body-sm mb-xs" style={{ color: 'rgb(var(--color-on-surface-variant) / 0.7)' }}>
-                (e.g., WhatsApp, Telegram, or mobile)
+                (e.g., international format preferred)
               </p>
               <input
                 className="w-full rounded-lg py-sm px-md font-body-sm"
@@ -310,8 +310,8 @@ function Settings() {
                   color: 'rgb(var(--color-on-surface))',
                 }}
                 placeholder="+1 555 123 4567"
-                value={whatsappNumber}
-                onChange={(e) => setWhatsappNumber(e.target.value)}
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
               />
             </div>
             <div className="flex justify-end">

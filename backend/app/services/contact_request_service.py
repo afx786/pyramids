@@ -144,7 +144,7 @@ def approve_contact_request(
     return {
         "status": "approved",
         "contact_email": target.contact_email,
-        "whatsapp_number": target.whatsapp_number
+        "phone_number": target.phone_number
     }
 
 
@@ -252,7 +252,7 @@ def get_contact_request_status(
             .first()
         )
         result["contact_email"] = target.contact_email
-        result["whatsapp_number"] = target.whatsapp_number
+        result["phone_number"] = target.phone_number
 
     return result
 
@@ -286,7 +286,7 @@ def get_my_contact_info(
 
     return {
         "contact_email": user.contact_email,
-        "whatsapp_number": user.whatsapp_number
+        "phone_number": user.phone_number
     }
 
 
@@ -294,7 +294,7 @@ def update_contact_info(
     db: Session,
     user_id: int,
     contact_email: str | None,
-    whatsapp_number: str | None
+    phone_number: str | None
 ):
 
     user = (
@@ -306,13 +306,13 @@ def update_contact_info(
     if contact_email is not None:
         user.contact_email = contact_email or None
 
-    if whatsapp_number is not None:
-        user.whatsapp_number = whatsapp_number or None
+    if phone_number is not None:
+        user.phone_number = phone_number or None
 
     db.commit()
     db.refresh(user)
 
     return {
         "contact_email": user.contact_email,
-        "whatsapp_number": user.whatsapp_number
+        "phone_number": user.phone_number
     }

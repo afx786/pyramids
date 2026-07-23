@@ -147,7 +147,7 @@ function Signup() {
                 onChange={(event) => updateField('phone', event.target.value)}
               />
               <p className="font-body-sm text-xs" style={{ color: 'rgb(var(--color-on-surface-variant) / 0.7)' }}>
-                Used to connect with collaborators after you approve a contact request.
+                Private by default. Shared only when you approve a contact request.
               </p>
               <FieldError>{errors.phone}</FieldError>
             </label>

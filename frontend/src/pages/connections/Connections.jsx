@@ -126,10 +126,10 @@ function Connections() {
   function handleViewContact(person) {
     const userId = person._userId || person.id;
     const status = contactStatuses[userId];
-    if (status?.contact_email || status?.whatsapp_number) {
+    if (status?.contact_email || status?.phone_number) {
       setSharedContactInfo({
         contact_email: status.contact_email,
-        whatsapp_number: status.whatsapp_number,
+        phone_number: status.phone_number,
         approved_at: status.approved_at,
       });
       setShowContactShared(true);

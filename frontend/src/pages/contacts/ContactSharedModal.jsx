@@ -43,7 +43,7 @@ function ContactSharedModal({ isOpen, onClose, contactInfo }) {
   if (!isOpen || !contactInfo) return null;
 
   const hasEmail = Boolean(contactInfo.contact_email);
-  const hasPhone = Boolean(contactInfo.whatsapp_number);
+  const hasPhone = Boolean(contactInfo.phone_number);
   const approvedDate = contactInfo.approved_at ? formatApprovedDate(contactInfo.approved_at) : null;
 
   return (
@@ -99,9 +99,9 @@ function ContactSharedModal({ isOpen, onClose, contactInfo }) {
               <Smartphone size={18} style={{ color: 'rgb(var(--color-primary))' }} />
               <div className="flex-1 min-w-0">
                 <p className="font-label-caps text-label-caps" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Phone</p>
-                <p className="font-body-sm font-medium truncate" style={{ color: 'rgb(var(--color-on-surface))' }}>{contactInfo.whatsapp_number}</p>
+                <p className="font-body-sm font-medium truncate" style={{ color: 'rgb(var(--color-on-surface))' }}>{contactInfo.phone_number}</p>
               </div>
-              <CopyButton text={contactInfo.whatsapp_number} />
+              <CopyButton text={contactInfo.phone_number} />
             </div>
           ) : null}
         </div>

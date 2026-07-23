@@ -57,7 +57,7 @@ def update_my_contact_info(
         db,
         current_user.id,
         data.contact_email,
-        data.whatsapp_number
+        data.phone_number
     )
 
 

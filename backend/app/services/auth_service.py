@@ -17,7 +17,7 @@ def signup_user(db: Session, name: str, email: str, password: str, phone_number:
         name=name,
         email=email,
         contact_email=email,
-        whatsapp_number=phone_number,
+        phone_number=phone_number,
         password_hash=hash_password(password),
         program=program,
         joining_year=joining_year,

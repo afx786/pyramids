@@ -56,7 +56,7 @@ class UserResponse(BaseModel):
     name: str
     email: str
     contact_email: str | None = None
-    whatsapp_number: str | None = None
+    phone_number: str | None = None
     program: str | None = None
     joining_year: int | None = None
     graduating_year: int | None = None
