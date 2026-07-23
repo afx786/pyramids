@@ -1,11 +1,17 @@
 from pydantic import BaseModel, EmailStr, field_validator
 
 
+import re
+
+from pydantic import BaseModel, EmailStr, field_validator
+
+
 class UserSignup(BaseModel):
     name: str
     email: EmailStr
     password: str
     phone_number: str
+    builder_id: str
     program: str | None = None
     joining_year: int | None = None
     graduating_year: int | None = None
@@ -16,6 +22,16 @@ class UserSignup(BaseModel):
         if not v or not v.strip():
             raise ValueError('Name cannot be empty')
         return v.strip()
+
+    @field_validator('builder_id')
+    @classmethod
+    def validate_builder_id(cls, v):
+        if not v or not v.strip():
+            raise ValueError('Builder ID is required')
+        v = v.strip().lower()
+        if not re.match(r'^[a-z0-9_]{3,20}$', v):
+            raise ValueError('Builder ID must be 3-20 characters: letters, numbers, underscores only')
+        return v
 
     @field_validator('phone_number')
     @classmethod
@@ -55,6 +71,7 @@ class UserResponse(BaseModel):
     public_id: str
     name: str
     email: str
+    builder_id: str | None = None
     contact_email: str | None = None
     phone_number: str | None = None
     program: str | None = None
@@ -95,3 +112,16 @@ class UserUpdate(BaseModel):
         if v is not None and joining is not None and v < joining:
             raise ValueError('Graduating year cannot be earlier than joining year')
         return v
+
+
+class BuilderIdCheck(BaseModel):
+    builder_id: str
+
+
+class BuilderIdCheckResponse(BaseModel):
+    available: bool
+    builder_id: str
+
+
+class InviteByBuilderId(BaseModel):
+    builder_id: str

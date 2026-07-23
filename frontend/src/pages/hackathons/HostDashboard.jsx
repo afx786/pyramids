@@ -120,7 +120,7 @@ function HostDashboard() {
     <div className="animate-fade-in p-xl max-w-6xl mx-auto">
       <PageHeader
         eyebrow="Host Dashboard"
-        title="My Hackathons"
+        title="Host a Hackathon"
         actions={
           <Button onClick={() => navigate('/hackathons/new')}>
             <Plus size={16} /> Create Hackathon

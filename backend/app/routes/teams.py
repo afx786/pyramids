@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 from fastapi import APIRouter, Depends
 from sqlalchemy import func
 from sqlalchemy.orm import Session
@@ -54,6 +55,7 @@ from app.schemas.team import (
 )
 from app.schemas.team import (
     TeamMemberInviteRequest,
+    TeamMemberInviteByBuilderId,
     TeamMemberRoleUpdate
 )
 from app.schemas.team_join_request import TeamJoinRequestResponse
@@ -79,12 +81,46 @@ def create_new_team(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
-    return create_team(
+    if data.purpose == "hackathon" and data.hackathon_id:
+        from app.models.hackathon import Hackathon
+        hackathon = db.query(Hackathon).filter(Hackathon.id == data.hackathon_id).first()
+        if not hackathon:
+            raise HTTPException(status_code=404, detail="Hackathon not found")
+        if hackathon.status != "published":
+            raise HTTPException(status_code=400, detail="Hackathon is not active")
+        today = datetime.utcnow()
+        if hackathon.registration_closes and hackathon.registration_closes < today:
+            raise HTTPException(status_code=400, detail="Hackathon registration has closed")
+        existing = db.query(HackathonTeam).join(Team).filter(
+            HackathonTeam.hackathon_id == hackathon.id,
+            Team.owner_id == current_user.id
+        ).first()
+        if existing:
+            raise HTTPException(status_code=400, detail="You already have a team for this hackathon")
+
+    if data.purpose == "research" and data.research_project_id:
+        from app.models.research_project import ResearchProject
+        rp = db.query(ResearchProject).filter(ResearchProject.id == data.research_project_id).first()
+        if not rp:
+            raise HTTPException(status_code=404, detail="Research project not found")
+
+    result = create_team(
         db=db,
         name=data.name,
         description=data.description,
-        owner_id=current_user.id
+        owner_id=current_user.id,
+        purpose=data.purpose,
+        hackathon_id=data.hackathon_id,
+        research_project_id=data.research_project_id,
     )
+
+    if result == "hackathon_not_found":
+        raise HTTPException(status_code=404, detail="Hackathon not found")
+
+    if result == "team_full":
+        raise HTTPException(status_code=400, detail="This hackathon already has the maximum number of teams")
+
+    return result
     
 @router.post(
     "/{team_id}/join",
@@ -396,6 +432,67 @@ def reject_request(
         )
 
     return result
+
+
+@router.post(
+    "/{team_id}/invite-by-builder-id"
+)
+def invite_by_builder_id(
+    team_id: str,
+    data: TeamMemberInviteByBuilderId,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    from app.services.auth_service import get_user_by_builder_id
+    team = _resolve_public_id(db, Team, team_id)
+    if not team:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    target = get_user_by_builder_id(db, data.builder_id)
+    if not target:
+        raise HTTPException(status_code=404, detail="Builder not found")
+
+    if target.id == current_user.id:
+        raise HTTPException(status_code=400, detail="You cannot invite yourself")
+
+    existing = db.query(TeamMember).filter(
+        TeamMember.team_id == team.id,
+        TeamMember.user_id == target.id
+    ).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Already a team member")
+
+    if team.purpose == "hackathon" and team.hackathon_id:
+        from app.models.hackathon import Hackathon
+        hackathon = db.query(Hackathon).filter(Hackathon.id == team.hackathon_id).first()
+        if hackathon and hackathon.team_size_max:
+            current_count = db.query(TeamMember).filter(
+                TeamMember.team_id == team.id,
+                TeamMember.role != "Pending Invite"
+            ).count()
+            if current_count >= hackathon.team_size_max:
+                raise HTTPException(status_code=400, detail=f"Team is full (max {hackathon.team_size_max} members)")
+
+    result = add_team_member(
+        db=db,
+        team_id=team.id,
+        current_user_id=current_user.id,
+        user_id=target.id,
+        role=data.role
+    )
+
+    if result == "team_not_found":
+        raise HTTPException(status_code=404, detail="Team not found")
+    if result == "forbidden":
+        raise HTTPException(status_code=403, detail="Not allowed to manage team")
+    if result == "invalid_role":
+        raise HTTPException(status_code=400, detail="Invalid role")
+    if result == "user_not_found":
+        raise HTTPException(status_code=404, detail="User not found")
+    if result == "already_member":
+        raise HTTPException(status_code=400, detail="Already a team member")
+
+    return {"message": f"Invited @{data.builder_id} to the team"}
 
 
 @router.post(

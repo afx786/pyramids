@@ -1,4 +1,4 @@
-import { Check, LayoutGrid, MessageSquare, TrendingUp } from 'lucide-react';
+import { Check, Copy, LayoutGrid, MessageSquare, TrendingUp } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import ErrorState from '../../components/common/ErrorState.jsx';
@@ -130,6 +130,22 @@ function Profile() {
               <h2 className="font-display-serif text-display-serif leading-none" style={{ color: 'rgb(var(--color-primary))' }}>
                 {displayUser?.name ?? 'Builder'}
               </h2>
+              {displayUser?.builder_id ? (
+                <div className="flex items-center gap-1 mt-1">
+                  <span className="font-mono text-xs" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                    @{displayUser.builder_id}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => { navigator.clipboard.writeText(`@${displayUser.builder_id}`); }}
+                    className="hover:text-primary transition-colors"
+                    style={{ color: 'rgb(var(--color-on-surface-variant))' }}
+                    aria-label="Copy builder ID"
+                  >
+                    <Copy size={12} />
+                  </button>
+                </div>
+              ) : null}
               {(() => {
                 const batch = formatBatch(displayUser?.joining_year, displayUser?.graduating_year);
                 return batch ? (

@@ -53,4 +53,16 @@ export const teamService = {
   updateMemberRole(teamId, userId, role) {
     return api.patch(`/teams/${teamId}/members/${userId}/role`, { role });
   },
+
+  inviteByBuilderId(teamId, builderId, role = 'Member') {
+    return api.post(`/teams/${teamId}/invite-by-builder-id`, { builder_id: builderId, role });
+  },
+
+  searchByBuilderId(query) {
+    return api.get(`/users/search-by-builder-id?q=${encodeURIComponent(query)}`);
+  },
+
+  findByBuilderId(builderId) {
+    return api.get(`/users/by-builder-id?builder_id=${encodeURIComponent(builderId)}`);
+  },
 };

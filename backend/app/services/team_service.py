@@ -11,13 +11,31 @@ def create_team(
     db: Session,
     name: str,
     description: str,
-    owner_id: int
+    owner_id: int,
+    purpose: str | None = None,
+    hackathon_id: int | None = None,
+    research_project_id: int | None = None
 ):
+    if purpose == "hackathon" and hackathon_id:
+        from app.models.hackathon import Hackathon
+        hackathon = db.query(Hackathon).filter(Hackathon.id == hackathon_id).first()
+        if not hackathon:
+            return "hackathon_not_found"
+        current_count = db.query(TeamMember).join(Team).filter(
+            Team.hackathon_id == hackathon_id,
+            TeamMember.role != "Pending Invite"
+        ).count()
+        if hackathon.team_size_max and current_count >= hackathon.team_size_max:
+            return "team_full"
+
     team = Team(
         public_id=generate_public_id('TEAM', db=db, model=Team),
         name=name,
         description=description,
-        owner_id=owner_id
+        owner_id=owner_id,
+        purpose=purpose,
+        hackathon_id=hackathon_id,
+        research_project_id=research_project_id,
     )
 
     db.add(team)
@@ -87,34 +105,60 @@ def join_team(
     return member
 
 
+def _serialize_team(team: Team) -> dict:
+    hackathon_data = None
+    if team.hackathon:
+        hackathon_data = {
+            "id": team.hackathon.id,
+            "title": team.hackathon.title,
+            "banner_url": team.hackathon.banner_url,
+            "mode": team.hackathon.mode,
+            "prize_pool": team.hackathon.prize_pool,
+            "start_date": str(team.hackathon.start_date) if team.hackathon.start_date else None,
+            "end_date": str(team.hackathon.end_date) if team.hackathon.end_date else None,
+            "team_size_min": team.hackathon.team_size_min,
+            "team_size_max": team.hackathon.team_size_max,
+        }
+    research_data = None
+    if team.research_project:
+        research_data = {
+            "id": team.research_project.id,
+            "title": team.research_project.title,
+            "domain": team.research_project.domain,
+            "supervisor": team.research_project.supervisor,
+        }
+    return {
+        "id": team.id,
+        "public_id": team.public_id,
+        "name": team.name,
+        "description": team.description,
+        "purpose": team.purpose,
+        "hackathon_id": team.hackathon_id,
+        "research_project_id": team.research_project_id,
+        "hackathon": hackathon_data,
+        "research_project": research_data,
+        "owner": {
+            "id": team.owner.id,
+            "name": team.owner.name,
+            "builder_id": team.owner.builder_id,
+        },
+        "members": [
+            {
+                "id": member.user.id,
+                "name": member.user.name,
+                "role": member.role,
+                "builder_id": member.user.builder_id,
+            }
+            for member in team.members
+        ]
+    }
+
+
 def get_all_teams(
     db: Session
 ):
     teams = db.query(Team).all()
-
-    results = []
-
-    for team in teams:
-        results.append({
-            "id": team.id,
-            "public_id": team.public_id,
-            "name": team.name,
-            "description": team.description,
-            "owner": {
-                "id": team.owner.id,
-                "name": team.owner.name
-            },
-            "members": [
-                {
-                    "id": member.user.id,
-                    "name": member.user.name,
-                    "role": member.role
-                }
-                for member in team.members
-            ]
-        })
-
-    return results
+    return [_serialize_team(t) for t in teams]
 
 
 def get_team(
@@ -132,24 +176,7 @@ def get_team(
     if not team:
         return None
 
-    return {
-        "id": team.id,
-        "public_id": team.public_id,
-        "name": team.name,
-        "description": team.description,
-        "owner": {
-            "id": team.owner.id,
-            "name": team.owner.name
-        },
-        "members": [
-            {
-                "id": member.user.id,
-                "name": member.user.name,
-                "role": member.role
-            }
-            for member in team.members
-        ]
-    }
+    return _serialize_team(team)
 
 
 def leave_team(

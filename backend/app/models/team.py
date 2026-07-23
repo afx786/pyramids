@@ -49,6 +49,23 @@ class Team(Base):
         default=datetime.utcnow
     )
 
+    purpose = Column(
+        String,
+        nullable=True
+    )
+
+    hackathon_id = Column(
+        Integer,
+        ForeignKey("hackathons.id"),
+        nullable=True
+    )
+
+    research_project_id = Column(
+        Integer,
+        ForeignKey("research_projects.id"),
+        nullable=True
+    )
+
     # -----------------------------
     # Team Owner
     # -----------------------------
@@ -64,4 +81,14 @@ class Team(Base):
         "TeamMember",
         back_populates="team",
         cascade="all, delete-orphan"
+    )
+
+    hackathon = relationship(
+        "Hackathon",
+        backref="related_teams"
+    )
+
+    research_project = relationship(
+        "ResearchProject",
+        backref="related_teams"
     )

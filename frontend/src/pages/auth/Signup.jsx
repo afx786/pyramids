@@ -4,6 +4,7 @@ import FieldError from '../../components/common/FieldError.jsx';
 import Button from '../../components/ui/Button.jsx';
 import Input from '../../components/ui/Input.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { api } from '../../services/api.js';
 import { COURSES_BY_CATEGORY } from '../../data/courses.js';
 
 const YEAR_OPTIONS = Array.from({ length: 21 }, (_, i) => 2020 + i);
@@ -14,12 +15,33 @@ function Signup() {
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({ name: '', program: '', email: '', phone: '', password: '', confirmPassword: '', joining_year: '', graduating_year: '' });
+  const [builderIdStatus, setBuilderIdStatus] = useState(null);
+  const [builderIdChecking, setBuilderIdChecking] = useState(false);
+  const [form, setForm] = useState({ name: '', program: '', email: '', phone: '', builder_id: '', password: '', confirmPassword: '', joining_year: '', graduating_year: '' });
 
   function updateField(field, value) {
     setForm((current) => ({ ...current, [field]: value }));
     setErrors((current) => ({ ...current, [field]: '' }));
     setApiError('');
+    if (field === 'builder_id') checkBuilderId(value);
+  }
+
+  async function checkBuilderId(value) {
+    const v = value.trim().toLowerCase();
+    if (!v || v.length < 3 || v.length > 20 || !/^[a-z0-9_]+$/.test(v)) {
+      setBuilderIdStatus(null);
+      setBuilderIdChecking(false);
+      return;
+    }
+    setBuilderIdChecking(true);
+    try {
+      const res = await api.post('/auth/check-builder-id', { builder_id: v });
+      setBuilderIdStatus(res.available ? 'available' : 'taken');
+    } catch {
+      setBuilderIdStatus(null);
+    } finally {
+      setBuilderIdChecking(false);
+    }
   }
 
   async function handleSubmit(event) {
@@ -31,6 +53,9 @@ function Signup() {
     if (!form.email.includes('@')) nextErrors.email = 'Enter a valid email address.';
     if (!form.phone.trim()) nextErrors.phone = 'Enter your phone number.';
     else if (form.phone.trim().length < 4 || form.phone.trim().length > 20) nextErrors.phone = 'Phone number must be between 4 and 20 characters.';
+    const bid = form.builder_id.trim().toLowerCase();
+    if (!bid) nextErrors.builder_id = 'Enter your Builder ID.';
+    else if (!/^[a-z0-9_]{3,20}$/.test(bid)) nextErrors.builder_id = 'Builder ID must be 3-20 characters: letters, numbers, underscores only.';
     if (form.password.length < 6) nextErrors.password = 'Password should be at least 6 characters.';
     if (!form.confirmPassword) nextErrors.confirmPassword = 'Confirm your password.';
     else if (form.password !== form.confirmPassword) nextErrors.confirmPassword = 'Passwords do not match.';
@@ -43,12 +68,18 @@ function Signup() {
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
+    if (builderIdStatus === 'taken') {
+      setErrors({ builder_id: 'This Builder ID is already taken.' });
+      return;
+    }
+
     setLoading(true);
     try {
       await signup({
         name: form.name.trim(),
         email: form.email.trim(),
         phone_number: form.phone.trim(),
+        builder_id: bid,
         password: form.password,
         program: form.program,
         joining_year: form.joining_year ? Number(form.joining_year) : null,
@@ -77,6 +108,34 @@ function Signup() {
           )}
 
           <form className="mt-8 grid gap-5 sm:grid-cols-2" onSubmit={handleSubmit}>
+            <label className="space-y-2 sm:col-span-2">
+              <span className="font-mono-label text-xs text-secondary">
+                Builder ID <span style={{ color: 'rgb(var(--color-error))' }}>*</span>
+              </span>
+              <div className="relative">
+                <Input
+                  placeholder="aaqib_khan"
+                  value={form.builder_id}
+                  onChange={(event) => updateField('builder_id', event.target.value)}
+                  aria-describedby="builder-id-helper"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs">
+                  {builderIdChecking ? (
+                    <span style={{ color: 'rgb(var(--color-on-surface-variant))' }}>checking...</span>
+                  ) : builderIdStatus === 'available' ? (
+                    <span style={{ color: 'rgb(var(--color-success))' }}>Available &#10003;</span>
+                  ) : builderIdStatus === 'taken' ? (
+                    <span style={{ color: 'rgb(var(--color-error))' }}>Already taken &#10007;</span>
+                  ) : form.builder_id && !/^[a-z0-9_]{3,20}$/.test(form.builder_id.trim().toLowerCase()) ? (
+                    <span style={{ color: 'rgb(var(--color-error))' }}>Invalid &#10007;</span>
+                  ) : null}
+                </span>
+              </div>
+              <p id="builder-id-helper" className="font-body-sm text-xs" style={{ color: 'rgb(var(--color-on-surface-variant) / 0.7)' }}>
+                This is your unique identity on Pyramids. Other builders will use it to invite you to teams.
+              </p>
+              <FieldError>{errors.builder_id}</FieldError>
+            </label>
             <label className="space-y-2">
               <span className="font-mono-label text-xs text-secondary">Full Name</span>
               <Input placeholder="Aarav Mehta" value={form.name} onChange={(event) => updateField('name', event.target.value)} />

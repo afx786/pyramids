@@ -200,3 +200,10 @@ class User(Base):
     default=False,
     nullable=False
 )
+
+    builder_id = Column(
+        String(20),
+        unique=True,
+        nullable=True,
+        index=True
+    )

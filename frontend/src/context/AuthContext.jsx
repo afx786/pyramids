@@ -49,8 +49,8 @@ export function AuthProvider({ children }) {
     return me;
   }, []);
 
-  const signup = useCallback(async ({ name, program, email, password, phone_number, joining_year, graduating_year }) => {
-    await api.post('/auth/signup', { name, program, email, password, phone_number, joining_year, graduating_year });
+  const signup = useCallback(async ({ name, program, email, password, phone_number, builder_id, joining_year, graduating_year }) => {
+    await api.post('/auth/signup', { name, program, email, password, phone_number, builder_id, joining_year, graduating_year });
     return login({ email, password });
   }, [login]);
 

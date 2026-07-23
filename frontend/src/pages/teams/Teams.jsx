@@ -83,6 +83,11 @@ function Teams() {
                           <h4 className="font-headline-md text-headline-md font-bold" style={{ color: 'rgb(var(--color-primary))' }}>
                             {team.name}
                           </h4>
+                          {team.purpose ? (
+                            <span className="font-mono text-[10px]" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                              {team.purpose === 'hackathon' ? (team.hackathon?.title || 'Hackathon') : (team.research_project?.title || 'Research')}
+                            </span>
+                          ) : null}
                           {team.github_url ? (
                             <p className="font-mono text-mono" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
                               {team.github_url.replace(/^https?:\/\//, '')}
@@ -97,7 +102,7 @@ function Teams() {
                             border: '1px solid rgb(var(--color-primary) / 0.2)',
                           }}
                         >
-                          {team.status || 'ACTIVE'}
+                          {team.purpose ? team.purpose.toUpperCase() : (team.status || 'ACTIVE')}
                         </span>
                       </div>
 
@@ -123,6 +128,7 @@ function Teams() {
                               <div className="flex items-center justify-between gap-sm">
                                 <p className="font-body-sm font-bold truncate" style={{ color: 'rgb(var(--color-primary))' }}>
                                   {member.name || member.user_name || 'Member'}
+                                  {member.builder_id ? <span className="font-mono text-[10px] ml-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>@{member.builder_id}</span> : null}
                                   {(() => {
                                     const batch = formatShortBatch(member.joining_year, member.graduating_year);
                                     return batch ? <span className="font-mono text-[10px] ml-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>({batch})</span> : null;
