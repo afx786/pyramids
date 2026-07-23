@@ -2,7 +2,7 @@
   {
     "id": 1,
     "title": "Pyramids Hackathon 2026",
-    "description": "Build the next generation of collaborative tools for student builders. Open to all domains.",
+    "description": "Build the next generation of collaborative tools for student builders. Open to all domains — web, mobile, AI, dev tools, and more.",
     "theme": "Collaboration & Community",
     "organizer": "Pyramids Team",
     "mode": "Online",
@@ -22,7 +22,7 @@
     "rules": "All code must be written during the event. Use of open source libraries is allowed.",
     "domains": ["Web", "Mobile", "AI/ML", "DevTools"],
     "technologies": ["Python", "JavaScript", "React", "FastAPI"],
-    "official_website": "https://pyramids.app/hackathons",
+    "official_website": "https://pyramids.app",
     "registration_link": "https://pyramids.app/hackathons/register",
     "contact_info": "hackathons@pyramids.app",
     "sponsors": [],
@@ -30,6 +30,80 @@
     "faqs": [
       {"question": "Who can participate?", "answer": "Any university student with a valid .edu email."},
       {"question": "Is it team-based?", "answer": "Yes, teams of 2–4 members."}
+    ],
+    "links": [],
+    "teams": []
+  },
+  {
+    "id": 2,
+    "title": "MLH Hackathon 2026",
+    "description": "Major League Hacking's flagship hackathon event. Build innovative projects and compete for prizes.",
+    "theme": "Open Innovation",
+    "organizer": "MLH",
+    "mode": "In-Person",
+    "type": "hackathon",
+    "status": "upcoming",
+    "start_date": "2026-04-05T09:00:00Z",
+    "end_date": "2026-04-07T18:00:00Z",
+    "registration_opens": "2026-02-01T00:00:00Z",
+    "registration_closes": "2026-03-30T23:59:59Z",
+    "venue": "Convention Center",
+    "city": "San Francisco",
+    "country": "USA",
+    "prize_pool": "$10,000",
+    "team_size_min": 2,
+    "team_size_max": 4,
+    "eligibility": "Open to all",
+    "rules": "Standard MLH code of conduct applies.",
+    "domains": ["Web", "Mobile", "Hardware", "AI"],
+    "technologies": ["Python", "JavaScript", "Arduino", "React"],
+    "official_website": "https://mlh.io",
+    "registration_link": "https://mlh.io/events",
+    "contact_info": "hi@mlh.io",
+    "sponsors": [],
+    "judges": [],
+    "faqs": [
+      {"question": "Do I need a team?", "answer": "You can join solo and we will help you find a team."}
+    ],
+    "links": [],
+    "teams": []
+  },
+  {
+    "id": 3,
+    "title": "AI for Good Hackathon",
+    "description": "Build AI-powered solutions for social impact. Topics include healthcare, education, environment, and accessibility.",
+    "theme": "AI for Social Impact",
+    "organizer": "AI4Good Foundation",
+    "mode": "Hybrid",
+    "type": "hackathon",
+    "status": "upcoming",
+    "start_date": "2026-05-20T00:00:00Z",
+    "end_date": "2026-05-22T23:59:59Z",
+    "registration_opens": "2026-03-01T00:00:00Z",
+    "registration_closes": "2026-05-15T23:59:59Z",
+    "venue": "Tech Park",
+    "city": "New York",
+    "country": "USA",
+    "prize_pool": "$7,500",
+    "team_size_min": 1,
+    "team_size_max": 5,
+    "eligibility": "Students and professionals welcome",
+    "rules": "Projects must use AI/ML in some capacity.",
+    "domains": ["AI/ML", "Healthcare", "Education", "Environment"],
+    "technologies": ["Python", "TensorFlow", "PyTorch", "Hugging Face"],
+    "official_website": "https://ai4good.dev",
+    "registration_link": "https://ai4good.dev/register",
+    "contact_info": "team@ai4good.dev",
+    "sponsors": [
+      {"name": "Google AI", "website": "https://ai.google"},
+      {"name": "Hugging Face", "website": "https://huggingface.co"}
+    ],
+    "judges": [
+      {"name": "Dr. Sarah Chen", "title": "AI Research Lead", "organization": "Google"},
+      {"name": "Alex Rivera", "title": "ML Engineer", "organization": "Hugging Face"}
+    ],
+    "faqs": [
+      {"question": "Can I participate remotely?", "answer": "Yes, the event is hybrid. Online participants will get access to our Discord and livestream."}
     ],
     "links": [],
     "teams": []
