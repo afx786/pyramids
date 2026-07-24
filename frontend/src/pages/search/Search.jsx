@@ -1,4 +1,4 @@
-import { Search as SearchIcon, UserPlus, Check, Users, FolderGit2, Trophy, Star, Building2 } from 'lucide-react';
+import { Search as SearchIcon, UserPlus, Check, Users, FolderGit2, Trophy, Star } from 'lucide-react';
 import EmptyState from '../../components/common/EmptyState.jsx';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -14,7 +14,7 @@ const SEARCH_TABS = [
   { id: 'projects', label: 'Projects', icon: FolderGit2 },
   { id: 'research', label: 'Research', icon: Star },
   { id: 'hackathons', label: 'Hackathons', icon: Trophy },
-  { id: 'organizations', label: 'Organizations', icon: Building2 },
+
 ];
 
 function Search() {
@@ -43,9 +43,6 @@ function Search() {
       } else if (type === 'hackathons') {
         const data = await api.get(`/search?q=${encodeURIComponent(query)}`);
         setResults(data?.hackathons ?? []);
-      } else if (type === 'organizations') {
-        const data = await api.get(`/search?q=${encodeURIComponent(query)}`);
-        setResults(data?.organizations ?? []);
       }
     } catch (err) {
       setError(err.message);
@@ -141,19 +138,6 @@ function Search() {
             </div>
           </Link>
         );
-      case 'organizations':
-        return (
-          <Link key={item.id} to={`/organizations/${item.id}`} className="block">
-            <div className="p-lg rounded-xl transition-all duration-200 hover:-translate-y-0.5"
-              style={{ background: 'rgb(var(--color-surface-container-low))', border: '1px solid rgb(var(--color-outline-variant))' }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgb(var(--color-primary) / 0.3)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgb(var(--color-outline-variant))'; }}
-            >
-              <p className="font-body-sm font-bold" style={{ color: 'rgb(var(--color-primary))' }}>{item.name}</p>
-              <p className="font-body-sm mt-sm line-clamp-2" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{item.description}</p>
-            </div>
-          </Link>
-        );
       default:
         return null;
     }
@@ -164,7 +148,7 @@ function Search() {
       <header className="mb-xl">
         <h2 className="font-display-serif text-display-serif" style={{ color: 'rgb(var(--color-primary))' }}>Search</h2>
         <p className="font-body-lg text-body-lg mt-sm" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
-          Find builders, projects, research, hackathons, and organizations.
+          Find builders, projects, research, and hackathons.
         </p>
       </header>
 

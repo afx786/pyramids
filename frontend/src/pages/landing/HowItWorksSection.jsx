@@ -4,7 +4,7 @@ const steps = [
   { step: '01', title: 'Create Profile', desc: 'Sign up with your college email, set your program and batch, and join the builder network.' },
   { step: '02', title: 'Build', desc: 'Create projects, push code to GitHub, and let Pyramids automatically verify your skills and technologies.' },
   { step: '03', title: 'Collaborate', desc: 'Form teams, invite members, work on research together, and participate in hackathons.' },
-  { step: '04', title: 'Participate', desc: 'Join hackathons, contribute to open research, and engage with campus organizations.' },
+  { step: '04', title: 'Participate', desc: 'Join hackathons, contribute to open research, and build your reputation.' },
   { step: '05', title: 'Grow Reputation', desc: 'Earn rank points through verified contributions. Advance from Explorer to Pyramidion.' },
 ];
 

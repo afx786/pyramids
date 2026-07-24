@@ -4,7 +4,7 @@ const items = [
   { title: 'Projects', desc: 'Showcase verified repositories with automated skill detection, technology recognition, and contribution scoring from your GitHub.' },
   { title: 'Research', desc: 'Document academic research with milestones, collaborative tools, and verifiable contribution history.' },
   { title: 'Hackathons', desc: 'Full hackathon lifecycle — discover events, register, form teams, submit projects, and receive reviews, all on-platform.' },
-  { title: 'Organizations', desc: 'Create or join campus clubs, research labs, and developer societies with verified member rosters.' },
+
   { title: 'Evidence System', desc: 'Every repository, commit, and contribution is analyzed and displayed as verified proof of your skills.' },
   { title: 'Builder Network', desc: 'Connect with verified builders, form evidence-backed teams, and grow your campus professional network.' },
 ];

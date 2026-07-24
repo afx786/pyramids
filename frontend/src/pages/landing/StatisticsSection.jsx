@@ -7,7 +7,7 @@ const statKeys = [
   { key: 'projects', label: 'Projects' },
   { key: 'research', label: 'Research' },
   { key: 'hackathons', label: 'Hackathons' },
-  { key: 'organizations', label: 'Organizations' },
+
 ];
 
 export default function StatisticsSection() {
@@ -22,7 +22,7 @@ export default function StatisticsSection() {
   return (
     <section className="py-20 sm:py-28 px-4 sm:px-6 lg:px-10" style={{ background: 'rgb(var(--color-surface-container-low))' }}>
       <div className="max-w-5xl mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {statKeys.map((s) => (
             <div key={s.label} className="text-center">
               <p className="text-3xl sm:text-4xl font-bold tracking-tight" style={{ color: 'rgb(var(--color-on-surface))' }}>

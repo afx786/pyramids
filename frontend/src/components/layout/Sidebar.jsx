@@ -1,6 +1,6 @@
 import {
   Bell,
-  Building2,
+
   LayoutDashboard,
   List,
   LogOut,
@@ -12,7 +12,7 @@ import {
   Pyramid,
   Search,
   Send,
-  Shapes,
+
   ShieldCheck,
   Star,
   Trophy,
@@ -21,7 +21,7 @@ import {
   X,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { notificationService } from '../../services/notificationService.js';
 import { prefetchService } from '../../services/prefetchService.js';
@@ -30,12 +30,12 @@ const navigation = [
   { label: 'Dashboard', to: '/dashboard', icon: LayoutDashboard },
   { label: 'Notifications', to: '/notifications', icon: Bell },
   { label: 'Feed', to: '/updates', icon: List },
-  { label: 'Domains', to: '/domains', icon: Shapes },
+
   { label: 'Teams', to: '/teams', icon: UsersRound },
   { label: 'Hackathons', to: '/hackathons', icon: Trophy },
   { label: 'Host a Hackathon', to: '/hackathons/host', icon: Trophy },
   { label: 'Research', to: '/research', icon: Star },
-  { label: 'Organizations', to: '/organizations', icon: Building2 },
+
   { label: 'Messages', to: '/messages', icon: MessageSquare },
   { label: 'Connections', to: '/connections', icon: Network },
   { label: 'Requests', to: '/requests', icon: Send },
@@ -153,7 +153,7 @@ function Sidebar() {
       >
         <div className="px-md pt-lg pb-xl">
           <h1 className="text-headline-md font-bold tracking-tight" style={{ color: 'rgb(var(--color-on-surface))' }}>
-            Pyramids
+            <Link to={user ? '/dashboard' : '/'} className="hover:opacity-80 transition-opacity">Pyramids</Link>
           </h1>
           <p className="font-label-caps text-[11px]" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
             Builder Workspace
@@ -199,7 +199,7 @@ function Sidebar() {
         <div className="flex items-center justify-between px-md pt-lg pb-xl">
           <div>
             <h1 className="text-headline-md font-bold tracking-tight" style={{ color: 'rgb(var(--color-on-surface))' }}>
-              Pyramids
+              <Link to={user ? '/dashboard' : '/'} className="hover:opacity-80 transition-opacity">Pyramids</Link>
             </h1>
             <p className="font-label-caps text-[11px]" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
               Builder Workspace

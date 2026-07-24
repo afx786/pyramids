@@ -4,7 +4,7 @@ export const stats = [
   { label: 'Projects', value: 0 },
   { label: 'Research', value: 0 },
   { label: 'Hackathons', value: 0 },
-  { label: 'Organizations', value: 0 },
+
   { label: 'Builders', value: 0 },
 ];
 

@@ -27,6 +27,7 @@ function Landing() {
       {/* NAV */}
       <nav className="fixed top-0 inset-x-0 z-50 h-16 flex items-center justify-between px-4 sm:px-6 lg:px-10" style={{ background: 'rgb(var(--color-surface) / 0.8)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgb(var(--color-outline-variant))' }}>
         <Link to="/" className="text-lg font-bold tracking-tight" style={{ color: 'rgb(var(--color-on-surface))' }}>Pyramids</Link>
+
         <div className="hidden md:flex items-center gap-lg">
           <button onClick={() => scrollTo('features')} className="text-sm font-medium transition-opacity hover:opacity-70" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Features</button>
           <button onClick={() => scrollTo('how-it-works')} className="text-sm font-medium transition-opacity hover:opacity-70" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>How It Works</button>

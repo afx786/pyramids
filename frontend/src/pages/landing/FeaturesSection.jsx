@@ -4,7 +4,7 @@ const features = [
   { title: 'Projects', desc: 'Connect your GitHub and get automatic skill detection, technology recognition, and repository scoring on every project.' },
   { title: 'Research', desc: 'Publish research with milestone tracking, contributor attribution, and versioned updates for academic credibility.' },
   { title: 'Hackathons', desc: 'End-to-end hackathon management — create or join events, form teams, submit projects, and receive structured reviews.' },
-  { title: 'Organizations', desc: 'Campus clubs, labs, and societies with verified membership, shared projects, and organization-wide analytics.' },
+
   { title: 'Evidence System', desc: 'Automated verification of skills, technologies, commits, and contributions — every claim backed by repository data.' },
   { title: 'Builder Reputation', desc: 'Rank progression from Explorer to Pyramidion, trust scores, and reputation metrics driven by verified contributions.' },
 ];
