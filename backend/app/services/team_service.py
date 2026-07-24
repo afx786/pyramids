@@ -8,6 +8,7 @@ from app.models.user import User
 from app.services.notification_service import create_notification
 from app.services.id_service import generate_public_id
 from app.services.team_activity_service import create_team_activity
+from app.constants.team_activity import TeamActivityType
 
 
 def create_team(
@@ -59,7 +60,7 @@ def create_team(
     create_team_activity(
         db=db,
         team_id=team.id,
-        action="team_created",
+        action=TeamActivityType.TEAM_CREATED,
         actor_id=owner_id,
         metadata={"team_name": team.name},
     )
@@ -181,7 +182,7 @@ def _serialize_team(team: Team) -> dict:
                 "action": a.action,
                 "actor_id": a.actor_id,
                 "target_id": a.target_id,
-                "metadata": json.loads(a.metadata_json) if a.metadata_json else {},
+                "metadata": a.metadata_json or {},
                 "created_at": a.created_at.isoformat(),
             }
             for a in team.activities
@@ -249,7 +250,7 @@ def leave_team(
     create_team_activity(
         db=db,
         team_id=team.id,
-        action="member_left",
+        action=TeamActivityType.MEMBER_LEFT,
         actor_id=user_id,
         metadata={},
     )
@@ -437,7 +438,7 @@ def add_team_member(
     create_team_activity(
         db=db,
         team_id=team.id,
-        action="member_joined",
+        action=TeamActivityType.MEMBER_JOINED,
         actor_id=current_user_id,
         target_id=user_id,
         metadata={"builder_id": user.builder_id} if user.builder_id else {},
@@ -503,7 +504,7 @@ def remove_team_member(
     create_team_activity(
         db=db,
         team_id=team.id,
-        action="member_removed",
+        action=TeamActivityType.MEMBER_REMOVED,
         actor_id=current_user_id,
         target_id=user_id,
         metadata={"target_name": target_name},

@@ -7,6 +7,7 @@ from app.models.user import User
 
 from app.services.notification_service import create_notification
 from app.services.team_activity_service import create_team_activity
+from app.constants.team_activity import TeamActivityType
 
 
 def create_join_request(
@@ -68,7 +69,7 @@ def create_join_request(
     create_team_activity(
         db=db,
         team_id=team.id,
-        action="join_request_sent",
+        action=TeamActivityType.JOIN_REQUEST_SENT,
         actor_id=user_id,
         target_id=team.owner_id,
         metadata={"team_name": team.name},
@@ -177,7 +178,7 @@ def approve_join_request(
     create_team_activity(
         db=db,
         team_id=team.id,
-        action="join_request_approved",
+        action=TeamActivityType.JOIN_REQUEST_APPROVED,
         actor_id=team.owner_id,
         target_id=request.user_id,
         metadata=meta,
@@ -237,7 +238,7 @@ def reject_join_request(
     create_team_activity(
         db=db,
         team_id=team.id,
-        action="join_request_declined",
+        action=TeamActivityType.JOIN_REQUEST_DECLINED,
         actor_id=team.owner_id,
         target_id=request.user_id,
         metadata={"team_name": team.name},

@@ -1,6 +1,9 @@
 """
 Supported event types and their metadata payloads.
 
+All actions must be referenced via TeamActivityType constants:
+    from app.constants.team_activity import TeamActivityType
+
 All TeamActivity records store event information using a generic schema:
   - action:       str  — the event type constant
   - actor_id:     int  — the user who performed the action (nullable)
@@ -85,8 +88,6 @@ hackathon_changed*
 ------------------------------------------------------------------------------
 """
 
-import json
-
 from sqlalchemy.orm import Session
 
 from app.models.team_activity import TeamActivity
@@ -105,7 +106,7 @@ def create_team_activity(
         actor_id=actor_id,
         target_id=target_id,
         action=action,
-        metadata_json=json.dumps(metadata) if metadata else "{}",
+        metadata_json=metadata if metadata else {},
     )
     db.add(activity)
     return activity

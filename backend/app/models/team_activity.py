@@ -4,8 +4,9 @@ from sqlalchemy import (
     String,
     DateTime,
     ForeignKey,
-    Text
 )
+
+from sqlalchemy.dialects.postgresql import JSONB
 
 from sqlalchemy.orm import relationship
 
@@ -46,8 +47,9 @@ class TeamActivity(Base):
     )
 
     metadata_json = Column(
-        Text,
-        nullable=True
+        JSONB,
+        nullable=False,
+        default=dict,
     )
 
     created_at = Column(
