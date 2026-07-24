@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { X } from 'lucide-react';
 import FieldError from '../../components/common/FieldError.jsx';
 import PageHeader from '../../components/common/PageHeader.jsx';
 import Button from '../../components/ui/Button.jsx';
@@ -7,6 +8,21 @@ import Card from '../../components/ui/Card.jsx';
 import Input from '../../components/ui/Input.jsx';
 import { teamService } from '../../services/teamService.js';
 
+const SUGGESTED_ROLES = [
+  'Frontend Developer',
+  'Backend Developer',
+  'AI/ML Engineer',
+  'UI/UX Designer',
+  'Product Manager',
+  'Mobile Developer',
+  'Data Scientist',
+  'DevOps',
+  'Cybersecurity',
+  'Blockchain',
+  'Cloud Engineer',
+  'QA Tester',
+  'Research Assistant',
+];
 
 function TeamCreate() {
   const navigate = useNavigate();
@@ -16,7 +32,8 @@ function TeamCreate() {
   const [selectedHackathon, setSelectedHackathon] = useState(null);
   const [researchProjects, setResearchProjects] = useState([]);
   const [selectedResearch, setSelectedResearch] = useState(null);
-  const [form, setForm] = useState({ name: '', description: '' });
+  const [form, setForm] = useState({ name: '', description: '', visibility: 'public', lookingFor: [] });
+  const [customRole, setCustomRole] = useState('');
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -46,6 +63,27 @@ function TeamCreate() {
     setErrors((prev) => ({ ...prev, [field]: '' }));
   }
 
+  function toggleLookingFor(role) {
+    setForm((prev) => ({
+      ...prev,
+      lookingFor: prev.lookingFor.includes(role)
+        ? prev.lookingFor.filter((r) => r !== role)
+        : [...prev.lookingFor, role],
+    }));
+  }
+
+  function addCustomRole() {
+    const trimmed = customRole.trim();
+    if (trimmed && !form.lookingFor.includes(trimmed)) {
+      setForm((prev) => ({ ...prev, lookingFor: [...prev.lookingFor, trimmed] }));
+      setCustomRole('');
+    }
+  }
+
+  function removeLookingFor(role) {
+    setForm((prev) => ({ ...prev, lookingFor: prev.lookingFor.filter((r) => r !== role) }));
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     const next = {};
@@ -64,6 +102,8 @@ function TeamCreate() {
         purpose,
         hackathon_id: purpose === 'hackathon' ? selectedHackathon : null,
         research_project_id: purpose === 'research' ? selectedResearch : null,
+        visibility: form.visibility,
+        looking_for: form.lookingFor.length > 0 ? form.lookingFor : null,
       };
       const team = await teamService.createTeam(payload);
       navigate(`/teams/${team.id}`);
@@ -234,6 +274,93 @@ function TeamCreate() {
                 />
                 <FieldError>{errors.description}</FieldError>
               </label>
+
+              <div>
+                <span className="text-sm font-black text-primary block mb-2">Visibility</span>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    className={`flex-1 p-3 rounded-xl text-sm font-semibold transition-all ${form.visibility === 'public' ? 'ring-2' : ''}`}
+                    style={{
+                      background: form.visibility === 'public' ? 'rgb(var(--color-primary) / 0.08)' : 'rgb(var(--color-surface-container))',
+                      border: `2px solid ${form.visibility === 'public' ? 'rgb(var(--color-primary))' : 'rgb(var(--color-outline-variant))'}`,
+                      color: 'rgb(var(--color-primary))',
+                    }}
+                    onClick={() => setForm((prev) => ({ ...prev, visibility: 'public' }))}
+                  >
+                    Public
+                    <p className="text-xs font-normal mt-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Anyone can discover and request to join</p>
+                  </button>
+                  <button
+                    type="button"
+                    className={`flex-1 p-3 rounded-xl text-sm font-semibold transition-all ${form.visibility === 'private' ? 'ring-2' : ''}`}
+                    style={{
+                      background: form.visibility === 'private' ? 'rgb(var(--color-primary) / 0.08)' : 'rgb(var(--color-surface-container))',
+                      border: `2px solid ${form.visibility === 'private' ? 'rgb(var(--color-primary))' : 'rgb(var(--color-outline-variant))'}`,
+                      color: 'rgb(var(--color-primary))',
+                    }}
+                    onClick={() => setForm((prev) => ({ ...prev, visibility: 'private' }))}
+                  >
+                    Private
+                    <p className="text-xs font-normal mt-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Only invite by code or direct invite</p>
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <span className="text-sm font-black text-primary block mb-2">
+                  Looking For <span className="font-normal text-xs" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>(optional)</span>
+                </span>
+                <p className="text-xs mb-3" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Select roles you are recruiting for:</p>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {SUGGESTED_ROLES.map((role) => (
+                    <button
+                      key={role}
+                      type="button"
+                      className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                        form.lookingFor.includes(role) ? 'ring-2' : 'opacity-70 hover:opacity-100'
+                      }`}
+                      style={{
+                        background: form.lookingFor.includes(role) ? 'rgb(var(--color-primary) / 0.15)' : 'rgb(var(--color-surface-container))',
+                        border: `1px solid ${form.lookingFor.includes(role) ? 'rgb(var(--color-primary))' : 'rgb(var(--color-outline-variant))'}`,
+                        color: form.lookingFor.includes(role) ? 'rgb(var(--color-primary))' : 'rgb(var(--color-on-surface))',
+                      }}
+                      onClick={() => toggleLookingFor(role)}
+                    >
+                      {role}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Add custom role..."
+                    value={customRole}
+                    onChange={(e) => setCustomRole(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addCustomRole(); } }}
+                  />
+                  <Button variant="secondary" type="button" onClick={addCustomRole} disabled={!customRole.trim()}>Add</Button>
+                </div>
+                {form.lookingFor.length > 0 ? (
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {form.lookingFor.map((role) => (
+                      <span
+                        key={role}
+                        className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold"
+                        style={{
+                          background: 'rgb(var(--color-primary) / 0.12)',
+                          color: 'rgb(var(--color-primary))',
+                          border: '1px solid rgb(var(--color-primary) / 0.3)',
+                        }}
+                      >
+                        {role}
+                        <button type="button" onClick={() => removeLookingFor(role)} className="hover:opacity-70" aria-label={`Remove ${role}`}>
+                          <X size={12} />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
 
               <div className="flex justify-end gap-3">
                 <Link to="/teams"><Button variant="secondary" type="button">Cancel</Button></Link>

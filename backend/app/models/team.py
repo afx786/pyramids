@@ -3,7 +3,8 @@ from sqlalchemy import (
     Integer,
     String,
     DateTime,
-    ForeignKey
+    ForeignKey,
+    Text
 )
 
 from sqlalchemy.orm import relationship
@@ -63,6 +64,16 @@ class Team(Base):
     research_project_id = Column(
         Integer,
         ForeignKey("research_projects.id"),
+        nullable=True
+    )
+
+    visibility = Column(
+        String,
+        default="public"
+    )
+
+    looking_for = Column(
+        Text,
         nullable=True
     )
 

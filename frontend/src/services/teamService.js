@@ -65,4 +65,18 @@ export const teamService = {
   findByBuilderId(builderId) {
     return api.get(`/users/by-builder-id?builder_id=${encodeURIComponent(builderId)}`);
   },
+
+  joinByCode(inviteCode) {
+    return api.post('/teams/join-by-code', { invite_code: inviteCode });
+  },
+
+  discoverTeams(params = {}) {
+    const query = new URLSearchParams();
+    if (params.q) query.set('q', params.q);
+    if (params.purpose) query.set('purpose', params.purpose);
+    if (params.limit) query.set('limit', params.limit);
+    if (params.offset) query.set('offset', params.offset);
+    if (params.sort) query.set('sort', params.sort);
+    return api.get(`/teams/discover?${query}`);
+  },
 };

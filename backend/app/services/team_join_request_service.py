@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 from app.models.team import Team
 from app.models.team_member import TeamMember
 from app.models.team_join_request import TeamJoinRequest
+from app.models.user import User
+from app.models.team_activity import TeamActivity
 
 from app.services.notification_service import create_notification
 
@@ -57,6 +59,19 @@ def create_join_request(
     )
 
     db.add(request)
+    db.flush()
+
+    requester = db.query(User).filter(User.id == user_id).first()
+    requester_name = requester.name if requester else "Someone"
+    requester_bid = requester.builder_id if requester else None
+
+    activity = TeamActivity(
+        team_id=team.id,
+        user_id=user_id,
+        action="join_request_sent",
+        description=f"{requester_name} requested to join the team",
+    )
+    db.add(activity)
 
     db.commit()
 
@@ -66,8 +81,16 @@ def create_join_request(
         db=db,
         user_id=team.owner_id,
         title="New Team Join Request",
-        message="Someone requested to join your team.",
-        notification_type="team_request"
+        message=f"{requester_name} wants to join your team.",
+        notification_type="TEAM_JOIN_REQUEST",
+        data={
+            "team_id": team.public_id,
+            "team_name": team.name,
+            "request_id": request.id,
+            "requester_id": user_id,
+            "requester_name": requester_name,
+            "requester_builder_id": requester_bid,
+        }
     )
 
     return request
@@ -92,8 +115,10 @@ def get_team_requests(
     if team.owner_id != current_user_id:
         return "forbidden"
 
+    from sqlalchemy.orm import joinedload
     return (
         db.query(TeamJoinRequest)
+        .options(joinedload(TeamJoinRequest.user))
         .filter(
             TeamJoinRequest.team_id == team_id,
             TeamJoinRequest.status == "pending"
@@ -142,6 +167,17 @@ def approve_join_request(
 
     db.add(member)
 
+    requester = db.query(User).filter(User.id == request.user_id).first()
+    requester_name = requester.name if requester else "Someone"
+
+    activity = TeamActivity(
+        team_id=team.id,
+        user_id=request.user_id,
+        action="join_request_approved",
+        description=f"{requester_name} joined the team",
+    )
+    db.add(activity)
+
     db.commit()
 
     db.refresh(request)
@@ -151,7 +187,8 @@ def approve_join_request(
         user_id=request.user_id,
         title="Team Request Approved",
         message=f"You have been added to team '{team.name}'.",
-        notification_type="team"
+        notification_type="TEAM_JOIN_APPROVED",
+        data={"team_id": team.public_id, "team_name": team.name}
     )
 
     return request
@@ -189,6 +226,17 @@ def reject_join_request(
 
     request.status = "rejected"
 
+    requester = db.query(User).filter(User.id == request.user_id).first()
+    requester_name = requester.name if requester else "Someone"
+
+    activity = TeamActivity(
+        team_id=team.id,
+        user_id=request.user_id,
+        action="join_request_rejected",
+        description=f"{requester_name}'s request to join was declined",
+    )
+    db.add(activity)
+
     db.commit()
 
     db.refresh(request)
@@ -196,9 +244,10 @@ def reject_join_request(
     create_notification(
         db=db,
         user_id=request.user_id,
-        title="Team Request Rejected",
-        message=f"Your request to join '{team.name}' was rejected.",
-        notification_type="team"
+        title="Team Request Declined",
+        message=f"Your request to join '{team.name}' was declined.",
+        notification_type="TEAM_JOIN_DECLINED",
+        data={"team_id": team.public_id, "team_name": team.name}
     )
 
     return request

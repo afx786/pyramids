@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import datetime
 
 
 class TeamCreate(BaseModel):
@@ -7,6 +8,8 @@ class TeamCreate(BaseModel):
     purpose: str | None = None
     hackathon_id: int | None = None
     research_project_id: int | None = None
+    visibility: str = "public"
+    looking_for: list[str] | None = None
 
 
 class TeamResponse(BaseModel):
@@ -18,6 +21,8 @@ class TeamResponse(BaseModel):
     purpose: str | None = None
     hackathon_id: int | None = None
     research_project_id: int | None = None
+    visibility: str | None = None
+    looking_for: list[str] | None = None
 
 
 class TeamMemberResponse(BaseModel):
@@ -52,6 +57,17 @@ class ResearchProjectBrief(BaseModel):
     supervisor: str | None = None
 
 
+class TeamActivityItem(BaseModel):
+    id: int
+    action: str
+    description: str
+    user_id: int | None = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
 class TeamDetailResponse(BaseModel):
     id: int
     public_id: str
@@ -60,10 +76,13 @@ class TeamDetailResponse(BaseModel):
     purpose: str | None = None
     hackathon_id: int | None = None
     research_project_id: int | None = None
+    visibility: str | None = None
+    looking_for: list[str] | None = None
     hackathon: HackathonBrief | None = None
     research_project: ResearchProjectBrief | None = None
     owner: TeamOwnerResponse
     members: list[TeamMemberResponse]
+    activities: list[TeamActivityItem] | None = None
 
 
 class TransferOwnershipRequest(BaseModel):
@@ -82,3 +101,7 @@ class TeamMemberInviteByBuilderId(BaseModel):
 
 class TeamMemberRoleUpdate(BaseModel):
     role: str
+
+
+class TeamJoinByCode(BaseModel):
+    invite_code: str

@@ -3,7 +3,8 @@ from sqlalchemy import (
     Integer,
     String,
     DateTime,
-    ForeignKey
+    ForeignKey,
+    Text
 )
 
 from sqlalchemy.orm import relationship
@@ -13,8 +14,8 @@ from datetime import datetime
 from app.database.base import Base
 
 
-class TeamJoinRequest(Base):
-    __tablename__ = "team_join_requests"
+class TeamActivity(Base):
+    __tablename__ = "team_activities"
 
     id = Column(
         Integer,
@@ -31,12 +32,22 @@ class TeamJoinRequest(Base):
     user_id = Column(
         Integer,
         ForeignKey("users.id"),
+        nullable=True
+    )
+
+    action = Column(
+        String,
         nullable=False
     )
 
-    status = Column(
+    description = Column(
         String,
-        default="pending"
+        nullable=False
+    )
+
+    metadata_json = Column(
+        Text,
+        nullable=True
     )
 
     created_at = Column(
@@ -44,12 +55,12 @@ class TeamJoinRequest(Base):
         default=datetime.utcnow
     )
 
-    user = relationship(
-        "User",
-        backref="join_requests"
-    )
-
     team = relationship(
         "Team",
-        backref="join_requests"
+        backref="activities"
+    )
+
+    user = relationship(
+        "User",
+        backref="team_activities"
     )

@@ -27,7 +27,8 @@ from app.services.team_service import (
     delete_team,
     add_team_member,
     remove_team_member,
-    change_team_member_role
+    change_team_member_role,
+    _serialize_team
 )
 from app.schemas.team import (
     TeamDetailResponse
@@ -56,7 +57,8 @@ from app.schemas.team import (
 from app.schemas.team import (
     TeamMemberInviteRequest,
     TeamMemberInviteByBuilderId,
-    TeamMemberRoleUpdate
+    TeamMemberRoleUpdate,
+    TeamJoinByCode
 )
 from app.schemas.team_join_request import TeamJoinRequestResponse
 from app.services.team_join_request_service import create_join_request
@@ -112,6 +114,8 @@ def create_new_team(
         purpose=data.purpose,
         hackathon_id=data.hackathon_id,
         research_project_id=data.research_project_id,
+        visibility=data.visibility,
+        looking_for=data.looking_for,
     )
 
     if result == "hackathon_not_found":
@@ -122,6 +126,42 @@ def create_new_team(
 
     return result
     
+@router.post(
+    "/join-by-code"
+)
+def join_team_by_code(
+    data: TeamJoinByCode,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user)
+):
+    team = _resolve_public_id(db, Team, data.invite_code)
+    if not team:
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    if team.visibility == "private":
+        raise HTTPException(status_code=400, detail="This team is not accepting join requests")
+
+    result = create_join_request(
+        db=db,
+        team_id=team.id,
+        user_id=current_user.id
+    )
+
+    if result == "owner":
+        raise HTTPException(status_code=400, detail="Owner cannot join their own team")
+
+    if result == "already_member":
+        raise HTTPException(status_code=400, detail="Already a member")
+
+    if result == "already_requested":
+        raise HTTPException(status_code=400, detail="Join request already pending")
+
+    if result == "team_not_found":
+        raise HTTPException(status_code=404, detail="Team not found")
+
+    return {"message": "Join request sent", "team_id": team.public_id}
+
+
 @router.post(
     "/{team_id}/join",
     response_model=TeamJoinRequestResponse
@@ -189,6 +229,59 @@ def list_teams(
 
     items, meta = paginate_list(results, limit, offset)
     return {"items": items, "meta": {**meta, "sort": sort}}
+
+
+@router.get(
+    "/discover"
+)
+def discover_teams(
+    db: Session = Depends(get_db),
+    q: str = "",
+    purpose: str = "",
+    limit: int = 20,
+    offset: int = 0,
+    sort: str = "newest"
+):
+    from app.models.hackathon import Hackathon
+    from sqlalchemy import case
+
+    query = db.query(Team).filter(Team.visibility == "public")
+
+    if q:
+        like = f"%{q}%"
+        query = query.filter(Team.name.ilike(like))
+
+    if purpose:
+        query = query.filter(Team.purpose == purpose)
+
+    total = query.count()
+
+    if sort == "newest":
+        teams = query.order_by(Team.created_at.desc()).offset(offset).limit(limit).all()
+    elif sort == "oldest":
+        teams = query.order_by(Team.created_at.asc()).offset(offset).limit(limit).all()
+    elif sort == "most_needed":
+        teams = query.order_by(Team.looking_for.is_(None).asc().nullslast()).offset(offset).limit(limit).all()
+    elif sort == "closing_soon":
+        teams = query.outerjoin(Hackathon, Team.hackathon_id == Hackathon.id).order_by(Hackathon.registration_closes.asc().nullslast()).offset(offset).limit(limit).all()
+    elif sort == "highest_prize":
+        teams = query.outerjoin(Hackathon, Team.hackathon_id == Hackathon.id).order_by(Hackathon.prize_pool.is_(None).asc().nullslast()).offset(offset).limit(limit).all()
+    elif sort == "newest_hackathons":
+        teams = query.outerjoin(Hackathon, Team.hackathon_id == Hackathon.id).order_by(Hackathon.start_date.desc().nullslast()).offset(offset).limit(limit).all()
+    elif sort == "oldest_hackathons":
+        teams = query.outerjoin(Hackathon, Team.hackathon_id == Hackathon.id).order_by(Hackathon.start_date.asc().nullslast()).offset(offset).limit(limit).all()
+    else:
+        teams = query.order_by(Team.created_at.desc()).offset(offset).limit(limit).all()
+
+    return {
+        "items": [_serialize_team(t) for t in teams],
+        "meta": {
+            "total": total,
+            "limit": limit,
+            "offset": offset,
+            "sort": sort,
+        }
+    }
 
 @router.get(
     "/{team_id}",

@@ -1,11 +1,31 @@
+import json
 from sqlalchemy.orm import Session
 
 from app.models.team import Team
 from app.models.team_member import TeamMember
 from app.models.hackathon_team import HackathonTeam
+from app.models.team_activity import TeamActivity
 from app.models.user import User
 from app.services.notification_service import create_notification
 from app.services.id_service import generate_public_id
+
+
+def create_team_activity(
+    db: Session,
+    team_id: int,
+    action: str,
+    description: str,
+    user_id: int | None = None,
+    metadata_json: dict | None = None
+):
+    activity = TeamActivity(
+        team_id=team_id,
+        user_id=user_id,
+        action=action,
+        description=description,
+        metadata_json=json.dumps(metadata_json) if metadata_json else None
+    )
+    db.add(activity)
 
 def create_team(
     db: Session,
@@ -14,7 +34,9 @@ def create_team(
     owner_id: int,
     purpose: str | None = None,
     hackathon_id: int | None = None,
-    research_project_id: int | None = None
+    research_project_id: int | None = None,
+    visibility: str = "public",
+    looking_for: list[str] | None = None
 ):
     if purpose == "hackathon" and hackathon_id:
         from app.models.hackathon import Hackathon
@@ -36,6 +58,8 @@ def create_team(
         purpose=purpose,
         hackathon_id=hackathon_id,
         research_project_id=research_project_id,
+        visibility=visibility,
+        looking_for=json.dumps(looking_for) if looking_for else None,
     )
 
     db.add(team)
@@ -48,6 +72,14 @@ def create_team(
     )
 
     db.add(leader)
+
+    create_team_activity(
+        db=db,
+        team_id=team.id,
+        action="team_created",
+        description=f"{team.name} was created",
+        user_id=owner_id,
+    )
 
     db.commit()
     db.refresh(team)
@@ -94,12 +126,14 @@ def join_team(
     db.refresh(member)
 
     if team.owner_id != user_id:
+        new_member = db.query(User).filter(User.id == user_id).first()
         create_notification(
             db=db,
             user_id=team.owner_id,
             title="New Team Member",
-            message=f"A new member joined your team '{team.name}'.",
-            notification_type="team"
+            message=f"{new_member.name if new_member else 'A member'} joined your team.",
+            notification_type="TEAM_MEMBER_JOINED",
+            data={"team_id": team.public_id, "team_name": team.name, "member_name": new_member.name if new_member else None}
        )
 
     return member
@@ -127,6 +161,8 @@ def _serialize_team(team: Team) -> dict:
             "domain": team.research_project.domain,
             "supervisor": team.research_project.supervisor,
         }
+    looking_for_list = json.loads(team.looking_for) if team.looking_for else None
+
     return {
         "id": team.id,
         "public_id": team.public_id,
@@ -135,6 +171,8 @@ def _serialize_team(team: Team) -> dict:
         "purpose": team.purpose,
         "hackathon_id": team.hackathon_id,
         "research_project_id": team.research_project_id,
+        "visibility": team.visibility,
+        "looking_for": looking_for_list,
         "hackathon": hackathon_data,
         "research_project": research_data,
         "owner": {
@@ -148,9 +186,20 @@ def _serialize_team(team: Team) -> dict:
                 "name": member.user.name,
                 "role": member.role,
                 "builder_id": member.user.builder_id,
+                "avatar": getattr(member.user, 'avatar', None) or getattr(member.user, 'profile_picture', None),
             }
             for member in team.members
-        ]
+        ],
+        "activities": [
+            {
+                "id": a.id,
+                "action": a.action,
+                "description": a.description,
+                "user_id": a.user_id,
+                "created_at": a.created_at.isoformat(),
+            }
+            for a in team.activities
+        ] if team.activities else []
     }
 
 
@@ -207,7 +256,17 @@ def leave_team(
     if team.owner_id == user_id:
         return "owner_cannot_leave"
 
+    user_obj = db.query(User).filter(User.id == user_id).first()
+
     db.delete(membership)
+
+    create_team_activity(
+        db=db,
+        team_id=team.id,
+        action="member_left",
+        description=f"{user_obj.name or 'A member'} left the team",
+        user_id=user_id,
+    )
 
     db.commit()
 
@@ -388,6 +447,15 @@ def add_team_member(
     )
 
     db.add(member)
+
+    create_team_activity(
+        db=db,
+        team_id=team.id,
+        action="member_added",
+        description=f"{user.name} was invited to the team",
+        user_id=user_id,
+    )
+
     db.commit()
     db.refresh(member)
 
@@ -396,7 +464,8 @@ def add_team_member(
         user_id=user_id,
         title="Team Invitation",
         message=f"You have been added to team '{team.name}'.",
-        notification_type="team"
+        notification_type="TEAM_INVITE",
+        data={"team_id": team.public_id, "team_name": team.name}
     )
 
     return member
@@ -439,7 +508,19 @@ def remove_team_member(
     if not membership:
         return "not_member"
 
+    target_user = db.query(User).filter(User.id == user_id).first()
+    target_name = target_user.name if target_user else "A member"
+
     db.delete(membership)
+
+    create_team_activity(
+        db=db,
+        team_id=team.id,
+        action="member_removed",
+        description=f"{target_name} was removed from the team",
+        user_id=user_id,
+    )
+
     db.commit()
 
     return "success"
