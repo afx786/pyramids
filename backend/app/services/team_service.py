@@ -4,28 +4,11 @@ from sqlalchemy.orm import Session
 from app.models.team import Team
 from app.models.team_member import TeamMember
 from app.models.hackathon_team import HackathonTeam
-from app.models.team_activity import TeamActivity
 from app.models.user import User
 from app.services.notification_service import create_notification
 from app.services.id_service import generate_public_id
+from app.services.team_activity_service import create_team_activity
 
-
-def create_team_activity(
-    db: Session,
-    team_id: int,
-    action: str,
-    description: str,
-    user_id: int | None = None,
-    metadata_json: dict | None = None
-):
-    activity = TeamActivity(
-        team_id=team_id,
-        user_id=user_id,
-        action=action,
-        description=description,
-        metadata_json=json.dumps(metadata_json) if metadata_json else None
-    )
-    db.add(activity)
 
 def create_team(
     db: Session,
@@ -77,8 +60,8 @@ def create_team(
         db=db,
         team_id=team.id,
         action="team_created",
-        description=f"{team.name} was created",
-        user_id=owner_id,
+        actor_id=owner_id,
+        metadata={"team_name": team.name},
     )
 
     db.commit()
@@ -148,6 +131,8 @@ def _serialize_team(team: Team) -> dict:
             "banner_url": team.hackathon.banner_url,
             "mode": team.hackathon.mode,
             "prize_pool": team.hackathon.prize_pool,
+            "display_prize": team.hackathon.display_prize,
+            "numeric_prize": team.hackathon.numeric_prize,
             "start_date": str(team.hackathon.start_date) if team.hackathon.start_date else None,
             "end_date": str(team.hackathon.end_date) if team.hackathon.end_date else None,
             "team_size_min": team.hackathon.team_size_min,
@@ -194,8 +179,9 @@ def _serialize_team(team: Team) -> dict:
             {
                 "id": a.id,
                 "action": a.action,
-                "description": a.description,
-                "user_id": a.user_id,
+                "actor_id": a.actor_id,
+                "target_id": a.target_id,
+                "metadata": json.loads(a.metadata_json) if a.metadata_json else {},
                 "created_at": a.created_at.isoformat(),
             }
             for a in team.activities
@@ -264,8 +250,8 @@ def leave_team(
         db=db,
         team_id=team.id,
         action="member_left",
-        description=f"{user_obj.name or 'A member'} left the team",
-        user_id=user_id,
+        actor_id=user_id,
+        metadata={},
     )
 
     db.commit()
@@ -451,9 +437,10 @@ def add_team_member(
     create_team_activity(
         db=db,
         team_id=team.id,
-        action="member_added",
-        description=f"{user.name} was invited to the team",
-        user_id=user_id,
+        action="member_joined",
+        actor_id=current_user_id,
+        target_id=user_id,
+        metadata={"builder_id": user.builder_id} if user.builder_id else {},
     )
 
     db.commit()
@@ -517,8 +504,9 @@ def remove_team_member(
         db=db,
         team_id=team.id,
         action="member_removed",
-        description=f"{target_name} was removed from the team",
-        user_id=user_id,
+        actor_id=current_user_id,
+        target_id=user_id,
+        metadata={"target_name": target_name},
     )
 
     db.commit()

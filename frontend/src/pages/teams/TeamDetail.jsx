@@ -115,15 +115,56 @@ function formatRelativeTime(dateStr) {
   return `${Math.floor(days / 30)} months ago`;
 }
 
+function getActivityDescription(a) {
+  const meta = a.metadata || {};
+  switch (a.action) {
+    case 'team_created': return 'Team was created';
+    case 'member_joined': return meta.builder_id
+      ? `A member joined the team (@${meta.builder_id})`
+      : 'A member joined the team';
+    case 'member_left': return 'A member left the team';
+    case 'member_removed': return `${meta.target_name || 'A member'} was removed from the team`;
+    case 'join_request_sent': return meta.team_name
+      ? `Join request sent to ${meta.team_name}`
+      : 'Join request sent';
+    case 'join_request_approved': return meta.builder_id
+      ? `@${meta.builder_id} joined the team`
+      : 'Join request approved';
+    case 'join_request_declined': return 'Join request declined';
+    case 'team_full': return `Team reached maximum capacity (${meta.member_count || '?'}/${meta.max_members || '?'})`;
+    case 'visibility_changed': return `Team visibility changed to ${meta.visibility || 'updated'}`;
+    default: return a.action || 'Unknown activity';
+  }
+}
+
+function CapacityBar({ current, max }) {
+  if (!max) return null;
+  const pct = Math.min((current / max) * 100, 100);
+  const color = pct >= 100 ? 'rgb(var(--color-error))' : pct >= 75 ? 'rgb(var(--color-warning))' : 'rgb(var(--color-primary))';
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-1">
+        <span className="text-xs font-semibold" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>Capacity</span>
+        <span className="text-xs font-mono" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{current}/{max}</span>
+      </div>
+      <div className="h-2 w-full rounded-full overflow-hidden" style={{ background: 'rgb(var(--color-surface-container-highest))' }}>
+        <div className="h-full rounded-full transition-all duration-300" style={{ width: `${pct}%`, background: color }} />
+      </div>
+    </div>
+  );
+}
+
 function getActivityIcon(action) {
   switch (action) {
     case 'team_created': return <CheckCircle size={14} style={{ color: 'rgb(var(--color-primary))' }} />;
-    case 'member_added': return <UserPlus size={14} style={{ color: 'rgb(var(--color-primary))' }} />;
+    case 'member_joined': return <UserPlus size={14} style={{ color: 'rgb(var(--color-primary))' }} />;
     case 'member_left':
     case 'member_removed': return <UserMinus size={14} style={{ color: 'rgb(var(--color-error))' }} />;
     case 'join_request_approved': return <CheckCircle size={14} style={{ color: 'rgb(var(--color-success))' }} />;
-    case 'join_request_rejected': return <XCircle size={14} style={{ color: 'rgb(var(--color-error))' }} />;
+    case 'join_request_declined': return <XCircle size={14} style={{ color: 'rgb(var(--color-error))' }} />;
     case 'join_request_sent': return <Clock size={14} style={{ color: 'rgb(var(--color-warning))' }} />;
+    case 'team_full': return <Users size={14} style={{ color: 'rgb(var(--color-warning))' }} />;
+    case 'visibility_changed': return <Activity size={14} style={{ color: 'rgb(var(--color-primary))' }} />;
     default: return <Activity size={14} style={{ color: 'rgb(var(--color-on-surface-variant))' }} />;
   }
 }
@@ -141,7 +182,7 @@ function ActivityTimeline({ activities }) {
         {sorted.slice(0, 20).map((a) => (
           <div key={a.id} className="flex items-start gap-2.5 text-xs">
             <span className="mt-0.5 shrink-0">{getActivityIcon(a.action)}</span>
-            <span className="flex-1" style={{ color: 'rgb(var(--color-on-surface))' }}>{a.description}</span>
+            <span className="flex-1" style={{ color: 'rgb(var(--color-on-surface))' }}>{getActivityDescription(a)}</span>
             <span className="shrink-0 font-mono" style={{ color: 'rgb(var(--color-on-surface-variant) / 0.7)' }}>{formatRelativeTime(a.created_at)}</span>
           </div>
         ))}
@@ -264,200 +305,222 @@ function TeamDetail() {
         Back to Teams
       </Link>
 
-      <Card className="p-8">
-        <div className="flex items-start justify-between flex-wrap gap-4">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <p className="font-mono-label text-[11px] text-secondary">{team.members?.length ?? 0} members</p>
-              {team.purpose ? (
-                <span className="px-sm py-[2px] text-[10px] font-mono rounded" style={{ background: 'rgb(var(--color-surface-variant))', color: 'rgb(var(--color-on-surface-variant))' }}>
-                  {team.purpose.toUpperCase()}
-                </span>
-              ) : null}
-              {team.visibility ? (
-                <span className="px-sm py-[2px] text-[10px] font-mono rounded" style={{
-                  background: team.visibility === 'public' ? 'rgb(var(--color-primary) / 0.1)' : 'rgb(var(--color-surface-variant))',
-                  color: team.visibility === 'public' ? 'rgb(var(--color-primary))' : 'rgb(var(--color-on-surface-variant))',
-                }}>
-                  {team.visibility.toUpperCase()}
-                </span>
-              ) : null}
-              {isFull ? (
-                <span className="px-sm py-[2px] text-[10px] font-mono font-bold rounded" style={{ background: 'rgb(var(--color-error) / 0.1)', color: 'rgb(var(--color-error))', border: '1px solid rgb(var(--color-error) / 0.3)' }}>
-                  TEAM FULL
-                </span>
-              ) : null}
-            </div>
-            <h1 className="mt-3 text-4xl font-black text-primary">{team.name}</h1>
-            {team.public_id ? (
-              <div className="mt-1 flex items-center gap-2">
-                <span className="font-mono text-xs" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>ID: {team.public_id}</span>
-                <button type="button" onClick={handleCopyInvite} className="text-xs hover:text-primary transition-colors" style={{ color: 'rgb(var(--color-on-surface-variant))' }} aria-label="Copy team ID">
-                  {copied ? <span style={{ color: 'rgb(var(--color-success))' }}>Copied!</span> : <Copy size={14} />}
-                </button>
-              </div>
-            ) : null}
-            <p className="mt-4 max-w-2xl text-sm font-medium leading-6 text-secondary">{team.description}</p>
-            <p className="mt-2 text-sm font-semibold text-secondary">
-              Owner: {team.owner?.name || '—'}
-              {team.owner?.builder_id ? <span className="font-mono text-xs ml-2" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>@{team.owner.builder_id}</span> : null}
-            </p>
-          </div>
-
-          <div className="flex shrink-0 flex-col gap-2">
-            {isOwner && (
-              <Button variant="ghost" onClick={handleDelete} style={{ color: 'rgb(var(--color-error))' }}>
-                <Trash2 className="h-4 w-4" /> Delete
-              </Button>
-            )}
-            {isMember && !isOwner && (
-              <Button variant="ghost" onClick={handleLeave}>
-                <LogOut className="h-4 w-4" /> Leave
-              </Button>
-            )}
-            {!isMember && !isFull && (
-              <Button onClick={handleJoin}>
-                <UserPlus className="h-4 w-4" /> Join
-              </Button>
-            )}
-          </div>
-        </div>
-
-        {team.looking_for && team.looking_for.length > 0 ? (
-          <div className="mt-6">
-            <p className="font-mono-label text-[11px] text-secondary mb-2">Looking For</p>
-            <div className="flex flex-wrap gap-2">
-              {team.looking_for.map((role) => (
-                <span
-                  key={role}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold"
-                  style={{
-                    background: 'rgb(var(--color-primary) / 0.1)',
-                    color: 'rgb(var(--color-primary))',
-                    border: '1px solid rgb(var(--color-primary) / 0.25)',
-                  }}
-                >
-                  {role}
-                </span>
-              ))}
-            </div>
+      <Card className="p-0 overflow-hidden">
+        {hackathon?.banner_url ? (
+          <div className="w-full h-48 sm:h-64 overflow-hidden" style={{ background: 'rgb(var(--color-surface-variant))' }}>
+            <img src={hackathon.banner_url} alt="" className="w-full h-full object-cover" />
           </div>
         ) : null}
 
-        {hackathon ? (
-          <div className="mt-6 p-4 rounded-xl flex items-center gap-4 flex-wrap" style={{ background: 'rgb(var(--color-surface-container))' }}>
-            {hackathon.banner_url ? <img src={hackathon.banner_url} alt="" className="w-24 h-16 object-cover rounded-lg" /> : null}
+        <div className="p-8">
+          <div className="flex items-center gap-2 flex-wrap mb-2">
+            {team.purpose ? (
+              <span className="px-sm py-[2px] text-[10px] font-mono rounded" style={{ background: 'rgb(var(--color-surface-variant))', color: 'rgb(var(--color-on-surface-variant))' }}>
+                {team.purpose.toUpperCase()}
+              </span>
+            ) : null}
+            {team.visibility ? (
+              <span className="px-sm py-[2px] text-[10px] font-mono rounded" style={{
+                background: team.visibility === 'public' ? 'rgb(var(--color-primary) / 0.1)' : 'rgb(var(--color-surface-variant))',
+                color: team.visibility === 'public' ? 'rgb(var(--color-primary))' : 'rgb(var(--color-on-surface-variant))',
+              }}>
+                {team.visibility.toUpperCase()}
+              </span>
+            ) : null}
+            {isFull ? (
+              <span className="px-sm py-[2px] text-[10px] font-mono font-bold rounded" style={{ background: 'rgb(var(--color-error) / 0.1)', color: 'rgb(var(--color-error))', border: '1px solid rgb(var(--color-error) / 0.3)' }}>
+                TEAM FULL
+              </span>
+            ) : null}
+          </div>
+
+          <div className="flex items-start justify-between flex-wrap gap-4">
             <div className="flex-1 min-w-0">
-              <p className="font-bold text-sm" style={{ color: 'rgb(var(--color-primary))' }}>{hackathon.title}</p>
-              <div className="flex gap-3 mt-1 text-xs flex-wrap" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
-                <span>Mode: {hackathon.mode || 'Online'}</span>
-                {hackathon.prize_pool ? <span>Prize: {hackathon.prize_pool}</span> : null}
-                {hackathon.team_size_min || hackathon.team_size_max ? (
-                  <span>Team: {team.members?.length || 0}/{hackathon.team_size_max || '∞'}</span>
+              <h1 className="text-4xl font-black text-primary">{team.name}</h1>
+              {team.public_id ? (
+                <div className="mt-1 flex items-center gap-2">
+                  <span className="font-mono text-xs" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>ID: {team.public_id}</span>
+                  <button type="button" onClick={handleCopyInvite} className="text-xs hover:text-primary transition-colors" style={{ color: 'rgb(var(--color-on-surface-variant))' }} aria-label="Copy team ID">
+                    {copied ? <span style={{ color: 'rgb(var(--color-success))' }}>Copied!</span> : <Copy size={14} />}
+                  </button>
+                </div>
+              ) : null}
+            </div>
+
+            <div className="flex shrink-0 flex-col gap-2">
+              {isOwner && (
+                <Button variant="ghost" onClick={handleDelete} style={{ color: 'rgb(var(--color-error))' }}>
+                  <Trash2 className="h-4 w-4" /> Delete
+                </Button>
+              )}
+              {isMember && !isOwner && (
+                <Button variant="ghost" onClick={handleLeave}>
+                  <LogOut className="h-4 w-4" /> Leave
+                </Button>
+              )}
+              {!isMember && !isFull && (
+                <Button onClick={handleJoin}>
+                  <UserPlus className="h-4 w-4" /> Join
+                </Button>
+              )}
+            </div>
+          </div>
+
+          {hackathon ? (
+            <div className="mt-4 p-4 rounded-xl flex items-center gap-4 flex-wrap" style={{ background: 'rgb(var(--color-surface-container))' }}>
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-sm" style={{ color: 'rgb(var(--color-primary))' }}>{hackathon.title}</p>
+                <div className="flex gap-3 mt-1 text-xs flex-wrap" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                  <span>Mode: {hackathon.mode || 'Online'}</span>
+                  {hackathon.prize_pool ? <span>Prize: {hackathon.prize_pool}</span> : null}
+                </div>
+                <div className="flex items-center gap-2 mt-2">
+                  <Calendar size={12} style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
+                  <CountdownTimer targetDate={hackathon.end_date} />
+                </div>
+                {hackathon.end_date ? (
+                  <p className="text-[10px] font-mono mt-0.5" style={{ color: 'rgb(var(--color-on-surface-variant) / 0.6)' }}>
+                    {new Date(hackathon.end_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </p>
                 ) : null}
               </div>
-              <div className="flex items-center gap-2 mt-2">
-                <Calendar size={12} style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
-                <CountdownTimer targetDate={hackathon.end_date} />
-              </div>
-              {hackathon.end_date ? (
-                <p className="text-[10px] font-mono mt-0.5" style={{ color: 'rgb(var(--color-on-surface-variant) / 0.6)' }}>
-                  {new Date(hackathon.end_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
-                </p>
-              ) : null}
             </div>
-          </div>
-        ) : null}
+          ) : null}
 
-        {research ? (
-          <div className="mt-6 p-4 rounded-xl" style={{ background: 'rgb(var(--color-surface-container))' }}>
-            <p className="font-bold text-sm" style={{ color: 'rgb(var(--color-primary))' }}>{research.title}</p>
-            <p className="text-xs mt-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{research.domain}{research.supervisor ? ` · Supervisor: ${research.supervisor}` : ''}</p>
+          {research ? (
+            <div className="mt-4 p-4 rounded-xl" style={{ background: 'rgb(var(--color-surface-container))' }}>
+              <p className="font-bold text-sm" style={{ color: 'rgb(var(--color-primary))' }}>{research.title}</p>
+              <p className="text-xs mt-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{research.domain}{research.supervisor ? ` · Supervisor: ${research.supervisor}` : ''}</p>
+            </div>
+          ) : null}
+
+          <div className="mt-6">
+            <div className="flex items-center gap-2 mb-3">
+              <Users size={16} style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
+              <span className="text-sm font-semibold" style={{ color: 'rgb(var(--color-on-surface))' }}>
+                {team.members?.length ?? 0} Members
+                {hackathon?.team_size_max ? ` / ${hackathon.team_size_max}` : ''}
+              </span>
+            </div>
+            <AvatarStack members={team.members} max={8} />
           </div>
-        ) : null}
+
+          <div className="mt-4">
+            <CapacityBar current={team.members?.length || 0} max={hackathon?.team_size_max || team.team_size_max} />
+          </div>
+
+          {team.looking_for && team.looking_for.length > 0 ? (
+            <div className="mt-6">
+              <p className="font-mono-label text-[11px] text-secondary mb-2">Looking For</p>
+              <div className="flex flex-wrap gap-2">
+                {team.looking_for.map((role) => (
+                  <span
+                    key={role}
+                    className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold"
+                    style={{
+                      background: 'rgb(var(--color-primary) / 0.1)',
+                      color: 'rgb(var(--color-primary))',
+                      border: '1px solid rgb(var(--color-primary) / 0.25)',
+                    }}
+                  >
+                    {role}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          {team.description ? (
+            <div className="mt-6">
+              <p className="font-mono-label text-[11px] text-secondary mb-2">About</p>
+              <p className="max-w-2xl text-sm font-medium leading-6" style={{ color: 'rgb(var(--color-on-surface))' }}>{team.description}</p>
+            </div>
+          ) : null}
+
+          <p className="mt-4 text-sm font-semibold" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+            Owner: {team.owner?.name || '—'}
+            {team.owner?.builder_id ? <span className="font-mono text-xs ml-2" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>@{team.owner.builder_id}</span> : null}
+          </p>
+        </div>
       </Card>
 
       <div className="mt-8 grid gap-8 xl:grid-cols-[1fr_360px]">
-        <Card className="p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Users size={16} style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
-            <p className="font-mono-label text-[11px] text-secondary">
-              Members
-              {hackathon?.team_size_max ? (
-                <span className="ml-2">({team.members?.length ?? 0}/{hackathon.team_size_max})</span>
-              ) : null}
-            </p>
-          </div>
+        <div className="space-y-8">
+          <Card className="p-6">
+            <ActivityTimeline activities={team.activities} />
 
-          <AvatarStack members={team.members} max={8} />
-
-          <div className="mt-4 space-y-4">
-            {team.members?.length > 0 ? (
-              team.members.map((m) => {
-                const status = getMemberStatus(m);
-                return (
-                  <div key={m.id} className="flex items-center justify-between border-t border-subtle pt-4 first:border-t-0 first:pt-0">
-                    <div className="flex items-center gap-3">
-                      {m.avatar ? (
-                        <img src={m.avatar} alt={m.name || 'Member'} className="h-9 w-9 rounded-full object-cover border" style={{ borderColor: 'rgb(var(--color-outline-variant))' }} />
-                      ) : (
-                        <div className="h-9 w-9 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: getAvatarColor(m.id), color: '#fff' }}>
-                          {getInitials(m.name)}
-                        </div>
-                      )}
-                      <div>
-                        <p className="text-sm font-semibold text-primary">
-                          {m.name}
-                          {m.builder_id ? <span className="font-mono text-[10px] ml-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>@{m.builder_id}</span> : null}
-                        </p>
-                        <p className="text-xs font-medium capitalize" style={{ color: status.color }}>{status.label}</p>
-                      </div>
-                      {m.id === team.owner?.id && <Crown className="h-4 w-4" style={{ color: 'rgb(var(--color-warning))' }} />}
-                    </div>
-                    {isOwner && m.id !== user.id && (
-                      <button type="button" onClick={() => handleRemoveMember(m.id)} className="text-secondary hover:text-error transition-colors" aria-label="Remove member">
-                        <UserMinus className="h-4 w-4" />
-                      </button>
-                    )}
-                  </div>
-                );
-              })
-            ) : (
-              <p className="text-sm text-secondary">No members.</p>
-            )}
-          </div>
-
-          {isOwner && (
             <div className="mt-6 pt-6 border-t" style={{ borderColor: 'rgb(var(--color-outline-variant))' }}>
-              <p className="font-mono-label text-[11px] text-secondary mb-3">Invite by Builder ID</p>
-              <div className="flex gap-2">
-                <Input
-                  placeholder="@builder_id"
-                  value={inviteBuilderId}
-                  onChange={(e) => { setInviteBuilderId(e.target.value); setInviteError(''); setInviteSuccess(''); }}
-                  aria-label="Builder ID to invite"
-                  disabled={isFull}
-                />
-                <Button onClick={handleInviteByBuilderId} disabled={inviteLoading || !inviteBuilderId.trim() || isFull}>
-                  {inviteLoading ? '...' : 'Invite'}
-                </Button>
+              <div className="flex items-center gap-2 mb-2">
+                <Users size={16} style={{ color: 'rgb(var(--color-on-surface-variant))' }} />
+                <p className="font-mono-label text-[11px] text-secondary">All Members</p>
               </div>
-              {inviteError ? <p className="text-xs mt-1" style={{ color: 'rgb(var(--color-error))' }} role="alert">{inviteError}</p> : null}
-              {inviteSuccess ? <p className="text-xs mt-1" style={{ color: 'rgb(var(--color-success))' }} role="alert">{inviteSuccess}</p> : null}
-              <p className="text-xs mt-2" style={{ color: 'rgb(var(--color-on-surface-variant) / 0.7)' }}>
-                Invite Code: <span className="font-mono">{team.public_id}</span>
-                <button type="button" onClick={handleCopyInvite} className="ml-1 text-xs hover:text-primary" style={{ color: 'rgb(var(--color-on-surface-variant))' }} aria-label="Copy invite code">
-                  <Copy size={12} className="inline" />
-                </button>
-              </p>
-              {isFull ? (
-                <p className="text-xs mt-2" style={{ color: 'rgb(var(--color-error))' }}>Team is full. Invites are disabled until a member leaves.</p>
-              ) : null}
+              <div className="space-y-4">
+                {team.members?.length > 0 ? (
+                  team.members.map((m) => {
+                    const status = getMemberStatus(m);
+                    return (
+                      <div key={m.id} className="flex items-center justify-between border-t pt-4 first:border-t-0 first:pt-0" style={{ borderColor: 'rgb(var(--color-outline-variant))' }}>
+                        <div className="flex items-center gap-3">
+                          {m.avatar ? (
+                            <img src={m.avatar} alt={m.name || 'Member'} className="h-9 w-9 rounded-full object-cover border" style={{ borderColor: 'rgb(var(--color-outline-variant))' }} />
+                          ) : (
+                            <div className="h-9 w-9 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: getAvatarColor(m.id), color: '#fff' }}>
+                              {getInitials(m.name)}
+                            </div>
+                          )}
+                          <div>
+                            <p className="text-sm font-semibold text-primary">
+                              {m.name}
+                              {m.builder_id ? <span className="font-mono text-[10px] ml-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>@{m.builder_id}</span> : null}
+                            </p>
+                            <p className="text-xs font-medium capitalize" style={{ color: status.color }}>{status.label}</p>
+                          </div>
+                          {m.id === team.owner?.id && <Crown className="h-4 w-4" style={{ color: 'rgb(var(--color-warning))' }} />}
+                        </div>
+                        {isOwner && m.id !== user.id && (
+                          <button type="button" onClick={() => handleRemoveMember(m.id)} className="text-secondary hover:text-error transition-colors" aria-label="Remove member">
+                            <UserMinus className="h-4 w-4" />
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="text-sm text-secondary" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>No members.</p>
+                )}
+              </div>
             </div>
-          )}
 
-          <ActivityTimeline activities={team.activities} />
-        </Card>
+            {isOwner && (
+              <div className="mt-6 pt-6 border-t" style={{ borderColor: 'rgb(var(--color-outline-variant))' }}>
+                <p className="font-mono-label text-[11px] text-secondary mb-3">Invite by Builder ID</p>
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="@builder_id"
+                    value={inviteBuilderId}
+                    onChange={(e) => { setInviteBuilderId(e.target.value); setInviteError(''); setInviteSuccess(''); }}
+                    aria-label="Builder ID to invite"
+                    disabled={isFull}
+                  />
+                  <Button onClick={handleInviteByBuilderId} disabled={inviteLoading || !inviteBuilderId.trim() || isFull}>
+                    {inviteLoading ? '...' : 'Invite'}
+                  </Button>
+                </div>
+                {inviteError ? <p className="text-xs mt-1" style={{ color: 'rgb(var(--color-error))' }} role="alert">{inviteError}</p> : null}
+                {inviteSuccess ? <p className="text-xs mt-1" style={{ color: 'rgb(var(--color-success))' }} role="alert">{inviteSuccess}</p> : null}
+                <p className="text-xs mt-2" style={{ color: 'rgb(var(--color-on-surface-variant) / 0.7)' }}>
+                  Invite Code: <span className="font-mono">{team.public_id}</span>
+                  <button type="button" onClick={handleCopyInvite} className="ml-1 text-xs hover:text-primary" style={{ color: 'rgb(var(--color-on-surface-variant))' }} aria-label="Copy invite code">
+                    <Copy size={12} className="inline" />
+                  </button>
+                </p>
+                {isFull ? (
+                  <p className="text-xs mt-2" style={{ color: 'rgb(var(--color-error))' }}>Team is full. Invites are disabled until a member leaves.</p>
+                ) : null}
+              </div>
+            )}
+          </Card>
+        </div>
 
         {isOwner && (
           <Card className="p-6">
@@ -465,7 +528,7 @@ function TeamDetail() {
             <div className="mt-5 space-y-3">
               {requests.filter((r) => r.status === 'pending').length > 0 ? (
                 requests.filter((r) => r.status === 'pending').map((r) => (
-                  <div key={r.id} className="flex items-center justify-between border-t border-subtle pt-3 first:border-t-0 first:pt-0">
+                  <div key={r.id} className="flex items-center justify-between border-t pt-3 first:border-t-0 first:pt-0" style={{ borderColor: 'rgb(var(--color-outline-variant))' }}>
                     <div className="flex items-center gap-2.5">
                       {r.user?.avatar ? (
                         <img src={r.user.avatar} alt="" className="h-8 w-8 rounded-full object-cover" />
@@ -490,7 +553,7 @@ function TeamDetail() {
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-secondary">No pending requests.</p>
+                <p className="text-sm text-secondary" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>No pending requests.</p>
               )}
             </div>
             {isFull ? (

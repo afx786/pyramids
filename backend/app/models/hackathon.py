@@ -39,6 +39,8 @@ class Hackathon(Base):
 
     # Competition
     prize_pool = Column(String)
+    display_prize = Column(String, nullable=True)
+    numeric_prize = Column(Integer, nullable=True)
     team_size_min = Column(Integer, default=1)
     team_size_max = Column(Integer)
     eligibility = Column(Text)

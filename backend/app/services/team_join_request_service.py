@@ -4,9 +4,9 @@ from app.models.team import Team
 from app.models.team_member import TeamMember
 from app.models.team_join_request import TeamJoinRequest
 from app.models.user import User
-from app.models.team_activity import TeamActivity
 
 from app.services.notification_service import create_notification
+from app.services.team_activity_service import create_team_activity
 
 
 def create_join_request(
@@ -65,13 +65,14 @@ def create_join_request(
     requester_name = requester.name if requester else "Someone"
     requester_bid = requester.builder_id if requester else None
 
-    activity = TeamActivity(
+    create_team_activity(
+        db=db,
         team_id=team.id,
-        user_id=user_id,
         action="join_request_sent",
-        description=f"{requester_name} requested to join the team",
+        actor_id=user_id,
+        target_id=team.owner_id,
+        metadata={"team_name": team.name},
     )
-    db.add(activity)
 
     db.commit()
 
@@ -170,13 +171,17 @@ def approve_join_request(
     requester = db.query(User).filter(User.id == request.user_id).first()
     requester_name = requester.name if requester else "Someone"
 
-    activity = TeamActivity(
+    meta = {"team_name": team.name}
+    if requester and requester.builder_id:
+        meta["builder_id"] = requester.builder_id
+    create_team_activity(
+        db=db,
         team_id=team.id,
-        user_id=request.user_id,
         action="join_request_approved",
-        description=f"{requester_name} joined the team",
+        actor_id=team.owner_id,
+        target_id=request.user_id,
+        metadata=meta,
     )
-    db.add(activity)
 
     db.commit()
 
@@ -229,13 +234,14 @@ def reject_join_request(
     requester = db.query(User).filter(User.id == request.user_id).first()
     requester_name = requester.name if requester else "Someone"
 
-    activity = TeamActivity(
+    create_team_activity(
+        db=db,
         team_id=team.id,
-        user_id=request.user_id,
-        action="join_request_rejected",
-        description=f"{requester_name}'s request to join was declined",
+        action="join_request_declined",
+        actor_id=team.owner_id,
+        target_id=request.user_id,
+        metadata={"team_name": team.name},
     )
-    db.add(activity)
 
     db.commit()
 

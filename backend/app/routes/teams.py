@@ -19,7 +19,6 @@ from app.services.team_service import (
 
 from app.services.team_service import (
     create_team,
-    join_team,
     get_all_teams,
     get_team,
     leave_team,
@@ -243,8 +242,6 @@ def discover_teams(
     sort: str = "newest"
 ):
     from app.models.hackathon import Hackathon
-    from sqlalchemy import case
-
     query = db.query(Team).filter(Team.visibility == "public")
 
     if q:
@@ -261,11 +258,15 @@ def discover_teams(
     elif sort == "oldest":
         teams = query.order_by(Team.created_at.asc()).offset(offset).limit(limit).all()
     elif sort == "most_needed":
-        teams = query.order_by(Team.looking_for.is_(None).asc().nullslast()).offset(offset).limit(limit).all()
+        teams = query.offset(offset).limit(limit).all()
+        teams.sort(
+            key=lambda t: ((t.team_size_max or 99) - len(t.members)) if t.team_size_max else 99,
+            reverse=True
+        )
     elif sort == "closing_soon":
         teams = query.outerjoin(Hackathon, Team.hackathon_id == Hackathon.id).order_by(Hackathon.registration_closes.asc().nullslast()).offset(offset).limit(limit).all()
     elif sort == "highest_prize":
-        teams = query.outerjoin(Hackathon, Team.hackathon_id == Hackathon.id).order_by(Hackathon.prize_pool.is_(None).asc().nullslast()).offset(offset).limit(limit).all()
+        teams = query.outerjoin(Hackathon, Team.hackathon_id == Hackathon.id).order_by(Hackathon.numeric_prize.desc().nullslast()).offset(offset).limit(limit).all()
     elif sort == "newest_hackathons":
         teams = query.outerjoin(Hackathon, Team.hackathon_id == Hackathon.id).order_by(Hackathon.start_date.desc().nullslast()).offset(offset).limit(limit).all()
     elif sort == "oldest_hackathons":

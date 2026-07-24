@@ -1,4 +1,4 @@
-import { ChevronRight, Plus, Users, Workflow, TrendingUp, ShieldCheck, Layers, X, Hash, Search, UserPlus } from 'lucide-react';
+import { ChevronRight, Plus, Users, Workflow, TrendingUp, ShieldCheck, Layers, X, Hash, Search, UserPlus, LogIn } from 'lucide-react';
 import { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { formatShortBatch } from '../../utils/batch.js';
@@ -63,6 +63,19 @@ function AvatarStack({ members, max = 4 }) {
           +{remaining}
         </span>
       ) : null}
+    </div>
+  );
+}
+
+function CapacityBar({ current, max }) {
+  if (!max) return null;
+  const pct = Math.min((current / max) * 100, 100);
+  const color = pct >= 100 ? 'rgb(var(--color-error))' : pct >= 75 ? 'rgb(var(--color-warning))' : 'rgb(var(--color-primary))';
+  return (
+    <div className="w-full">
+      <div className="h-1.5 w-full rounded-full overflow-hidden" style={{ background: 'rgb(var(--color-surface-container-highest))' }}>
+        <div className="h-full rounded-full transition-all duration-300" style={{ width: `${pct}%`, background: color }} />
+      </div>
     </div>
   );
 }
@@ -347,71 +360,86 @@ function Teams() {
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-md">
-                {discoverTeams.map((team) => (
-                  <div
-                    key={team.id}
-                    className="p-md rounded-lg transition-all duration-200 hover:-translate-y-0.5 cursor-pointer flex flex-col"
-                    style={{
-                      background: 'rgb(var(--color-surface-container-low))',
-                      border: '1px solid rgb(var(--color-outline-variant))',
-                    }}
-                    onClick={() => navigate(`/teams/${team.id}`)}
-                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgb(var(--color-primary) / 0.5)'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgb(var(--color-outline-variant))'; }}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/teams/${team.id}`); }}
-                    aria-label={`View team ${team.name}`}
-                  >
-                    <div className="flex items-start justify-between mb-2">
-                      <h4 className="font-bold text-sm truncate flex-1" style={{ color: 'rgb(var(--color-primary))' }}>{team.name}</h4>
-                      <div className="flex items-center gap-1.5 shrink-0 ml-2">
-                        {isTeamFull(team) ? (
-                          <span className="px-1.5 py-0.5 text-[9px] font-mono font-bold rounded" style={{ background: 'rgb(var(--color-error) / 0.1)', color: 'rgb(var(--color-error))', border: '1px solid rgb(var(--color-error) / 0.3)' }}>
-                            FULL
-                          </span>
-                        ) : null}
-                        {team.purpose ? (
-                          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded" style={{ background: 'rgb(var(--color-surface-variant))', color: 'rgb(var(--color-on-surface-variant))' }}>
-                            {team.purpose === 'hackathon' ? 'HACK' : 'RSCH'}
-                          </span>
+                {discoverTeams.map((team) => {
+                  const maxMembers = team.hackathon?.team_size_max;
+                  return (
+                    <div
+                      key={team.id}
+                      className="p-md rounded-lg transition-all duration-200 hover:-translate-y-0.5 flex flex-col"
+                      style={{
+                        background: 'rgb(var(--color-surface-container-low))',
+                        border: '1px solid rgb(var(--color-outline-variant))',
+                      }}
+                    >
+                      <div className="flex items-start justify-between mb-1">
+                        <h4 className="font-bold text-sm truncate flex-1" style={{ color: 'rgb(var(--color-primary))' }}>{team.name}</h4>
+                        <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                          {isTeamFull(team) ? (
+                            <span className="px-1.5 py-0.5 text-[9px] font-mono font-bold rounded" style={{ background: 'rgb(var(--color-error) / 0.1)', color: 'rgb(var(--color-error))', border: '1px solid rgb(var(--color-error) / 0.3)' }}>
+                              FULL
+                            </span>
+                          ) : null}
+                        </div>
+                      </div>
+                      {team.purpose === 'hackathon' && team.hackathon ? (
+                        <p className="text-[10px] font-mono mb-2 truncate" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                          {team.hackathon.title}
+                        </p>
+                      ) : null}
+                      {team.description ? (
+                        <p className="text-xs mb-2 line-clamp-2 flex-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{team.description}</p>
+                      ) : <div className="flex-1" />}
+                      {team.looking_for && team.looking_for.length > 0 ? (
+                        <div className="flex flex-wrap gap-1.5 mb-2">
+                          {team.looking_for.slice(0, 3).map((role) => (
+                            <span
+                              key={role}
+                              className="px-2 py-0.5 text-[9px] font-semibold rounded-full"
+                              style={{
+                                background: 'rgb(var(--color-primary) / 0.1)',
+                                color: 'rgb(var(--color-primary))',
+                                border: '1px solid rgb(var(--color-primary) / 0.2)',
+                              }}
+                            >
+                              {role}
+                            </span>
+                          ))}
+                          {team.looking_for.length > 3 ? (
+                            <span className="text-[9px] px-1.5 py-0.5 font-mono" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                              +{team.looking_for.length - 3}
+                            </span>
+                          ) : null}
+                        </div>
+                      ) : null}
+                      <div className="flex items-center justify-between pt-2 border-t mb-2" style={{ borderColor: 'rgb(var(--color-outline-variant))' }}>
+                        <AvatarStack members={team.members} max={3} />
+                        <div className="flex items-center gap-2 text-xs" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
+                          {team.hackathon?.end_date ? <CountdownTimer targetDate={team.hackathon.end_date} /> : null}
+                          <span className="font-semibold">{team.members?.length ?? 0}{maxMembers ? `/${maxMembers}` : ''}</span>
+                        </div>
+                      </div>
+                      {maxMembers ? (
+                        <div className="mb-3">
+                          <CapacityBar current={team.members?.length || 0} max={maxMembers} />
+                        </div>
+                      ) : null}
+                      <div className="flex gap-2">
+                        <Link to={`/teams/${team.id}`} className="flex-1">
+                          <Button variant="primary" className="w-full text-xs py-2 px-3">
+                            <LogIn size={14} /> View Team
+                          </Button>
+                        </Link>
+                        {!isTeamFull(team) ? (
+                          <Link to={`/teams/${team.id}`} className="flex-1">
+                            <Button variant="secondary" className="w-full text-xs py-2 px-3">
+                              <UserPlus size={14} /> Join
+                            </Button>
+                          </Link>
                         ) : null}
                       </div>
                     </div>
-                    {team.description ? (
-                      <p className="text-xs mb-2 line-clamp-2 flex-1" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>{team.description}</p>
-                    ) : <div className="flex-1" />}
-                    {team.looking_for && team.looking_for.length > 0 ? (
-                      <div className="flex flex-wrap gap-1.5 mb-2">
-                        {team.looking_for.slice(0, 3).map((role) => (
-                          <span
-                            key={role}
-                            className="px-2 py-0.5 text-[9px] font-semibold rounded-full"
-                            style={{
-                              background: 'rgb(var(--color-primary) / 0.1)',
-                              color: 'rgb(var(--color-primary))',
-                              border: '1px solid rgb(var(--color-primary) / 0.2)',
-                            }}
-                          >
-                            {role}
-                          </span>
-                        ))}
-                        {team.looking_for.length > 3 ? (
-                          <span className="text-[9px] px-1.5 py-0.5 font-mono" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
-                            +{team.looking_for.length - 3}
-                          </span>
-                        ) : null}
-                      </div>
-                    ) : null}
-                    <div className="flex items-center justify-between mt-auto pt-2 border-t" style={{ borderColor: 'rgb(var(--color-outline-variant))' }}>
-                      <AvatarStack members={team.members} max={3} />
-                      <div className="flex items-center gap-2 text-xs" style={{ color: 'rgb(var(--color-on-surface-variant))' }}>
-                        {team.hackathon?.end_date ? <CountdownTimer targetDate={team.hackathon.end_date} /> : null}
-                        <span className="font-semibold">{team.members?.length ?? 0}</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </section>

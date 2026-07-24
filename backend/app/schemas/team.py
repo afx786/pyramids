@@ -44,6 +44,8 @@ class HackathonBrief(BaseModel):
     banner_url: str | None = None
     mode: str | None = None
     prize_pool: str | None = None
+    display_prize: str | None = None
+    numeric_prize: int | None = None
     start_date: str | None = None
     end_date: str | None = None
     team_size_min: int | None = None
@@ -60,8 +62,9 @@ class ResearchProjectBrief(BaseModel):
 class TeamActivityItem(BaseModel):
     id: int
     action: str
-    description: str
-    user_id: int | None = None
+    actor_id: int | None = None
+    target_id: int | None = None
+    metadata: dict = {}
     created_at: datetime
 
     class Config:

@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import desc
 
 from app.models.hackathon import Hackathon
+import re
 from app.models.hackathon_team import HackathonTeam
 from app.models.hackathon_submission import HackathonSubmission
 from app.models.hackathon_announcement import HackathonAnnouncement
@@ -10,7 +11,21 @@ from app.services.notification_service import create_notification
 from app.services.id_service import generate_public_id
 
 
+def _parse_prize_value(raw):
+    if not raw:
+        return None, None
+    cleaned = re.sub(r'[^0-9,]', '', raw).strip()
+    if not cleaned:
+        return raw, None
+    cleaned = cleaned.replace(',', '')
+    try:
+        return raw, int(cleaned)
+    except ValueError:
+        return raw, None
+
+
 def create_hackathon(db: Session, data, user_id: int):
+    display, numeric = _parse_prize_value(data.prize_pool)
     hackathon = Hackathon(
         public_id=generate_public_id('HACK', db=db, model=Hackathon),
         title=data.title,
@@ -29,6 +44,8 @@ def create_hackathon(db: Session, data, user_id: int):
         official_website=data.official_website,
         registration_link=data.registration_link,
         prize_pool=data.prize_pool,
+        display_prize=display,
+        numeric_prize=numeric,
         team_size_min=data.team_size_min,
         team_size_max=data.team_size_max,
         eligibility=data.eligibility,
@@ -81,6 +98,11 @@ def update_hackathon(db: Session, hackathon_id: int, user_id: int, data):
         val = getattr(data, field, None)
         if val is not None:
             setattr(hackathon, field, val)
+
+    if getattr(data, 'prize_pool', None) is not None:
+        display, numeric = _parse_prize_value(data.prize_pool)
+        hackathon.display_prize = display
+        hackathon.numeric_prize = numeric
 
     db.commit()
     db.refresh(hackathon)

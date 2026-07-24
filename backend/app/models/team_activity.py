@@ -29,18 +29,18 @@ class TeamActivity(Base):
         nullable=False
     )
 
-    user_id = Column(
+    actor_id = Column(
         Integer,
         ForeignKey("users.id"),
         nullable=True
     )
 
-    action = Column(
-        String,
-        nullable=False
+    target_id = Column(
+        Integer,
+        nullable=True
     )
 
-    description = Column(
+    action = Column(
         String,
         nullable=False
     )
@@ -60,7 +60,8 @@ class TeamActivity(Base):
         backref="activities"
     )
 
-    user = relationship(
+    actor = relationship(
         "User",
-        backref="team_activities"
+        backref="team_activities",
+        foreign_keys=[actor_id]
     )
